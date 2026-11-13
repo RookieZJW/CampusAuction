@@ -24,7 +24,9 @@ import java.nio.charset.StandardCharsets;
 public class AuthInterceptor implements HandlerInterceptor {
 
     public static final String ATTR_OPENID = "openid";
+    public static final String ATTR_ADMIN_ID = "adminId";
     private static final String BEARER_PREFIX = "Bearer ";
+    private static final String ADMIN_PREFIX = "/api/v1/admin";
 
     private final JwtUtil jwtUtil;
     private final ObjectMapper objectMapper;
@@ -44,8 +46,21 @@ public class AuthInterceptor implements HandlerInterceptor {
 
         String token = auth.substring(BEARER_PREFIX.length());
         try {
-            String openid = jwtUtil.parseOpenid(token);
-            request.setAttribute(ATTR_OPENID, openid);
+            String subject = jwtUtil.parseOpenid(token);
+
+            // 管理员接口只接受 admin: 前缀的 token（小程序用户 token 不能越权）
+            boolean isAdminPath = request.getRequestURI().startsWith(ADMIN_PREFIX);
+            boolean isAdminToken = subject.startsWith("admin:");
+            if (isAdminPath && !isAdminToken) {
+                writeUnauthorized(response, ResultCode.FORBIDDEN);
+                return false;
+            }
+
+            if (isAdminToken) {
+                request.setAttribute(ATTR_ADMIN_ID, subject.substring("admin:".length()));
+            } else {
+                request.setAttribute(ATTR_OPENID, subject);
+            }
             return true;
         } catch (JwtException e) {
             writeUnauthorized(response, ResultCode.TOKEN_INVALID);

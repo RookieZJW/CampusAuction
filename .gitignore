@@ -39,3 +39,6 @@ desktop.ini
 # ---- 构建产物 ----
 sql/*.dump
 dump.rdb
+
+# ---- 上传文件（运行时产物）----
+server/uploads/

@@ -33,3 +33,11 @@ jwt:
   # 生产环境务必更换并放入环境变量；HS256 要求密钥至少 32 字符
   secret: ${JWT_SECRET:campus-auction-dev-secret-key-change-me-2026-1234567890}
   expire-days: 7
+
+# 图片上传目录（相对 server 运行目录）；生产环境改为绝对路径
+upload:
+  dir: ${UPLOAD_DIR:./uploads}
+
+spring.servlet.multipart:
+  max-file-size: 3MB
+  max-request-size: 10MB
