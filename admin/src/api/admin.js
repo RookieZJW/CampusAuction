@@ -28,6 +28,13 @@ export const adminApi = {
   orders(params) {
     return request.get('/admin/orders', { params })
   },
+  // 举报处理（W5）
+  reports(params) {
+    return request.get('/admin/reports', { params })
+  },
+  handleReport(reportId, data) {
+    return request.post(`/admin/reports/${reportId}/handle`, data)
+  },
   // 拍品审核
   auditItems() {
     return request.get('/admin/audit/items')
