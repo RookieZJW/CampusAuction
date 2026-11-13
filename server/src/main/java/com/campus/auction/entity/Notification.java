@@ -1,0 +1,35 @@
+package com.campus.auction.entity;
+
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
+
+import java.time.LocalDateTime;
+
+@Data
+@TableName("t_notification")
+public class Notification {
+
+    public static final String TYPE_AUCTION_WIN = "AUCTION_WIN";
+    public static final String TYPE_AUCTION_END = "AUCTION_END";
+    public static final String TYPE_OUTBID = "OUTBID";
+    public static final String TYPE_AUDIT_RESULT = "AUDIT_RESULT";
+
+    @TableId(type = IdType.AUTO)
+    private Long id;
+
+    private Long userId;
+
+    private String type;
+
+    private String title;
+
+    private String content;
+
+    private Long refId;
+
+    private Integer isRead;
+
+    private LocalDateTime createTime;
+}

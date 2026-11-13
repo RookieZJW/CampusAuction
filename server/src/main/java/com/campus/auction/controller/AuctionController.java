@@ -42,4 +42,11 @@ public class AuctionController {
         }
         return Result.ok(vo);
     }
+
+    @Operation(summary = "竞价实时态（轮询专用）",
+            description = "只返回 4 个字段，详情页 3 秒轮询局部刷新用，降低流量")
+    @GetMapping("/{id}/live")
+    public Result<Map<String, Object>> live(@PathVariable Long id) {
+        return Result.ok(auctionService.live(id));
+    }
 }

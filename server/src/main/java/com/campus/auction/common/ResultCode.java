@@ -26,6 +26,7 @@ public enum ResultCode {
     INSUFFICIENT_BALANCE(3006, "余额不足以支付保证金"),
     LOW_CREDIT(3007, "信用分不足，无法参与竞拍"),
     WX_LOGIN_FAILED(3008, "微信登录失败"),
+    SELLER_CANNOT_BID(3009, "卖家不能参与自己发布的拍卖"),
 
     SYSTEM_ERROR(5000, "系统繁忙，请稍后重试");
 

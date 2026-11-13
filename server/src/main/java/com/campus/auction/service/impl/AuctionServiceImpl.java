@@ -142,4 +142,18 @@ public class AuctionServiceImpl implements AuctionService {
         }
         return nickname.charAt(0) + "*".repeat(nickname.length() - 2) + nickname.charAt(nickname.length() - 1);
     }
+
+    @Override
+    public Map<String, Object> live(Long auctionId) {
+        Auction a = auctionMapper.selectById(auctionId);
+        if (a == null) {
+            return Map.of("status", "NOT_FOUND");
+        }
+        return Map.of(
+                "currentPrice", a.getCurrentPrice(),
+                "bidCount", a.getBidCount(),
+                "endTime", a.getEndTime() == null ? "" : a.getEndTime().toString(),
+                "status", a.getStatus()
+        );
+    }
 }

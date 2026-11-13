@@ -34,6 +34,7 @@ public class WebConfig implements WebMvcConfigurer {
                         "/api/v1/categories",
                         "/api/v1/auctions",
                         "/api/v1/auctions/*",
+                        "/api/v1/auctions/*/live",
                         "/doc.html",
                         "/webjars/**",
                         "/v3/api-docs/**",
