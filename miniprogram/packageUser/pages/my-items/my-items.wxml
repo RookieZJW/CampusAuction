@@ -1,1 +1,21 @@
-<view class="empty">Under development - W2</view>
+<view class="my-items-page">
+  <view wx:if="{{loading}}" class="empty">加载中...</view>
+  <view wx:elif="{{list.length === 0}}" class="empty">
+    还没有发布过拍品\n点底部「发布」开始第一场拍卖
+  </view>
+  <block wx:else>
+    <view class="card item-card" wx:for="{{list}}" wx:key="itemId"
+          bindtap="onItemTap" data-id="{{item.auctionId}}">
+      <image class="cover" src="{{item.images[0] || '/images/placeholder.png'}}" mode="aspectFill" />
+      <view class="info">
+        <view class="title">{{item.title}}</view>
+        <view class="status-row">
+          <text class="status-tag {{item.itemStatus}}">{{item.statusText}}</text>
+          <text class="price">¥{{item.priceYuan}}</text>
+        </view>
+        <view wx:if="{{item.bidCount > 0}}" class="bid-count">{{item.bidCount}} 次出价</view>
+        <view wx:if="{{item.rejectReason}}" class="reject-reason">驳回理由：{{item.rejectReason}}</view>
+      </view>
+    </view>
+  </block>
+</view>

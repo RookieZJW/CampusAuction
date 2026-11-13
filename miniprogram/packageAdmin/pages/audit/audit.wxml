@@ -1,1 +1,33 @@
-<view class="empty">Under development - W2</view>
+<view class="audit-page">
+  <!-- 管理员登录（未登录时显示） -->
+  <view class="card login-card" wx:if="{{!adminToken}}">
+    <view class="form-title">管理员登录</view>
+    <view class="form-item">
+      <input class="input" placeholder="用户名" value="{{username}}" bindinput="onInput" data-field="username" />
+    </view>
+    <view class="form-item">
+      <input class="input" placeholder="密码" password value="{{password}}" bindinput="onInput" data-field="password" />
+    </view>
+    <button class="btn-primary" bindtap="onAdminLogin" loading="{{logging}}">登录</button>
+  </view>
+
+  <!-- 待审核列表 -->
+  <block wx:else>
+    <view class="header">待审核拍品（{{list.length}}）</view>
+    <view wx:if="{{loading}}" class="empty">加载中...</view>
+    <view wx:elif="{{list.length === 0}}" class="empty">暂无待审核拍品</view>
+    <view class="card audit-card" wx:for="{{list}}" wx:key="itemId"
+          bindtap="onAuditTap" data-index="{{index}}">
+      <image class="cover" src="{{item.images[0] || '/images/placeholder.png'}}" mode="aspectFill" />
+      <view class="info">
+        <view class="title">{{item.title}}</view>
+        <view class="meta">{{item.sellerNickname}} · {{item.categoryName}} · {{item.condition}}</view>
+        <view class="price-row">
+          <text class="price">起拍 ¥{{item.startPriceYuan}}</text>
+          <text class="duration">时长 {{item.durationHours}} 小时</text>
+        </view>
+      </view>
+    </view>
+    <button class="btn-ghost logout" bindtap="onAdminLogout">退出管理员</button>
+  </block>
+</view>

@@ -7,11 +7,14 @@ const { BASE_URL } = require('./config')
  * @returns {Promise<any>} 成功 resolve 业务 data，失败 reject { code, msg }
  */
 function request(options) {
-  const { url, method = 'GET', data = {}, needAuth = true } = options
+  const { url, method = 'GET', data = {}, needAuth = true, token } = options
 
   return new Promise((resolve, reject) => {
     const header = { 'Content-Type': 'application/json' }
-    if (needAuth) {
+    if (token) {
+      // 显式传入 token（管理员身份等场景）
+      header['Authorization'] = 'Bearer ' + token
+    } else if (needAuth) {
       const userInfo = wx.getStorageSync('userInfo')
       if (userInfo && userInfo.token) {
         header['Authorization'] = 'Bearer ' + userInfo.token

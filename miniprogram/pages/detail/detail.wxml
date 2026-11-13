@@ -1,1 +1,65 @@
-<view class="empty">Under development - W2</view>
+<view class="detail-page" wx:if="{{detail}}">
+  <!-- 图集 -->
+  <swiper class="image-swiper" indicator-dots circular="{{detail.images.length > 1}}">
+    <swiper-item wx:for="{{detail.images}}" wx:key="index">
+      <image src="{{item}}" mode="aspectFill" class="swiper-image"
+             bindtap="onPreviewImage" data-index="{{index}}" />
+    </swiper-item>
+    <swiper-item wx:if="{{!detail.images.length}}">
+      <image src="/images/placeholder.png" mode="aspectFill" class="swiper-image" />
+    </swiper-item>
+  </swiper>
+
+  <!-- 价格与状态 -->
+  <view class="card price-card">
+    <view class="price-row">
+      <view class="current-price">
+        <text class="price-label">当前价</text>
+        <text class="price">¥{{currentPriceYuan}}</text>
+      </view>
+      <view class="bid-count">{{detail.bidCount}} 次出价</view>
+    </view>
+    <view class="meta-row">
+      <text class="tag">{{detail.categoryName}}</text>
+      <text class="tag">{{detail.condition}}</text>
+      <view class="countdown {{urgent ? 'urgent' : ''}}">
+        {{detail.status === 'ONGOING' ? ('距结束 ' + countdownText) : statusText}}
+      </view>
+    </view>
+    <view class="rules">
+      <view>起拍价 ¥{{startPriceYuan}} · 加价幅度 ¥{{incrementYuan}}</view>
+      <view>参拍需冻结保证金 ¥10.00（虚拟余额）</view>
+    </view>
+  </view>
+
+  <!-- 标题与描述 -->
+  <view class="card">
+    <view class="detail-title">{{detail.title}}</view>
+    <view class="seller">卖家：{{detail.sellerNickname || '微信用户'}}</view>
+    <view class="description">{{detail.description || '暂无描述'}}</view>
+  </view>
+
+  <!-- 出价记录 -->
+  <view class="card">
+    <view class="section-title">出价记录（{{detail.bidRecords.length}}）</view>
+    <view wx:if="{{!detail.bidRecords.length}}" class="empty" style="padding: 40rpx 0;">
+      还没有人出价，来做第一个吧
+    </view>
+    <view class="bid-item" wx:for="{{detail.bidRecords}}" wx:key="index">
+      <text class="bid-nickname">{{item.nickname}}</text>
+      <text class="bid-price">¥{{item.priceYuan}}</text>
+      <text class="bid-time">{{item.bidTimeText}}</text>
+    </view>
+  </view>
+
+  <!-- 底部操作栏 -->
+  <view class="bottom-bar">
+    <button class="btn-primary bid-btn" bindtap="onBidTap"
+            disabled="{{detail.status !== 'ONGOING'}}">
+      {{detail.status === 'ONGOING' ? '我要出价' : '拍卖已结束'}}
+    </button>
+  </view>
+</view>
+
+<view wx:elif="{{loading}}" class="empty">加载中...</view>
+<view wx:else class="empty">拍卖不存在或已下架</view>

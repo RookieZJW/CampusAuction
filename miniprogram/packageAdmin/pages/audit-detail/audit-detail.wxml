@@ -1,1 +1,52 @@
-<view class="empty">Under development - W2</view>
+<view class="audit-detail-page" wx:if="{{item}}">
+  <swiper class="image-swiper" indicator-dots circular="{{item.images.length > 1}}">
+    <swiper-item wx:for="{{item.images}}" wx:key="index">
+      <image src="{{item}}" mode="aspectFill" class="swiper-image" />
+    </swiper-item>
+    <swiper-item wx:if="{{!item.images.length}}">
+      <image src="/images/placeholder.png" mode="aspectFill" class="swiper-image" />
+    </swiper-item>
+  </swiper>
+
+  <view class="card">
+    <view class="detail-title">{{item.title}}</view>
+    <view class="meta">卖家：{{item.sellerNickname}} · 提交于 {{item.submitTimeText}}</view>
+
+    <view class="info-grid">
+      <view class="info-cell">
+        <view class="info-label">分类</view>
+        <view>{{item.categoryName}}</view>
+      </view>
+      <view class="info-cell">
+        <view class="info-label">成色</view>
+        <view>{{item.condition}}</view>
+      </view>
+      <view class="info-cell">
+        <view class="info-label">起拍价</view>
+        <view class="price">¥{{startPriceYuan}}</view>
+      </view>
+      <view class="info-cell">
+        <view class="info-label">加价幅度</view>
+        <view>¥{{incrementYuan}}</view>
+      </view>
+      <view class="info-cell">
+        <view class="info-label">保证金</view>
+        <view>¥{{depositYuan}}</view>
+      </view>
+      <view class="info-cell">
+        <view class="info-label">时长</view>
+        <view>{{item.durationHours}} 小时</view>
+      </view>
+    </view>
+
+    <view class="section-title">拍品描述</view>
+    <view class="description">{{item.description || '（无描述）'}}</view>
+  </view>
+
+  <view class="bottom-bar">
+    <button class="btn-ghost reject-btn" bindtap="onReject" loading="{{rejecting}}">驳回</button>
+    <button class="btn-primary approve-btn" bindtap="onApprove" loading="{{approving}}">通过并开拍</button>
+  </view>
+</view>
+
+<view wx:else class="empty">{{loading ? '加载中...' : '该拍品已不在待审核状态'}}</view>

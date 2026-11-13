@@ -21,7 +21,12 @@ Page({
 
   onMenuTap(e) {
     const url = e.currentTarget.dataset.url
-    // 未登录统一先去登录页
+    // 管理员入口无需用户登录（页内有独立的管理员登录）
+    if (e.currentTarget.dataset.admin) {
+      wx.navigateTo({ url })
+      return
+    }
+    // 其余入口未登录统一先去登录页
     if (!app.globalData.userInfo) {
       wx.navigateTo({ url: '/pages/login/login' })
       return

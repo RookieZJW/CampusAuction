@@ -1,1 +1,77 @@
-<view class="empty">Under development - W2</view>
+<view class="publish-page">
+  <view class="card">
+    <view class="form-title">基本信息</view>
+
+    <view class="form-item">
+      <view class="label">标题</view>
+      <input class="input" placeholder="如：考研数学复习全书" value="{{title}}"
+             bindinput="onInput" data-field="title" maxlength="100" />
+    </view>
+
+    <view class="form-item">
+      <view class="label">分类</view>
+      <picker range="{{categoryNames}}" bindchange="onCategoryChange">
+        <view class="picker-value {{categoryId ? '' : 'placeholder'}}">
+          {{categoryId ? categoryNames[categoryIndex] : '请选择分类'}}
+        </view>
+      </picker>
+    </view>
+
+    <view class="form-item">
+      <view class="label">成色</view>
+      <picker range="{{conditions}}" bindchange="onConditionChange">
+        <view class="picker-value {{condition ? '' : 'placeholder'}}">
+          {{condition || '请选择成色'}}
+        </view>
+      </picker>
+    </view>
+
+    <view class="form-item">
+      <view class="label">描述</view>
+      <textarea class="textarea" placeholder="补充描述、使用时长、瑕疵说明等" value="{{description}}"
+                bindinput="onInput" data-field="description" maxlength="2000" />
+    </view>
+
+    <view class="form-item">
+      <view class="label">图片（{{images.length}}/3）</view>
+      <view class="image-list">
+        <view class="image-item" wx:for="{{images}}" wx:key="index">
+          <image src="{{item}}" mode="aspectFill" bindtap="onPreviewImage" data-index="{{index}}" />
+          <view class="image-delete" catchtap="onDeleteImage" data-index="{{index}}">×</view>
+        </view>
+        <view class="image-add" wx:if="{{images.length < 3}}" bindtap="onChooseImage">+</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="form-title">拍卖规则</view>
+
+    <view class="form-item">
+      <view class="label">起拍价（元）</view>
+      <input class="input" type="digit" placeholder="如：20" value="{{startPriceYuan}}"
+             bindinput="onInput" data-field="startPriceYuan" />
+    </view>
+
+    <view class="form-item">
+      <view class="label">加价幅度（元）</view>
+      <input class="input" type="digit" placeholder="每次出价至少加多少，默认 1" value="{{incrementYuan}}"
+             bindinput="onInput" data-field="incrementYuan" />
+    </view>
+
+    <view class="form-item">
+      <view class="label">拍卖时长</view>
+      <picker range="{{durationLabels}}" bindchange="onDurationChange">
+        <view class="picker-value">{{durationLabels[durationIndex]}}（审核通过后起算）</view>
+      </picker>
+    </view>
+
+    <view class="deposit-tip">
+      参拍保证金统一为 10 元（虚拟余额冻结），成交违约将被扣除
+    </view>
+  </view>
+
+  <view class="submit-area">
+    <button class="btn-primary" bindtap="onSubmit" loading="{{submitting}}">提交审核</button>
+  </view>
+</view>
