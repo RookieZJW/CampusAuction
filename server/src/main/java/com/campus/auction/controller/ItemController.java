@@ -2,11 +2,14 @@ package com.campus.auction.controller;
 
 import com.campus.auction.common.Result;
 import com.campus.auction.common.ResultCode;
+import com.campus.auction.dto.PriceSuggestDTO;
 import com.campus.auction.dto.PublishItemDTO;
 import com.campus.auction.interceptor.AuthInterceptor;
 import com.campus.auction.mapper.UserMapper;
+import com.campus.auction.service.AiPriceService;
 import com.campus.auction.service.ItemService;
 import com.campus.auction.vo.MyItemVO;
+import com.campus.auction.vo.PriceSuggestVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -27,7 +30,20 @@ import java.util.List;
 public class ItemController {
 
     private final ItemService itemService;
+    private final AiPriceService aiPriceService;
     private final UserMapper userMapper;
+
+    @Operation(summary = "AI 定价建议", description = "大模型估价（DeepSeek 等），未配 Key 或失败时自动降级规则估价；source 字段区分来源")
+    @PostMapping("/price-suggest")
+    public Result<PriceSuggestVO> priceSuggest(
+            @RequestAttribute(AuthInterceptor.ATTR_OPENID) String openid,
+            @Valid @RequestBody PriceSuggestDTO dto) {
+        Long userId = userMapper.selectIdByOpenid(openid);
+        if (userId == null) {
+            return Result.fail(ResultCode.UNAUTHORIZED);
+        }
+        return Result.ok(aiPriceService.suggest(dto));
+    }
 
     @Operation(summary = "发布拍品", description = "创建物品与拍卖场次，进入待审核状态")
     @PostMapping

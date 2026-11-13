@@ -5,22 +5,27 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.campus.auction.common.Result;
 import com.campus.auction.common.ResultCode;
+import com.campus.auction.dto.ReportHandleDTO;
 import com.campus.auction.entity.Auction;
 import com.campus.auction.entity.Category;
 import com.campus.auction.entity.Item;
 import com.campus.auction.entity.Order;
 import com.campus.auction.entity.User;
+import com.campus.auction.interceptor.AuthInterceptor;
 import com.campus.auction.mapper.AuctionMapper;
 import com.campus.auction.mapper.CategoryMapper;
 import com.campus.auction.mapper.ItemMapper;
 import com.campus.auction.mapper.OrderMapper;
 import com.campus.auction.mapper.UserMapper;
+import com.campus.auction.service.ReportService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -44,6 +49,7 @@ public class AdminManageController {
     private final ItemMapper itemMapper;
     private final OrderMapper orderMapper;
     private final CategoryMapper categoryMapper;
+    private final ReportService reportService;
 
     @Operation(summary = "数据看板")
     @GetMapping("/stats")
@@ -170,5 +176,24 @@ public class AdminManageController {
         return Result.ok(Map.of(
                 "list", result.getRecords(),
                 "total", result.getTotal()));
+    }
+
+    // ---------- 举报处理（W5） ----------
+
+    @Operation(summary = "举报列表", description = "按状态过滤，先到先处理")
+    @GetMapping("/reports")
+    public Result<Map<String, Object>> reports(@RequestParam(defaultValue = "1") int page,
+                                               @RequestParam(defaultValue = "10") int size,
+                                               @RequestParam(required = false) String status) {
+        return Result.ok(reportService.adminList(page, size, status));
+    }
+
+    @Operation(summary = "处理举报", description = "action=RESOLVED 核实（被举报方信用 -20 + 通知）/ DISMISSED 驳回；双方均收到处理结果通知")
+    @PostMapping("/reports/{reportId}/handle")
+    public Result<Void> handleReport(@RequestAttribute(AuthInterceptor.ATTR_ADMIN_ID) Long adminId,
+                                     @PathVariable Long reportId,
+                                     @Valid @RequestBody ReportHandleDTO dto) {
+        reportService.handle(reportId, adminId, dto);
+        return Result.ok();
     }
 }

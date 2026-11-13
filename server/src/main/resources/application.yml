@@ -38,6 +38,15 @@ jwt:
 upload:
   dir: ${UPLOAD_DIR:./uploads}
 
+# AI 定价建议：Key 仅从环境变量或 application-local.yml 注入，不入库不入 git
+# 未配置 Key 或调用失败时自动降级为规则估价，功能不中断
+ai:
+  price:
+    enabled: ${AI_PRICE_ENABLED:false}
+    base-url: ${AI_BASE_URL:https://api.deepseek.com}
+    api-key: ${AI_PRICE_KEY:}
+    model: ${AI_MODEL:deepseek-chat}
+
 spring.servlet.multipart:
   max-file-size: 3MB
   max-request-size: 10MB
