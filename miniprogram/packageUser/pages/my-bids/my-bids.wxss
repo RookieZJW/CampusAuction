@@ -1,1 +1,72 @@
-/* stub */
+.bid-card {
+  display: flex;
+}
+
+.cover {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 12rpx;
+  background: var(--bg);
+  flex-shrink: 0;
+}
+
+.info {
+  flex: 1;
+  margin-left: 20rpx;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.title {
+  font-size: 28rpx;
+  font-weight: bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.price-row,
+.current-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 24rpx;
+  color: var(--text-secondary);
+}
+
+.my-price {
+  color: var(--text);
+  font-weight: bold;
+}
+
+.current-row .price {
+  font-size: 26rpx;
+}
+
+.status-tag {
+  font-size: 22rpx;
+  padding: 4rpx 16rpx;
+  border-radius: 20rpx;
+}
+
+.status-tag.leading {
+  background: var(--primary-light);
+  color: var(--primary);
+}
+
+.status-tag.outbid {
+  background: var(--danger-light);
+  color: var(--danger);
+}
+
+.status-tag.winning {
+  background: var(--success-light);
+  color: var(--success);
+}
+
+.bid-count {
+  font-size: 22rpx;
+  color: var(--text-hint);
+}

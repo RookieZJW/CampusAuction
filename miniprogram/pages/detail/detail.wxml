@@ -26,9 +26,10 @@
         {{detail.status === 'ONGOING' ? ('距结束 ' + countdownText) : statusText}}
       </view>
     </view>
+    <view wx:if="{{extendedTip}}" class="extend-tip">本场拍卖已被出价延长 2 分钟（防狙击）</view>
     <view class="rules">
       <view>起拍价 ¥{{startPriceYuan}} · 加价幅度 ¥{{incrementYuan}}</view>
-      <view>参拍需冻结保证金 ¥10.00（虚拟余额）</view>
+      <view>参拍需冻结保证金 ¥10.00（虚拟余额）· 结束前 5 分钟出价自动延时</view>
     </view>
   </view>
 
@@ -41,7 +42,7 @@
 
   <!-- 出价记录 -->
   <view class="card">
-    <view class="section-title">出价记录（{{detail.bidRecords.length}}）</view>
+    <view class="section-title">出价记录（{{detail.bidCount}}）</view>
     <view wx:if="{{!detail.bidRecords.length}}" class="empty" style="padding: 40rpx 0;">
       还没有人出价，来做第一个吧
     </view>
@@ -55,9 +56,31 @@
   <!-- 底部操作栏 -->
   <view class="bottom-bar">
     <button class="btn-primary bid-btn" bindtap="onBidTap"
-            disabled="{{detail.status !== 'ONGOING'}}">
-      {{detail.status === 'ONGOING' ? '我要出价' : '拍卖已结束'}}
+            disabled="{{detail.status !== 'ONGOING' || bidding}}">
+      {{bidding ? '出价中...' : (detail.status === 'ONGOING' ? '我要出价' : statusText)}}
     </button>
+  </view>
+
+  <!-- 出价面板遮罩 -->
+  <view class="bid-mask" wx:if="{{showBidPanel}}" bindtap="onCloseBidPanel"></view>
+  <!-- 出价面板 -->
+  <view class="bid-panel" wx:if="{{showBidPanel}}">
+    <view class="panel-title">出价</view>
+    <view class="panel-info">
+      <view>当前价 <text class="price">¥{{currentPriceYuan}}</text></view>
+      <view>最低出价 <text class="price">¥{{minNextYuan}}</text></view>
+    </view>
+    <view class="panel-input-row">
+      <text class="panel-unit">¥</text>
+      <input class="panel-input" type="digit" value="{{bidYuan}}"
+             bindinput="onBidInput" focus="{{true}}" placeholder="输入出价金额（元）" />
+    </view>
+    <view class="quick-bids">
+      <view class="quick-btn" wx:for="{{quickBids}}" wx:key="*this"
+            bindtap="onQuickBid" data-price="{{item}}">¥{{item}}</view>
+    </view>
+    <view class="panel-tip">出价将冻结保证金 ¥10.00，未中标自动解冻</view>
+    <button class="btn-primary" bindtap="onConfirmBid" loading="{{bidding}}">确认出价</button>
   </view>
 </view>
 

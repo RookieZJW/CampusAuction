@@ -1,1 +1,23 @@
-<view class="empty">Under development - W2</view>
+<view class="my-bids-page">
+  <view wx:if="{{loading}}" class="empty">加载中...</view>
+  <view wx:elif="{{list.length === 0}}" class="empty">
+    还没有出过价\n去拍场逛逛吧
+  </view>
+  <block wx:else>
+    <view class="card bid-card" wx:for="{{list}}" wx:key="auctionId"
+          bindtap="onBidTap" data-id="{{item.auctionId}}">
+      <image class="cover" src="{{item.coverImage || '/images/placeholder.png'}}" mode="aspectFill" />
+      <view class="info">
+        <view class="title">{{item.title}}</view>
+        <view class="price-row">
+          <text>我的出价 <text class="my-price">¥{{item.myPriceYuan}}</text></text>
+          <text class="status-tag {{item.myStatusClass}}">{{item.myStatusText}}</text>
+        </view>
+        <view class="current-row">
+          <text>当前价 <text class="price">¥{{item.currentPriceYuan}}</text></text>
+          <text class="bid-count">{{item.auctionStatusText}}</text>
+        </view>
+      </view>
+    </view>
+  </block>
+</view>
