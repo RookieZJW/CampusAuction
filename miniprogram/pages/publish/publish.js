@@ -203,7 +203,63 @@ Page({
   resetForm() {
     this.setData({
       title: '', description: '', condition: '', images: [],
-      startPriceYuan: '', incrementYuan: '1'
+      startPriceYuan: '', incrementYuan: '1', suggest: null
     })
+  },
+
+  /** W5：AI 定价建议（大模型优先，后端自动降级规则估价） */
+  onSuggestPrice() {
+    if (this.data.suggesting) return
+    if (!this.data.title.trim()) {
+      wx.showToast({ title: '先填写标题再估价', icon: 'none' })
+      return
+    }
+    if (!this.data.categoryId) {
+      wx.showToast({ title: '先选择分类再估价', icon: 'none' })
+      return
+    }
+    if (!this.data.condition) {
+      wx.showToast({ title: '先选择成色再估价', icon: 'none' })
+      return
+    }
+    this.setData({ suggesting: true })
+    request({
+      url: '/api/v1/items/price-suggest',
+      method: 'POST',
+      data: {
+        title: this.data.title.trim(),
+        categoryId: this.data.categoryId,
+        condition: this.data.condition,
+        description: this.data.description
+      }
+    }).then((data) => {
+      this.setData({
+        suggest: {
+          minPrice: data.minPrice,
+          maxPrice: data.maxPrice,
+          minYuan: (data.minPrice / 100).toFixed(data.minPrice % 100 ? 2 : 0),
+          maxYuan: (data.maxPrice / 100).toFixed(data.maxPrice % 100 ? 2 : 0),
+          source: data.source,
+          reason: data.reason,
+          applied: false
+        }
+      })
+    }).catch((e) => {
+      wx.showToast({ title: e.msg || '估价失败，请稍后再试', icon: 'none' })
+    }).finally(() => {
+      this.setData({ suggesting: false })
+    })
+  },
+
+  onApplySuggest() {
+    this.setData({
+      startPriceYuan: this.data.suggest.minYuan,
+      'suggest.applied': true
+    })
+    wx.showToast({ title: '已填入起拍价', icon: 'success' })
+  },
+
+  onDismissSuggest() {
+    this.setData({ suggest: null })
   }
 })

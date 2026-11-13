@@ -23,6 +23,7 @@ Page({
     countdownText: '',
     urgent: false,
     statusText: '',
+    collected: false,
     // 出价面板
     showBidPanel: false,
     bidYuan: '',
@@ -34,6 +35,68 @@ Page({
   onLoad(options) {
     this.setData({ id: options.id })
     this.loadDetail()
+    this.loadCollected()
+  },
+
+  /** W5：收藏状态（未登录默认未收藏，点击时再引导登录） */
+  loadCollected() {
+    if (!app.globalData.userInfo) {
+      return
+    }
+    request({
+      url: `/api/v1/favorites/auctions/${this.data.id}/check`,
+      method: 'GET'
+    }).then((data) => {
+      this.setData({ collected: !!data.collected })
+    }).catch(() => { /* 静默：收藏状态失败不阻塞详情 */ })
+  },
+
+  onToggleFavorite() {
+    if (!app.globalData.userInfo) {
+      wx.navigateTo({ url: '/pages/login/login' })
+      return
+    }
+    request({
+      url: `/api/v1/favorites/auctions/${this.data.id}`,
+      method: 'POST'
+    }).then((data) => {
+      this.setData({ collected: !!data.collected })
+      wx.showToast({ title: data.collected ? '已收藏' : '已取消收藏', icon: 'none' })
+    })
+  },
+
+  /** W5：举报拍品（理由必填，同对象幂等） */
+  onReportTap() {
+    if (!app.globalData.userInfo) {
+      wx.navigateTo({ url: '/pages/login/login' })
+      return
+    }
+    wx.showModal({
+      title: '举报该拍品',
+      editable: true,
+      placeholderText: '请填写举报理由（必填）',
+      success: (res) => {
+        if (!res.confirm) {
+          return
+        }
+        const reason = (res.content || '').trim()
+        if (!reason) {
+          wx.showToast({ title: '举报理由不能为空', icon: 'none' })
+          return
+        }
+        request({
+          url: '/api/v1/reports',
+          method: 'POST',
+          data: {
+            targetType: 'ITEM',
+            targetId: this.data.detail.itemId,
+            reason
+          }
+        }).then(() => {
+          wx.showToast({ title: '已提交，等待管理员处理', icon: 'none' })
+        })
+      }
+    })
   },
 
   onHide() {

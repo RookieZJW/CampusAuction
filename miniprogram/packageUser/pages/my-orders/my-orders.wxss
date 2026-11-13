@@ -115,3 +115,10 @@
   color: var(--primary);
   background: transparent;
 }
+
+/* W5：已评价标记 */
+.reviewed-tip {
+  font-size: 22rpx;
+  color: var(--success);
+  text-align: right;
+}

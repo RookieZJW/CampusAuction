@@ -35,8 +35,14 @@
 
   <!-- 标题与描述 -->
   <view class="card">
-    <view class="detail-title">{{detail.title}}</view>
-    <view class="seller">卖家：{{detail.sellerNickname || '微信用户'}}</view>
+    <view class="title-row">
+      <view class="detail-title">{{detail.title}}</view>
+      <view class="fav-btn {{collected ? 'fav-on' : ''}}" bindtap="onToggleFavorite">{{collected ? '♥' : '♡'}}</view>
+    </view>
+    <view class="seller-row">
+      <text class="seller">卖家：{{detail.sellerNickname || '微信用户'}}</text>
+      <text class="report-link" bindtap="onReportTap">举报</text>
+    </view>
     <view class="description">{{detail.description || '暂无描述'}}</view>
   </view>
 

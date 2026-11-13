@@ -17,6 +17,8 @@
         "pages/wallet/wallet",
         "pages/credit/credit",
         "pages/notifications/notifications",
+        "pages/my-reviews/my-reviews",
+        "pages/review/review",
         "pages/favorites/favorites"
       ]
     },

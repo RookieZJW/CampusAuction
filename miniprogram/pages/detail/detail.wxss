@@ -69,15 +69,46 @@
   padding-top: 16rpx;
 }
 
+.title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
 .detail-title {
+  flex: 1;
   font-size: 34rpx;
   font-weight: bold;
+}
+
+/* W5 收藏按钮 */
+.fav-btn {
+  font-size: 52rpx;
+  color: var(--text-hint);
+  margin-left: 20rpx;
+  line-height: 1.1;
+}
+
+.fav-btn.fav-on {
+  color: var(--danger);
+}
+
+.seller-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .seller {
   font-size: 24rpx;
   color: var(--text-secondary);
   margin: 12rpx 0;
+}
+
+/* W5 举报入口 */
+.report-link {
+  font-size: 22rpx;
+  color: var(--text-hint);
 }
 
 .description {

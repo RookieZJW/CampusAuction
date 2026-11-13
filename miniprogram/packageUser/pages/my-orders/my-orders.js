@@ -32,8 +32,33 @@ Page({
       }))
       this.setData({ list: decorated, loading: false })
       this.applyFilter()
+      this.markReviewed()
     }).catch(() => {
       this.setData({ loading: false })
+    })
+  },
+
+  /** W5：标记哪些已完成订单我已评价过（对照 /reviews/sent） */
+  markReviewed() {
+    request({
+      url: '/api/v1/reviews/sent',
+      method: 'GET'
+    }).then((sent) => {
+      const reviewedIds = new Set((sent || []).map(r => r.orderId))
+      const list = this.data.list.map(o => ({
+        ...o,
+        reviewed: reviewedIds.has(o.orderId)
+      }))
+      this.setData({ list })
+      this.applyFilter()
+    }).catch(() => { /* 静默：评价状态拉取失败不阻塞列表 */ })
+  },
+
+  /** W5：跳转互评页 */
+  onReview(e) {
+    const { id, title } = e.currentTarget.dataset
+    wx.navigateTo({
+      url: `/packageUser/pages/review/review?orderId=${id}&title=${encodeURIComponent(title || '')}`
     })
   },
 

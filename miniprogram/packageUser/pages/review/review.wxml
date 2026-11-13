@@ -1,0 +1,19 @@
+<view class="review-page">
+  <view class="card">
+    <view class="item-title">{{title || '订单'}}</view>
+    <view class="section-label">为本次交易打分</view>
+    <view class="stars-row">
+      <text wx:for="{{stars}}" wx:key="*this" class="star {{rating >= item ? 'star-on' : ''}}"
+            bindtap="onStarTap" data-star="{{item}}">★</text>
+      <text class="rating-text">{{ratingText}}</text>
+    </view>
+
+    <view class="section-label">评语（选填）</view>
+    <textarea class="content-input" placeholder="说说这次交易的体验，如沟通、守时、物品成色等"
+              value="{{content}}" bindinput="onContentInput" maxlength="500" />
+  </view>
+
+  <view class="submit-area">
+    <button class="btn-primary" bindtap="onSubmit" loading="{{submitting}}">提交评价</button>
+  </view>
+</view>

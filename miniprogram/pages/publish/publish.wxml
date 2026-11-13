@@ -47,8 +47,26 @@
   <view class="card">
     <view class="form-title">拍卖规则</view>
 
+    <!-- AI 定价建议（W5）：填好基本信息后一键估价 -->
+    <view class="ai-suggest" wx:if="{{suggest}}">
+      <view class="ai-suggest-head">
+        <view class="ai-badge {{suggest.source === 'AI' ? 'ai-badge-ai' : 'ai-badge-rule'}}">
+          {{suggest.source === 'AI' ? 'AI 估价' : '智能估价'}}
+        </view>
+        <view class="ai-suggest-range">¥{{suggest.minYuan}} ~ ¥{{suggest.maxYuan}}</view>
+      </view>
+      <view class="ai-suggest-reason">{{suggest.reason}}</view>
+      <view class="ai-suggest-actions" wx:if="{{!suggest.applied}}">
+        <view class="ai-apply" bindtap="onApplySuggest">用 {{suggest.minYuan}} 元作起拍价</view>
+        <view class="ai-dismiss" bindtap="onDismissSuggest">忽略</view>
+      </view>
+    </view>
+
     <view class="form-item">
-      <view class="label">起拍价（元）</view>
+      <view class="label-row">
+        <text class="label">起拍价（元）</text>
+        <text class="ai-trigger" bindtap="onSuggestPrice">{{suggesting ? '估价中…' : '✨ AI 帮我定价'}}</text>
+      </view>
       <input class="input" type="digit" placeholder="如：20" value="{{startPriceYuan}}"
              bindinput="onInput" data-field="startPriceYuan" />
     </view>

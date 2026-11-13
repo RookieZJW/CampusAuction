@@ -1,0 +1,23 @@
+<view class="my-review-page">
+  <view class="tab-bar">
+    <view class="tab {{tab === 'RECEIVED' ? 'active' : ''}}" data-tab="RECEIVED" bindtap="onTabTap">收到的</view>
+    <view class="tab {{tab === 'SENT' ? 'active' : ''}}" data-tab="SENT" bindtap="onTabTap">我发出的</view>
+  </view>
+
+  <view class="card" wx:if="{{list.length > 0}}">
+    <view class="review-item" wx:for="{{list}}" wx:key="id">
+      <view class="head-row">
+        <text class="who">{{tab === 'RECEIVED' ? '来自' : '评价'}}：{{item.counterparty}}</text>
+        <text class="time">{{item.timeText}}</text>
+      </view>
+      <view class="stars">
+        <text wx:for="{{item.stars}}" wx:for-item="s" wx:key="*this"
+              class="star {{item.rating >= s ? 'star-on' : ''}}">★</text>
+      </view>
+      <view class="item-title">{{item.itemTitle}}</view>
+      <view class="content" wx:if="{{item.content}}">{{item.content}}</view>
+    </view>
+  </view>
+
+  <view wx:else class="empty">暂无{{tab === 'RECEIVED' ? '收到的' : ''}}评价</view>
+</view>

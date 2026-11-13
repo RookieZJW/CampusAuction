@@ -1,1 +1,23 @@
-<view class="empty">Under development - W2</view>
+<view class="fav-page">
+  <view class="card" wx:if="{{list.length > 0}}">
+    <view class="fav-item" wx:for="{{list}}" wx:key="auctionId"
+          bindtap="onItemTap" data-id="{{item.auctionId}}">
+      <image class="cover" src="{{item.coverImage || '/images/placeholder.png'}}" mode="aspectFill" />
+      <view class="info">
+        <view class="title">{{item.title}}</view>
+        <view class="meta">
+          <text class="tag" wx:if="{{item.categoryName}}">{{item.categoryName}}</text>
+          <text class="tag {{item.status === 'ONGOING' ? 'tag-ongoing' : ''}}">{{item.statusText}}</text>
+        </view>
+        <view class="bottom-row">
+          <view class="price">¥{{item.priceYuan}}</view>
+          <text class="remain" wx:if="{{item.status === 'ONGOING'}}">{{item.remainText}}</text>
+          <text class="bid-count" wx:else>{{item.bidCount}} 次出价</text>
+        </view>
+      </view>
+      <view class="cancel" catchtap="onCancelFavorite" data-id="{{item.auctionId}}">✕</view>
+    </view>
+  </view>
+
+  <view wx:else class="empty">还没有收藏，去拍场逛逛吧</view>
+</view>

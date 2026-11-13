@@ -26,6 +26,12 @@
             <button class="mini-btn primary" catchtap="onComplete" data-id="{{item.orderId}}">确认交割完成</button>
           </block>
         </view>
+        <!-- W5 互评：已完成订单且未评价 → 去评价 -->
+        <view class="actions" wx:if="{{item.status === 'COMPLETED' && !item.reviewed}}">
+          <button class="mini-btn primary" catchtap="onReview" data-id="{{item.orderId}}"
+                  data-title="{{item.title}}">评价对方</button>
+        </view>
+        <view class="reviewed-tip" wx:if="{{item.status === 'COMPLETED' && item.reviewed}}">已评价</view>
       </view>
     </view>
   </block>
