@@ -1,0 +1,87 @@
+.mine-page {
+  padding-bottom: 60rpx;
+}
+
+.user-card {
+  display: flex;
+  align-items: center;
+  margin-top: 20rpx;
+}
+
+.avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  background: var(--bg);
+  flex-shrink: 0;
+}
+
+.avatar-empty {
+  line-height: 120rpx;
+  text-align: center;
+  font-size: 48rpx;
+  color: var(--text-hint);
+}
+
+.user-info {
+  flex: 1;
+  margin-left: 24rpx;
+  min-width: 0;
+}
+
+.nickname {
+  font-size: 34rpx;
+  font-weight: bold;
+}
+
+.stats {
+  margin-top: 10rpx;
+  font-size: 24rpx;
+  color: var(--text-secondary);
+}
+
+.stats .divider {
+  margin: 0 16rpx;
+  color: var(--border);
+}
+
+.btn-login {
+  background: var(--primary);
+  color: #ffffff;
+  font-size: 26rpx;
+  border-radius: 36rpx;
+  height: 64rpx;
+  line-height: 64rpx;
+  padding: 0 32rpx;
+}
+
+.menu {
+  padding: 0 24rpx;
+}
+
+.menu-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100rpx;
+  border-bottom: 1rpx solid var(--border);
+}
+
+.menu-item:last-child {
+  border-bottom: none;
+}
+
+.arrow {
+  color: var(--text-hint);
+  font-size: 32rpx;
+}
+
+.logout-row {
+  padding: 0 24rpx;
+  margin-top: 40rpx;
+}
+
+.logout-btn {
+  color: var(--danger);
+  border-color: var(--danger);
+}

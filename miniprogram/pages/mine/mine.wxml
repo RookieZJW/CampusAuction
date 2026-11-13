@@ -1,0 +1,50 @@
+<view class="mine-page">
+  <!-- 用户信息区 -->
+  <view class="user-card card">
+    <block wx:if="{{userInfo}}">
+      <image class="avatar" src="{{userInfo.avatar || '/images/placeholder.png'}}" mode="aspectFill" />
+      <view class="user-info">
+        <view class="nickname">{{userInfo.nickname}}</view>
+        <view class="stats">
+          <text>余额 ¥{{balanceYuan}}</text>
+          <text class="divider">|</text>
+          <text>信用 {{userInfo.creditScore}}</text>
+        </view>
+      </view>
+    </block>
+    <block wx:else>
+      <view class="avatar avatar-empty">?</view>
+      <view class="user-info">
+        <view class="nickname">未登录</view>
+        <view class="stats">登录后参与竞拍</view>
+      </view>
+      <button class="btn-login" bindtap="onLoginTap">去登录</button>
+    </block>
+  </view>
+
+  <!-- 功能入口 -->
+  <view class="menu card">
+    <view class="menu-item" bindtap="onMenuTap" data-url="/packageUser/pages/my-items/my-items">
+      <text>我发布的</text><text class="arrow">›</text>
+    </view>
+    <view class="menu-item" bindtap="onMenuTap" data-url="/packageUser/pages/my-bids/my-bids">
+      <text>我的出价</text><text class="arrow">›</text>
+    </view>
+    <view class="menu-item" bindtap="onMenuTap" data-url="/packageUser/pages/my-orders/my-orders">
+      <text>我的订单</text><text class="arrow">›</text>
+    </view>
+    <view class="menu-item" bindtap="onMenuTap" data-url="/packageUser/pages/wallet/wallet">
+      <text>钱包流水</text><text class="arrow">›</text>
+    </view>
+    <view class="menu-item" bindtap="onMenuTap" data-url="/packageUser/pages/credit/credit">
+      <text>信用分</text><text class="arrow">›</text>
+    </view>
+    <view class="menu-item" bindtap="onMenuTap" data-url="/packageUser/pages/favorites/favorites">
+      <text>我的收藏</text><text class="arrow">›</text>
+    </view>
+  </view>
+
+  <view wx:if="{{userInfo}}" class="logout-row">
+    <button class="btn-ghost logout-btn" bindtap="onLogout">退出登录</button>
+  </view>
+</view>

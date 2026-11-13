@@ -1,0 +1,46 @@
+<view class="index-page">
+  <!-- 顶部分类快捷入口 -->
+  <view class="category-bar">
+    <view
+      class="category-item {{activeCategory === 0 ? 'active' : ''}}"
+      data-id="0"
+      bindtap="onCategoryTap">全部</view>
+    <view
+      wx:for="{{categories}}"
+      wx:key="id"
+      class="category-item {{activeCategory === item.id ? 'active' : ''}}"
+      data-id="{{item.id}}"
+      bindtap="onCategoryTap">{{item.name}}</view>
+  </view>
+
+  <!-- 拍卖列表 -->
+  <view wx:if="{{loading}}" class="empty">加载中...</view>
+  <view wx:elif="{{auctionList.length === 0}}" class="empty">
+    暂无进行中的拍卖\n去发布第一件拍品吧
+  </view>
+  <block wx:else>
+    <view
+      wx:for="{{auctionList}}"
+      wx:key="id"
+      class="card auction-card"
+      bindtap="onAuctionTap"
+      data-id="{{item.id}}">
+      <image class="auction-cover" src="{{item.coverImage}}" mode="aspectFill" />
+      <view class="auction-info">
+        <view class="auction-title">{{item.title}}</view>
+        <view class="auction-meta">
+          <text class="tag">{{item.categoryName}}</text>
+          <text class="tag">{{item.condition}}</text>
+        </view>
+        <view class="auction-price-row">
+          <text class="price">¥{{item.currentPriceYuan}}</text>
+          <text class="bid-count">{{item.bidCount}}次出价</text>
+        </view>
+        <view class="countdown {{item.urgent ? 'urgent' : ''}}">
+          距结束 {{item.countdownText}}
+        </view>
+      </view>
+    </view>
+    <view wx:if="{{noMore}}" class="empty">没有更多了</view>
+  </block>
+</view>

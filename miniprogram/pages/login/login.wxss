@@ -1,0 +1,49 @@
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 200rpx 60rpx 80rpx;
+  box-sizing: border-box;
+  background: #ffffff;
+}
+
+.logo-area {
+  text-align: center;
+}
+
+.logo-icon {
+  width: 140rpx;
+  height: 140rpx;
+  line-height: 140rpx;
+  margin: 0 auto;
+  border-radius: 36rpx;
+  background: var(--primary);
+  color: #ffffff;
+  font-size: 64rpx;
+  font-weight: bold;
+}
+
+.app-name {
+  margin-top: 32rpx;
+  font-size: 44rpx;
+  font-weight: bold;
+  color: var(--text);
+}
+
+.app-slogan {
+  margin-top: 12rpx;
+  font-size: 26rpx;
+  color: var(--text-hint);
+}
+
+.login-area {
+  padding-bottom: 60rpx;
+}
+
+.privacy-tip {
+  margin-top: 24rpx;
+  text-align: center;
+  font-size: 22rpx;
+  color: var(--text-hint);
+}

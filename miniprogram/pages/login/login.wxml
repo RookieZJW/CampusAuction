@@ -1,0 +1,16 @@
+<view class="login-page">
+  <view class="logo-area">
+    <view class="logo-icon">拍</view>
+    <view class="app-name">校园拍场</view>
+    <view class="app-slogan">闲置好物 · 价高者得 · 校园面交</view>
+  </view>
+
+  <view class="login-area">
+    <button class="btn-primary" bindtap="onWxLogin" loading="{{loading}}">
+      微信一键登录
+    </button>
+    <view class="privacy-tip">
+      登录即代表同意《用户协议》与《隐私保护指引》
+    </view>
+  </view>
+</view>

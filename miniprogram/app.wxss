@@ -1,0 +1,83 @@
+/* 全局样式：主题色与公共类（手写，无组件库） */
+
+page {
+  /* 主题变量 */
+  --primary: #185FA5;
+  --primary-light: #E6F1FB;
+  --danger: #A32D2D;
+  --danger-light: #FCEBEB;
+  --success: #3B6D11;
+  --success-light: #EAF3DE;
+  --warning: #854F0B;
+  --text: #1a1a1a;
+  --text-secondary: #666666;
+  --text-hint: #999999;
+  --bg: #f5f6f8;
+  --card-bg: #ffffff;
+  --border: #eeeeee;
+
+  background: var(--bg);
+  color: var(--text);
+  font-size: 28rpx;
+  line-height: 1.6;
+  font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+}
+
+/* 卡片 */
+.card {
+  background: var(--card-bg);
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin: 20rpx 24rpx;
+}
+
+/* 主按钮 */
+.btn-primary {
+  background: var(--primary);
+  color: #ffffff;
+  border-radius: 48rpx;
+  font-size: 30rpx;
+  height: 88rpx;
+  line-height: 88rpx;
+}
+
+.btn-primary[disabled] {
+  background: #b8c4cf;
+  color: #ffffff;
+}
+
+/* 次级按钮 */
+.btn-ghost {
+  border: 2rpx solid var(--primary);
+  color: var(--primary);
+  border-radius: 48rpx;
+  font-size: 30rpx;
+  height: 88rpx;
+  line-height: 88rpx;
+  background: transparent;
+}
+
+/* 价格 */
+.price {
+  color: var(--danger);
+  font-weight: bold;
+}
+
+/* 标签胶囊 */
+.tag {
+  display: inline-block;
+  padding: 4rpx 20rpx;
+  border-radius: 24rpx;
+  font-size: 22rpx;
+  background: var(--primary-light);
+  color: var(--primary);
+  margin-right: 12rpx;
+}
+
+/* 空态 */
+.empty {
+  text-align: center;
+  color: var(--text-hint);
+  padding: 120rpx 0;
+  font-size: 26rpx;
+}

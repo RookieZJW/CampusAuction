@@ -1,0 +1,83 @@
+.index-page {
+  padding-bottom: 40rpx;
+}
+
+/* 分类横滑条 */
+.category-bar {
+  display: flex;
+  white-space: nowrap;
+  background: #ffffff;
+  padding: 16rpx 16rpx 8rpx;
+}
+
+.category-item {
+  display: inline-block;
+  padding: 8rpx 28rpx;
+  margin-right: 8rpx;
+  border-radius: 28rpx;
+  font-size: 26rpx;
+  color: var(--text-secondary);
+  background: var(--bg);
+}
+
+.category-item.active {
+  color: #ffffff;
+  background: var(--primary);
+}
+
+/* 拍卖卡片 */
+.auction-card {
+  display: flex;
+}
+
+.auction-cover {
+  width: 200rpx;
+  height: 200rpx;
+  border-radius: 12rpx;
+  background: var(--bg);
+  flex-shrink: 0;
+}
+
+.auction-info {
+  flex: 1;
+  margin-left: 20rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 0;
+}
+
+.auction-title {
+  font-size: 30rpx;
+  font-weight: bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.auction-price-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.auction-price-row .price {
+  font-size: 34rpx;
+}
+
+.bid-count {
+  font-size: 22rpx;
+  color: var(--text-hint);
+}
+
+.countdown {
+  font-size: 24rpx;
+  color: var(--warning);
+}
+
+.countdown.urgent {
+  color: var(--danger);
+  font-weight: bold;
+}

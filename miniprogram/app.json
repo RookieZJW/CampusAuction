@@ -1,0 +1,66 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/detail/detail",
+    "pages/publish/publish",
+    "pages/mine/mine",
+    "pages/login/login"
+  ],
+  "subpackages": [
+    {
+      "root": "packageUser",
+      "name": "packageUser",
+      "pages": [
+        "pages/my-items/my-items",
+        "pages/my-bids/my-bids",
+        "pages/my-orders/my-orders",
+        "pages/wallet/wallet",
+        "pages/credit/credit",
+        "pages/favorites/favorites"
+      ]
+    },
+    {
+      "root": "packageAdmin",
+      "name": "packageAdmin",
+      "pages": [
+        "pages/audit/audit",
+        "pages/audit-detail/audit-detail"
+      ]
+    }
+  ],
+  "preloadRule": {
+    "pages/mine/mine": {
+      "network": "all",
+      "packages": ["packageUser"]
+    }
+  },
+  "tabBar": {
+    "color": "#8a8a8a",
+    "selectedColor": "#185FA5",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "拍场"
+      },
+      {
+        "pagePath": "pages/publish/publish",
+        "text": "发布"
+      },
+      {
+        "pagePath": "pages/mine/mine",
+        "text": "我的"
+      }
+    ]
+  },
+  "window": {
+    "navigationBarBackgroundColor": "#185FA5",
+    "navigationBarTitleText": "校园拍场",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#f5f6f8"
+  },
+  "lazyCodeLoading": "requiredComponents",
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}
