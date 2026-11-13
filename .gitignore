@@ -1,0 +1,41 @@
+# ---- Java / Maven ----
+target/
+*.class
+*.jar
+!.mvn/wrapper/maven-wrapper.jar
+.mvn/
+
+# ---- IDE ----
+.idea/
+*.iml
+.vscode/
+*.ipr
+*.iws
+
+# ---- Node ----
+node_modules/
+dist/
+.pnpm-store/
+
+# ---- 微信开发者工具私有配置 ----
+miniprogram/project.private.config.json
+
+# ---- 本机私密配置（含数据库密码 / 微信密钥）----
+server/src/main/resources/application-local.yml
+*.local.yml
+*.local.yaml
+.env
+.env.*
+
+# ---- 日志 ----
+logs/
+*.log
+
+# ---- 操作系统 ----
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---- 构建产物 ----
+sql/*.dump
+dump.rdb
