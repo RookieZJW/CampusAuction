@@ -1,1 +1,21 @@
-<view class="empty">Under development - W2</view>
+<view class="credit-page">
+  <view class="score-card {{level}}">
+    <view class="score">{{creditScore}}</view>
+    <view class="level">{{levelText}}</view>
+    <view class="rule-tip" wx:if="{{creditScore < 60}}">信用分低于 60，暂时无法出价与发布</view>
+  </view>
+
+  <view class="card">
+    <view class="section-title">信用分明细</view>
+    <view wx:if="{{logs.length === 0}}" class="empty" style="padding: 40rpx 0;">暂无记录</view>
+    <view class="log-item" wx:for="{{logs}}" wx:key="id">
+      <view class="log-left">
+        <view class="log-reason">{{item.reason}}</view>
+        <view class="log-time">{{item.timeText}}</view>
+      </view>
+      <view class="log-change {{item.changeValue >= 0 ? 'plus' : 'minus'}}">
+        {{item.changeValue >= 0 ? '+' : ''}}{{item.changeValue}}
+      </view>
+    </view>
+  </view>
+</view>

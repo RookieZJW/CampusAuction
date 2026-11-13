@@ -1,17 +1,32 @@
 // 我的：登录态展示 + 个人中心入口
 const app = getApp()
+const { request } = require('../../utils/request')
 
 Page({
   data: {
     userInfo: null,
-    balanceYuan: '0.00'
+    balanceYuan: '0.00',
+    unread: 0
   },
 
   onShow() {
     const userInfo = app.globalData.userInfo
     this.setData({
       userInfo,
-      balanceYuan: userInfo ? (userInfo.balance / 100).toFixed(2) : '0.00'
+      balanceYuan: userInfo ? (userInfo.balance / 100).toFixed(2) : '0.00',
+      unread: 0
+    })
+    if (userInfo) {
+      this.loadUnread()
+    }
+  },
+
+  loadUnread() {
+    request({
+      url: '/api/v1/notifications',
+      method: 'GET'
+    }).then((data) => {
+      this.setData({ unread: data.unread || 0 })
     })
   },
 

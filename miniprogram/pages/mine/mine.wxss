@@ -76,6 +76,17 @@
   font-size: 32rpx;
 }
 
+.menu-right {
+  display: flex;
+  align-items: center;
+}
+
+.unread-tip {
+  color: var(--danger);
+  font-size: 24rpx;
+  margin-right: 12rpx;
+}
+
 .logout-row {
   padding: 0 24rpx;
   margin-top: 40rpx;

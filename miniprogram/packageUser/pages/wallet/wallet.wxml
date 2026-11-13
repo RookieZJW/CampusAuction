@@ -1,1 +1,22 @@
-<view class="empty">Under development - W2</view>
+<view class="wallet-page">
+  <view class="balance-card">
+    <view class="balance-label">虚拟余额</view>
+    <view class="balance">¥{{balanceYuan}}</view>
+    <view class="balance-tip">注册赠送 · 仅用于保证金冻结 · 不涉及真实资金</view>
+  </view>
+
+  <view class="card">
+    <view class="section-title">流水明细</view>
+    <view wx:if="{{logs.length === 0}}" class="empty" style="padding: 40rpx 0;">暂无流水</view>
+    <view class="log-item" wx:for="{{logs}}" wx:key="id">
+      <view class="log-left">
+        <view class="log-type">{{item.typeText}}</view>
+        <view class="log-remark">{{item.remark}}</view>
+        <view class="log-time">{{item.timeText}}</view>
+      </view>
+      <view class="log-amount {{item.amount >= 0 ? 'plus' : 'minus'}}">
+        {{item.amount >= 0 ? '+' : ''}}{{item.amountYuan}}
+      </view>
+    </view>
+  </view>
+</view>

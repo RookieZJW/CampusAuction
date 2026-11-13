@@ -1,0 +1,25 @@
+<view class="notify-page">
+  <view class="card head-card">
+    <view class="head-row">
+      <view class="head-title">未读消息 <text class="unread-badge" wx:if="{{unread > 0}}">{{unread}}</text></view>
+      <view class="read-all" bindtap="onReadAllTap">全部已读</view>
+    </view>
+  </view>
+
+  <view class="card" wx:if="{{list.length > 0}}">
+    <view class="notify-item {{item.isRead ? 'read' : ''}}" wx:for="{{list}}" wx:key="id"
+          bindtap="onItemTap" data-id="{{item.id}}">
+      <view class="dot {{item.isRead ? 'dot-read' : 'dot-unread'}}"></view>
+      <view class="notify-body">
+        <view class="notify-title-row">
+          <text class="notify-title">{{item.title}}</text>
+          <text class="notify-type tag">{{item.typeText}}</text>
+        </view>
+        <view class="notify-content">{{item.content}}</view>
+        <view class="notify-time">{{item.timeText}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view wx:else class="empty">暂无消息</view>
+</view>

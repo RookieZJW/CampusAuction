@@ -1,1 +1,70 @@
-/* stub */
+.balance-card {
+  margin: 20rpx 24rpx;
+  padding: 48rpx 32rpx;
+  border-radius: 16rpx;
+  background: var(--primary);
+  color: #ffffff;
+}
+
+.balance-label {
+  font-size: 24rpx;
+  opacity: 0.8;
+}
+
+.balance {
+  font-size: 64rpx;
+  font-weight: bold;
+  margin: 12rpx 0;
+}
+
+.balance-tip {
+  font-size: 20rpx;
+  opacity: 0.7;
+}
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: bold;
+  margin-bottom: 12rpx;
+}
+
+.log-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid var(--border);
+}
+
+.log-item:last-child {
+  border-bottom: none;
+}
+
+.log-type {
+  font-size: 28rpx;
+  font-weight: bold;
+}
+
+.log-remark {
+  font-size: 22rpx;
+  color: var(--text-secondary);
+}
+
+.log-time {
+  font-size: 20rpx;
+  color: var(--text-hint);
+  margin-top: 4rpx;
+}
+
+.log-amount {
+  font-size: 32rpx;
+  font-weight: bold;
+}
+
+.log-amount.plus {
+  color: var(--success);
+}
+
+.log-amount.minus {
+  color: var(--danger);
+}

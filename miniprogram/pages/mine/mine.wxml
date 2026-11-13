@@ -39,6 +39,13 @@
     <view class="menu-item" bindtap="onMenuTap" data-url="/packageUser/pages/credit/credit">
       <text>信用分</text><text class="arrow">›</text>
     </view>
+    <view class="menu-item" bindtap="onMenuTap" data-url="/packageUser/pages/notifications/notifications">
+      <text>消息中心</text>
+      <view class="menu-right">
+        <text class="unread-tip" wx:if="{{unread > 0}}">{{unread}} 条未读</text>
+        <text class="arrow">›</text>
+      </view>
+    </view>
     <view class="menu-item" bindtap="onMenuTap" data-url="/packageUser/pages/favorites/favorites">
       <text>我的收藏</text><text class="arrow">›</text>
     </view>

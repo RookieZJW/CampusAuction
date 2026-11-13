@@ -1,1 +1,32 @@
-<view class="empty">Under development - W2</view>
+<view class="orders-page">
+  <!-- 角色切换 -->
+  <view class="tab-bar">
+    <view class="tab {{tab === 'BUYER' ? 'active' : ''}}" data-tab="BUYER" bindtap="onTabTap">我买到的</view>
+    <view class="tab {{tab === 'SELLER' ? 'active' : ''}}" data-tab="SELLER" bindtap="onTabTap">我卖出的</view>
+  </view>
+
+  <view wx:if="{{loading}}" class="empty">加载中...</view>
+  <view wx:elif="{{filteredList.length === 0}}" class="empty">暂无订单</view>
+  <block wx:else>
+    <view class="card order-card" wx:for="{{filteredList}}" wx:key="orderId">
+      <image class="cover" src="{{item.coverImage || '/images/placeholder.png'}}" mode="aspectFill" />
+      <view class="info">
+        <view class="title">{{item.title}}</view>
+        <view class="meta">订单号 {{item.orderNo}}</view>
+        <view class="meta">{{item.role === 'BUYER' ? '卖家' : '买家'}}：{{item.counterparty}}</view>
+        <view wx:if="{{item.tradePlace}}" class="meta">交割地点：{{item.tradePlace}}</view>
+        <view class="price-row">
+          <text class="price">¥{{item.dealPriceYuan}}</text>
+          <text class="status-tag {{item.status}}">{{item.statusText}}</text>
+        </view>
+        <!-- 买方待交割：可确认完成 / 设置地点 -->
+        <view class="actions" wx:if="{{item.status === 'PENDING_TRADING'}}">
+          <button class="mini-btn ghost" catchtap="onSetPlace" data-id="{{item.orderId}}">约定地点</button>
+          <block wx:if="{{tab === 'BUYER'}}">
+            <button class="mini-btn primary" catchtap="onComplete" data-id="{{item.orderId}}">确认交割完成</button>
+          </block>
+        </view>
+      </view>
+    </view>
+  </block>
+</view>
