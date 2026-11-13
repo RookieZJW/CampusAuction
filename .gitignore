@@ -46,3 +46,6 @@ server/uploads/
 
 # ---- 浏览器自动化临时产物 ----
 .playwright-cli/
+
+# ---- 运行日志 ----
+server/server-run.log
