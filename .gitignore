@@ -19,6 +19,7 @@ dist/
 
 # ---- 微信开发者工具私有配置 ----
 miniprogram/project.private.config.json
+miniprogram/project.config.json
 
 # ---- 本机私密配置（含数据库密码 / 微信密钥）----
 server/src/main/resources/application-local.yml
