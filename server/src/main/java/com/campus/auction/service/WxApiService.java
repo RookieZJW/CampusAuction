@@ -35,7 +35,8 @@ public class WxApiService {
     private boolean mock;
 
     /**
-     * 用 wx.login 的 code 换 openid
+     * 用 wx.login 的 code 换 openid。
+     * 网络/解析异常统一转 3008，前端提示「微信登录失败」而非「系统繁忙」，便于排查。
      */
     public String code2Openid(String code) {
         if (mock) {
@@ -44,8 +45,14 @@ public class WxApiService {
             return "mock-openid-" + Integer.toHexString(code.hashCode());
         }
 
-        WxSession session = restTemplate.getForObject(JS_CODE_2_SESSION_URL, WxSession.class,
-                appid, secret, code);
+        WxSession session;
+        try {
+            session = restTemplate.getForObject(JS_CODE_2_SESSION_URL, WxSession.class,
+                    appid, secret, code);
+        } catch (org.springframework.web.client.RestClientException e) {
+            log.error("code2session 网络异常：{}", e.getMessage());
+            throw new BusinessException(ResultCode.WX_LOGIN_FAILED);
+        }
         if (session == null || session.getErrcode() == null || session.getErrcode() != 0
                 || session.getOpenid() == null) {
             log.error("code2session 失败：{}", session);

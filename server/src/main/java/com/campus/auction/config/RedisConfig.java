@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -41,9 +42,22 @@ public class RedisConfig {
         return template;
     }
 
-    /** 调微信 code2session 接口用的 RestTemplate */
+    /**
+     * 调微信 code2session 接口用的 RestTemplate。
+     * 微信 API 返回 JSON 但 Content-Type 是 text/plain，
+     * 需给 Jackson 转换器追加 text/plain 支持，否则 UnknownContentTypeException。
+     */
     @Bean
     public RestTemplate restTemplate() {
-        return new RestTemplate();
+        RestTemplate restTemplate = new RestTemplate();
+        MappingJackson2HttpMessageConverter jsonConverter =
+                new MappingJackson2HttpMessageConverter();
+        jsonConverter.setSupportedMediaTypes(java.util.List.of(
+                org.springframework.http.MediaType.APPLICATION_JSON,
+                org.springframework.http.MediaType.TEXT_PLAIN,
+                org.springframework.http.MediaType.APPLICATION_OCTET_STREAM));
+        // 放到队首，优先于默认的 Jackson 转换器生效
+        restTemplate.getMessageConverters().add(0, jsonConverter);
+        return restTemplate;
     }
 }
