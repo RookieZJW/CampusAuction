@@ -23,7 +23,7 @@
       "outputPath": ""
     }
   },
-  "libVersion": "latest",
+  "libVersion": "3.17.2",
   "appid": "wx4aa1de34c361be17",
   "condition": {}
 }
