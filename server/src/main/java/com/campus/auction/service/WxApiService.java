@@ -53,11 +53,24 @@ public class WxApiService {
             log.error("code2session 网络异常：{}", e.getMessage());
             throw new BusinessException(ResultCode.WX_LOGIN_FAILED);
         }
-        if (session == null || session.getErrcode() == null || session.getErrcode() != 0
-                || session.getOpenid() == null) {
+        // 微信成功响应没有 errcode 字段，只有 openid/session_key；
+        // 失败响应才有 errcode。故以 openid 是否存在作为主判据，避免把成功当成失败。
+        boolean success = session != null
+                && session.getOpenid() != null && !session.getOpenid().isBlank()
+                && (session.getErrcode() == null || session.getErrcode() == 0);
+        if (!success) {
             log.error("code2session 失败：{}", session);
             throw new BusinessException(ResultCode.WX_LOGIN_FAILED);
         }
+        log.info("code2session 成功：openid={}", maskOpenid(session.getOpenid()));
         return session.getOpenid();
+    }
+
+    /** 日志脱敏：只保留首尾各 4 位，避免 openid 明文落盘 */
+    private String maskOpenid(String openid) {
+        if (openid.length() <= 8) {
+            return "****";
+        }
+        return openid.substring(0, 4) + "****" + openid.substring(openid.length() - 4);
     }
 }
