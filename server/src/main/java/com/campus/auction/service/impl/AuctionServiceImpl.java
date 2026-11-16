@@ -39,19 +39,35 @@ public class AuctionServiceImpl implements AuctionService {
 
     @Override
     public Map<String, Object> pageList(int page, int size, Long categoryId) {
-        // 1. 先按拍卖表分页查 ONGOING（即将结束的排前面，制造紧迫感）
+        // 1. 分类过滤：类别字段在 t_item.category_id 上，t_auction 没有该列。
+        //    先查出该类目下的 itemId，再作为拍卖分页的 in 条件，
+        //    这样 total 也是筛选后的数量，分页不会错。
+        LambdaQueryWrapper<Auction> wrapper = new LambdaQueryWrapper<Auction>()
+                .eq(Auction::getStatus, Auction.STATUS_ONGOING)
+                .orderByAsc(Auction::getEndTime);
+
+        if (categoryId != null) {
+            List<Long> itemIds = itemMapper.selectList(
+                            new LambdaQueryWrapper<Item>()
+                                    .select(Item::getId)
+                                    .eq(Item::getCategoryId, categoryId))
+                    .stream().map(Item::getId).toList();
+            if (itemIds.isEmpty()) {
+                return Map.of("list", List.of(), "total", 0L);
+            }
+            wrapper.in(Auction::getItemId, itemIds);
+        }
+
+        // 2. 按拍卖表分页查 ONGOING（即将结束的排前面，制造紧迫感）
         Page<Auction> auctionPage = auctionMapper.selectPage(
-                new Page<>(page, Math.min(size, 20)),
-                new LambdaQueryWrapper<Auction>()
-                        .eq(Auction::getStatus, Auction.STATUS_ONGOING)
-                        .orderByAsc(Auction::getEndTime));
+                new Page<>(page, Math.min(size, 20)), wrapper);
 
         List<Auction> auctions = auctionPage.getRecords();
         if (auctions.isEmpty()) {
             return Map.of("list", List.of(), "total", auctionPage.getTotal());
         }
 
-        // 2. 批量补拍品与分类信息（避免 N+1 查询，论文可作性能优化点）
+        // 3. 批量补拍品与分类信息（避免 N+1 查询，论文可作性能优化点）
         List<Long> itemIds = auctions.stream().map(Auction::getItemId).toList();
         Map<Long, Item> itemMap = itemMapper.selectBatchIds(itemIds).stream()
                 .collect(Collectors.toMap(Item::getId, Function.identity()));
