@@ -81,4 +81,13 @@
   text-align: center;
   font-size: var(--fs-caption);
   color: var(--text-hint);
+  line-height: 1.8;
+}
+
+.privacy-link {
+  display: inline-block;
+  margin-top: 6rpx;
+  color: var(--primary);
+  border-bottom: 1rpx solid var(--primary-soft);
+  padding-bottom: 2rpx;
 }

@@ -7,6 +7,17 @@ Page({
     loading: false
   },
 
+  /** 打开小程序管理后台配置的《用户隐私保护指引》（微信官方页面） */
+  onOpenPrivacyContract() {
+    if (!wx.openPrivacyContract) {
+      wx.showToast({ title: '当前微信版本不支持，请升级微信', icon: 'none' })
+      return
+    }
+    wx.openPrivacyContract({
+      fail: () => wx.showToast({ title: '请先在小程序后台配置隐私指引', icon: 'none' })
+    })
+  },
+
   onWxLogin() {
     if (this.data.loading) {
       return

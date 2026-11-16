@@ -19,7 +19,8 @@
         "pages/notifications/notifications",
         "pages/my-reviews/my-reviews",
         "pages/review/review",
-        "pages/favorites/favorites"
+        "pages/favorites/favorites",
+        "pages/profile/profile"
       ]
     },
     {
@@ -72,5 +73,6 @@
   },
   "lazyCodeLoading": "requiredComponents",
   "style": "v2",
+  "__usePrivacyCheck__": true,
   "sitemapLocation": "sitemap.json"
 }

@@ -30,6 +30,9 @@
 
   <!-- 功能入口 -->
   <view class="menu card">
+    <view class="menu-item" bindtap="onMenuTap" data-url="/packageUser/pages/profile/profile">
+      <text>完善资料</text><text class="arrow">›</text>
+    </view>
     <view class="menu-item" bindtap="onMenuTap" data-url="/packageUser/pages/my-items/my-items">
       <text>我发布的</text><text class="arrow">›</text>
     </view>

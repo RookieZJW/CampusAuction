@@ -11,7 +11,8 @@
       微信一键登录
     </button>
     <view class="privacy-tip">
-      登录即代表同意《用户协议》与《隐私保护指引》
+      <view>登录只用于识别身份，不会获取头像、昵称和手机号</view>
+      <text class="privacy-link" bindtap="onOpenPrivacyContract">查看《用户隐私保护指引》</text>
     </view>
   </view>
 </view>

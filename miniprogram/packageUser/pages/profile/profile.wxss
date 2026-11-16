@@ -1,0 +1,260 @@
+.profile-page {
+  padding-bottom: 160rpx;
+}
+
+/* 顶部说明：明确选填，不制造强制授权感 */
+.notice {
+  background: var(--primary-light);
+  border-color: var(--primary-soft);
+}
+
+.notice-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  letter-spacing: 1rpx;
+  color: var(--primary-deep);
+}
+
+.notice-text {
+  margin-top: 8rpx;
+  font-size: var(--fs-meta);
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+
+.section-label {
+  display: flex;
+  align-items: baseline;
+  font-size: 26rpx;
+  font-weight: 600;
+  letter-spacing: 1rpx;
+  color: var(--text);
+  margin-bottom: 18rpx;
+}
+
+.section-label::before {
+  content: '';
+  display: inline-block;
+  width: 6rpx;
+  height: 24rpx;
+  background: var(--brick);
+  border-radius: 2rpx;
+  margin-right: 12rpx;
+}
+
+.section-label .optional {
+  font-size: var(--fs-label);
+  font-weight: 400;
+  letter-spacing: 1rpx;
+  color: var(--text-hint);
+  margin-left: 10rpx;
+}
+
+.field-hint {
+  margin-top: 12rpx;
+  font-size: var(--fs-label);
+  color: var(--text-hint);
+  line-height: 1.6;
+}
+
+.declined-tip {
+  background: var(--warning-light);
+  border-color: var(--warning-light);
+  border-left: 6rpx solid var(--kraft);
+}
+
+.declined-text {
+  font-size: var(--fs-caption);
+  color: var(--warning);
+  line-height: 1.7;
+}
+
+.reagree-btn {
+  margin-top: 16rpx;
+  background: transparent;
+  color: var(--warning);
+  border: 1rpx solid var(--kraft);
+  border-radius: 6rpx;
+  font-size: var(--fs-caption);
+  height: 64rpx;
+  line-height: 64rpx;
+}
+
+.reagree-btn::after {
+  border: none;
+}
+
+/* ---- 头像：button 包 image，清掉微信 button 默认描边 ---- */
+.avatar-btn {
+  display: flex;
+  align-items: center;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  line-height: normal;
+  border-radius: 0;
+}
+
+.avatar-btn::after {
+  border: none;
+}
+
+.avatar-img {
+  width: 128rpx;
+  height: 128rpx;
+  border-radius: 50%;
+  border: 2rpx solid var(--border);
+  background: var(--bg-deep);
+  flex-shrink: 0;
+}
+
+.avatar-hint {
+  margin-left: 24rpx;
+  font-size: var(--fs-meta);
+  color: var(--primary);
+  border-bottom: 1rpx solid var(--primary-soft);
+  padding-bottom: 2rpx;
+}
+
+/* ---- 昵称 ---- */
+.nickname-input {
+  background: var(--bg-deep);
+  border: 1rpx solid var(--border);
+  border-radius: 6rpx;
+  padding: 18rpx 20rpx;
+  font-size: var(--fs-body);
+  color: var(--text);
+}
+
+/* ---- 手机号 ---- */
+.phone-btn {
+  background: var(--card-bg);
+  border: 1rpx solid var(--primary);
+  color: var(--primary);
+  border-radius: 8rpx;
+  font-size: 26rpx;
+  letter-spacing: 1rpx;
+  height: 76rpx;
+  line-height: 76rpx;
+}
+
+.phone-btn::after {
+  border: none;
+}
+
+.phone-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.phone-num {
+  font-family: var(--font-num);
+  font-variant-numeric: tabular-nums;
+  font-size: 34rpx;
+  letter-spacing: 2rpx;
+  color: var(--text);
+}
+
+.phone-tag {
+  font-size: var(--fs-label);
+  color: var(--success);
+  background: var(--success-light);
+  border-radius: 4rpx;
+  padding: 4rpx 12rpx;
+}
+
+/* ---- 底部保存条 ---- */
+.submit-area {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 18rpx 40rpx calc(18rpx + env(safe-area-inset-bottom));
+  background: var(--card-bg);
+  border-top: 1rpx solid var(--border);
+  box-shadow: 0 -4rpx 18rpx rgba(39, 51, 62, 0.05);
+}
+
+/* ---- 隐私授权弹窗 ---- */
+.privacy-mask {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(27, 54, 84, 0.44);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.privacy-panel {
+  width: 600rpx;
+  background: var(--card-bg);
+  border: 1rpx solid var(--border);
+  border-radius: 12rpx;
+  padding: 36rpx 32rpx 28rpx;
+  box-shadow: 0 12rpx 32rpx rgba(27, 54, 84, 0.16);
+}
+
+.privacy-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  letter-spacing: 1rpx;
+  color: var(--primary-deep);
+}
+
+.privacy-text {
+  margin-top: 16rpx;
+  font-size: var(--fs-meta);
+  color: var(--text-secondary);
+  line-height: 1.75;
+}
+
+.privacy-link {
+  background: transparent;
+  color: var(--primary);
+  font-size: var(--fs-caption);
+  text-align: left;
+  padding: 0;
+  margin-top: 16rpx;
+  line-height: 1.6;
+}
+
+.privacy-link::after {
+  border: none;
+}
+
+.privacy-actions {
+  display: flex;
+  gap: 16rpx;
+  margin-top: 28rpx;
+}
+
+.privacy-disagree,
+.privacy-agree {
+  flex: 1;
+  height: 76rpx;
+  line-height: 76rpx;
+  font-size: 26rpx;
+  border-radius: 8rpx;
+  margin: 0;
+}
+
+.privacy-disagree {
+  background: var(--bg-deep);
+  color: var(--text-secondary);
+  border: 1rpx solid var(--border);
+}
+
+.privacy-agree {
+  background: var(--primary);
+  color: #FFFFFF;
+}
+
+.privacy-disagree::after,
+.privacy-agree::after {
+  border: none;
+}
