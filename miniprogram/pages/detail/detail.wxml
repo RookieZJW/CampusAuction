@@ -27,7 +27,7 @@
       <text class="tag">{{detail.categoryName}}</text>
       <text class="tag">{{detail.condition}}</text>
       <view class="countdown {{urgent ? 'urgent' : ''}}">
-        {{detail.status === 'ONGOING' ? ('距结束 ' + countdownText) : statusText}}
+        {{detail.status === 'ONGOING' ? countdownLabel : statusText}}
       </view>
     </view>
     <view wx:if="{{extendedTip}}" class="extend-tip">本场拍卖已被出价延长 2 分钟（防狙击）</view>

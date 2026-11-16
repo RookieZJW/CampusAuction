@@ -20,7 +20,8 @@ import com.campus.auction.mapper.OrderMapper;
 import com.campus.auction.mapper.UserMapper;
 import com.campus.auction.service.OrderService;
 import com.campus.auction.util.JsonUtil;
-import com.campus.auction.vo.OrderVO;
+import com.campus.auction.vo.OrderVO;import com.campus.auction.util.TimeUtil;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -87,7 +88,7 @@ public class OrderServiceImpl implements OrderService {
                     .tradePlace(o.getTradePlace())
                     .counterparty(nicknameMap.getOrDefault(
                             isBuyer ? o.getSellerId() : o.getBuyerId(), "微信用户"))
-                    .createTime(o.getCreateTime() == null ? null : o.getCreateTime().toString())
+                    .createTime(TimeUtil.str(o.getCreateTime()))
                     .build();
         }).toList();
     }

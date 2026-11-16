@@ -11,7 +11,8 @@ import com.campus.auction.mapper.CategoryMapper;
 import com.campus.auction.mapper.ItemMapper;
 import com.campus.auction.service.ItemService;
 import com.campus.auction.util.JsonUtil;
-import com.campus.auction.vo.MyItemVO;
+import com.campus.auction.vo.MyItemVO;import com.campus.auction.util.TimeUtil;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -107,7 +108,7 @@ public class ItemServiceImpl implements ItemService {
                     .currentPrice(auction != null ? auction.getCurrentPrice() : null)
                     .bidCount(auction != null ? auction.getBidCount() : 0)
                     .endTime(auction != null && auction.getEndTime() != null
-                            ? auction.getEndTime().toString() : null)
+                            ? TimeUtil.str(auction.getEndTime()) : null)
                     .build();
         }).toList();
     }

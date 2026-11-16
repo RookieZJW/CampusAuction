@@ -1,6 +1,7 @@
 // 拍卖详情：图集 + 价格 + 倒计时 + 出价面板 + 3 秒实时轮询
 // 轮询用轻量接口 /auctions/{id}/live，只取 4 个字段做局部 setData（避免整对象刷新卡顿）
 const { request } = require('../../utils/request')
+const { parseServerTime, formatServerTime } = require('../../utils/time')
 const app = getApp()
 
 const STATUS_TEXT = {
@@ -21,6 +22,7 @@ Page({
     incrementYuan: '0.00',
     minNextYuan: '0.00',
     countdownText: '',
+    countdownLabel: '',
     urgent: false,
     statusText: '',
     collected: false,
@@ -120,7 +122,7 @@ Page({
       const records = (detail.bidRecords || []).map(r => ({
         ...r,
         priceYuan: fen2yuan(r.price),
-        bidTimeText: (r.bidTime || '').replace('T', ' ').slice(5, 16)
+        bidTimeText: formatServerTime(r.bidTime, 16).slice(5)
       }))
       this.setData({
         detail: { ...detail, bidRecords: records },
@@ -179,17 +181,28 @@ Page({
     if (this._timer) {
       clearInterval(this._timer)
     }
-    this._timer = setInterval(() => {
-      const detail = this.data.detail
-      if (!detail || !detail.endTime || detail.status !== 'ONGOING') {
-        return
-      }
-      const remain = new Date(detail.endTime.replace(/-/g, '/')).getTime() - Date.now()
-      this.setData({
-        urgent: remain <= 5 * 60 * 1000,
-        countdownText: remain > 0 ? this.formatRemain(remain) : '已结束'
-      })
-    }, 1000)
+    // 先立即算一次，避免首屏出现 1 秒空白
+    this.updateCountdown()
+    this._timer = setInterval(() => this.updateCountdown(), 1000)
+  },
+
+  updateCountdown() {
+    const detail = this.data.detail
+    if (!detail || !detail.endTime || detail.status !== 'ONGOING') {
+      return
+    }
+    const remain = parseServerTime(detail.endTime) - Date.now()
+    const valid = Number.isFinite(remain)
+    const text = valid ? (remain > 0 ? this.formatRemain(remain) : '已结束') : '--'
+    this.setData({
+      urgent: valid && remain > 0 && remain <= 5 * 60 * 1000,
+      countdownText: text,
+      // 时间到但结算任务（30 秒一轮）尚未跑完时显示「等待结算」，
+      // 避免出现「距结束 已结束」这种自相矛盾的文案
+      countdownLabel: valid
+        ? (remain > 0 ? '距结束 ' + text : '等待结算')
+        : '倒计时读取中'
+    })
   },
 
   formatRemain(ms) {

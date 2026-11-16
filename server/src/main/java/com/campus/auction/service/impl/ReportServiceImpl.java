@@ -18,7 +18,8 @@ import com.campus.auction.mapper.NotificationMapper;
 import com.campus.auction.mapper.ReportMapper;
 import com.campus.auction.mapper.UserMapper;
 import com.campus.auction.service.ReportService;
-import com.campus.auction.vo.ReportVO;
+import com.campus.auction.vo.ReportVO;import com.campus.auction.util.TimeUtil;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -192,7 +193,7 @@ public class ReportServiceImpl implements ReportService {
                 .targetUser(targetUser == null ? "已注销" : safeNickname(targetUser))
                 .itemTitle(item == null ? null : item.getTitle())
                 .handleResult(r.getHandleResult())
-                .createTime(r.getCreateTime() == null ? null : r.getCreateTime().toString())
+                .createTime(TimeUtil.str(r.getCreateTime()))
                 .build();
     }
 

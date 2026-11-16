@@ -1,6 +1,7 @@
 // 拍卖大厅：列表 + 分类筛选 + 倒计时
 // W2 后端就绪后接口为 GET /api/v1/auctions?page=&size=&categoryId=
 const { request } = require('../../utils/request')
+const { parseServerTime } = require('../../utils/time')
 
 Page({
   data: {
@@ -98,12 +99,13 @@ Page({
     this._timer = setInterval(() => {
       const now = Date.now()
       const list = this.data.auctionList.map((item) => {
-        const remain = new Date(item.endTime.replace(/-/g, '/')).getTime() - now
-        const urgent = remain <= 5 * 60 * 1000
+        const remain = parseServerTime(item.endTime) - now
+        const valid = Number.isFinite(remain)
         return {
           ...item,
-          urgent,
-          countdownText: remain > 0 ? this.formatRemain(remain) : '已结束'
+          urgent: valid && remain > 0 && remain <= 5 * 60 * 1000,
+          // 解析失败时给占位符，不再误报「已结束」
+          countdownText: valid ? (remain > 0 ? this.formatRemain(remain) : '已结束') : '--'
         }
       })
       this.setData({ auctionList: list })

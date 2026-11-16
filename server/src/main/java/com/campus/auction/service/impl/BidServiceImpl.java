@@ -18,7 +18,8 @@ import com.campus.auction.service.AuctionCacheService;
 import com.campus.auction.service.BidService;
 import com.campus.auction.util.JsonUtil;
 import com.campus.auction.vo.BidVO;
-import com.campus.auction.vo.MyBidVO;
+import com.campus.auction.vo.MyBidVO;import com.campus.auction.util.TimeUtil;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -120,7 +121,7 @@ public class BidServiceImpl implements BidService {
                 return BidVO.builder()
                         .currentPrice(latest.getCurrentPrice())
                         .bidCount(latest.getBidCount())
-                        .endTime(latest.getEndTime().toString())
+                        .endTime(TimeUtil.str(latest.getEndTime()))
                         .minNext(latest.getCurrentPrice() + latest.getIncrement())
                         .isLeading(true)
                         .extended(result.extended)
@@ -288,7 +289,7 @@ public class BidServiceImpl implements BidService {
                             .myStatus(r.getStatus())
                             .currentPrice(a.getCurrentPrice())
                             .bidCount(a.getBidCount())
-                            .endTime(a.getEndTime() == null ? null : a.getEndTime().toString())
+                            .endTime(TimeUtil.str(a.getEndTime()))
                             .auctionStatus(a.getStatus())
                             .build();
                 }).toList();

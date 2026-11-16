@@ -17,7 +17,8 @@ import com.campus.auction.mapper.UserMapper;
 import com.campus.auction.service.AdminService;
 import com.campus.auction.util.JwtUtil;
 import com.campus.auction.util.JsonUtil;
-import com.campus.auction.vo.AuditItemVO;
+import com.campus.auction.vo.AuditItemVO;import com.campus.auction.util.TimeUtil;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -101,7 +102,7 @@ public class AdminServiceImpl implements AdminService {
                     .deposit(a != null ? a.getDeposit() : null)
                     .durationHours(a != null && a.getDurationMinutes() != null
                             ? a.getDurationMinutes() / 60 : null)
-                    .submitTime(item.getCreateTime() == null ? null : item.getCreateTime().toString())
+                    .submitTime(TimeUtil.str(item.getCreateTime()))
                     .build();
         }).toList();
     }

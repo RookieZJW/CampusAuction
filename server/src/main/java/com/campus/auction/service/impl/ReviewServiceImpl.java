@@ -15,7 +15,8 @@ import com.campus.auction.mapper.OrderMapper;
 import com.campus.auction.mapper.ReviewMapper;
 import com.campus.auction.mapper.UserMapper;
 import com.campus.auction.service.ReviewService;
-import com.campus.auction.vo.ReviewVO;
+import com.campus.auction.vo.ReviewVO;import com.campus.auction.util.TimeUtil;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -125,7 +126,7 @@ public class ReviewServiceImpl implements ReviewService {
                 .counterparty(nicknameMap.getOrDefault(
                         received ? r.getFromUser() : r.getToUser(), "微信用户"))
                 .itemTitle(titleMap.getOrDefault(r.getOrderId(), "已删除拍品"))
-                .createTime(r.getCreateTime() == null ? null : r.getCreateTime().toString())
+                .createTime(TimeUtil.str(r.getCreateTime()))
                 .build()).toList();
     }
 

@@ -16,7 +16,8 @@ import com.campus.auction.service.AuctionService;
 import com.campus.auction.util.JsonUtil;
 import com.campus.auction.vo.AuctionDetailVO;
 import com.campus.auction.vo.AuctionListVO;
-import com.campus.auction.vo.BidRecordVO;
+import com.campus.auction.vo.BidRecordVO;import com.campus.auction.util.TimeUtil;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -73,7 +74,7 @@ public class AuctionServiceImpl implements AuctionService {
                             .condition(item.getCondition())
                             .currentPrice(a.getCurrentPrice())
                             .bidCount(a.getBidCount())
-                            .endTime(a.getEndTime().toString())
+                            .endTime(TimeUtil.str(a.getEndTime()))
                             .build();
                 }).toList();
 
@@ -107,7 +108,7 @@ public class AuctionServiceImpl implements AuctionService {
                 .map(r -> BidRecordVO.builder()
                         .nickname(maskNickname(nicknameMap.getOrDefault(r.getUserId(), "微信用户")))
                         .price(r.getPrice())
-                        .bidTime(r.getBidTime() == null ? null : r.getBidTime().toString())
+                        .bidTime(TimeUtil.str(r.getBidTime()))
                         .status(r.getStatus())
                         .build())
                 .toList();
@@ -126,8 +127,8 @@ public class AuctionServiceImpl implements AuctionService {
                 .currentPrice(auction.getCurrentPrice())
                 .bidCount(auction.getBidCount())
                 .status(auction.getStatus())
-                .startTime(auction.getStartTime() == null ? null : auction.getStartTime().toString())
-                .endTime(auction.getEndTime() == null ? null : auction.getEndTime().toString())
+                .startTime(TimeUtil.str(auction.getStartTime()))
+                .endTime(TimeUtil.str(auction.getEndTime()))
                 .sellerNickname(seller != null ? seller.getNickname() : null)
                 .sellerAvatar(seller != null ? seller.getAvatar() : null)
                 .bidRecords(recordVOs)
@@ -152,7 +153,7 @@ public class AuctionServiceImpl implements AuctionService {
         return Map.of(
                 "currentPrice", a.getCurrentPrice(),
                 "bidCount", a.getBidCount(),
-                "endTime", a.getEndTime() == null ? "" : a.getEndTime().toString(),
+                "endTime", a.getEndTime() == null ? "" : TimeUtil.str(a.getEndTime()),
                 "status", a.getStatus()
         );
     }
