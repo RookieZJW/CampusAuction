@@ -18,7 +18,7 @@
   </view>
 
   <!-- 分类横滑条：纸条式的筛选签 -->
-  <view class="category-bar">
+  <scroll-view class="category-bar" scroll-x>
     <view
       class="category-item {{activeCategory === 0 ? 'active' : ''}}"
       data-id="0"
@@ -29,7 +29,7 @@
       class="category-item {{activeCategory === item.id ? 'active' : ''}}"
       data-id="{{item.id}}"
       bindtap="onCategoryTap">{{item.name}}</view>
-  </view>
+  </scroll-view>
 
   <!-- 拍卖列表 -->
   <view wx:if="{{loading}}" class="empty">正在翻公告板…</view>
