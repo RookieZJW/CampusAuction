@@ -1,83 +1,196 @@
-/* 全局样式：主题色与公共类（手写，无组件库） */
+/* 全局样式｜纸感校园 · 墨蓝细线（手写，无组件库）
+   设计基调：暖白纸张 + 钢笔墨蓝 + 砖红价签 + 等值数字。
+   不使用大面积渐变、胶囊按钮和高饱和配色，避免模板感。 */
 
 page {
-  /* 主题变量 */
-  --primary: #185FA5;
-  --primary-light: #E6F1FB;
-  --danger: #A32D2D;
-  --danger-light: #FCEBEB;
-  --success: #3B6D11;
-  --success-light: #EAF3DE;
-  --warning: #854F0B;
-  --text: #1a1a1a;
-  --text-secondary: #666666;
-  --text-hint: #999999;
-  --bg: #f5f6f8;
-  --card-bg: #ffffff;
-  --border: #eeeeee;
+  /* ---- 纸与墨：基础层 ---- */
+  --bg: #F5F2EA;
+  --bg-deep: #EBE6DA;
+  --card-bg: #FFFDF7;
+  --border: #E4DDCE;
 
-  background: var(--bg);
+  /* ---- 墨蓝：主色，也是整套里唯一的冷色 ---- */
+  --primary: #24476C;
+  --primary-deep: #1B3654;
+  --primary-light: #E7EEF3;
+  --primary-soft: #D3E0EA;
+
+  /* ---- 校园点缀：砖墙、草地、牛皮纸 ---- */
+  --brick: #A9503C;
+  --moss: #54704F;
+  --kraft: #9A6B2F;
+  --star: #B9883F;
+
+  /* ---- 语义色：沿用旧变量名，保证所有分包页面无需改动即可换新 ---- */
+  --danger: #AC4A38;
+  --danger-light: #F8E9E4;
+  --success: #4E6F4C;
+  --success-light: #E9F0E5;
+  --warning: #93662E;
+  --warning-light: #F7EEDC;
+
+  /* ---- 文字 ---- */
+  --text: #27333E;
+  --text-secondary: #5C6670;
+  --text-hint: #7E7D73;
+
+  /* ---- 字体层级 ---- */
+  --fs-hero: 46rpx;
+  --fs-title: 34rpx;
+  --fs-subtitle: 30rpx;
+  --fs-body: 28rpx;
+  --fs-meta: 24rpx;
+  --fs-caption: 22rpx;
+  --fs-label: 20rpx;
+
+  /* ---- 字体栈：中文偏阅读感；数字单独走等值字形 ---- */
+  --font-cn: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB',
+             'Microsoft YaHei UI', 'Microsoft YaHei', 'Source Han Sans SC', sans-serif;
+  --font-num: 'DIN Alternate', 'SF Mono', 'Helvetica Neue', 'Roboto Mono',
+              Menlo, Consolas, monospace;
+
+  background-color: var(--bg);
+  /* 极淡的方格纸底纹：校园草稿纸 + 一点科技感，不抢内容 */
+  background-image: radial-gradient(rgba(36, 71, 108, 0.045) 1rpx, transparent 1rpx);
+  background-size: 26rpx 26rpx;
   color: var(--text);
-  font-size: 28rpx;
-  line-height: 1.6;
-  font-family: -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-size: var(--fs-body);
+  line-height: 1.65;
+  font-family: var(--font-cn);
+  -webkit-font-smoothing: antialiased;
 }
 
-/* 卡片 */
+/* 卡片：像贴在公告栏上的一张纸，靠细边和一条压痕立起来 */
 .card {
+  position: relative;
+  box-sizing: border-box;
   background: var(--card-bg);
-  border-radius: 16rpx;
+  border: 1rpx solid var(--border);
+  border-radius: 12rpx;
   padding: 24rpx;
   margin: 20rpx 24rpx;
+  box-shadow: 0 2rpx 0 rgba(39, 51, 62, 0.035);
 }
 
-/* 主按钮 */
+/* 主按钮：实心墨块，圆角收敛，顶部一道极细高光 */
 .btn-primary {
   background: var(--primary);
-  color: #ffffff;
-  border-radius: 48rpx;
-  font-size: 30rpx;
+  color: #FFFFFF;
+  border-radius: 12rpx;
+  font-size: var(--fs-subtitle);
+  font-weight: 500;
+  letter-spacing: 2rpx;
   height: 88rpx;
   line-height: 88rpx;
+  box-shadow: inset 0 1rpx 0 rgba(255, 255, 255, 0.16);
 }
 
 .btn-primary[disabled] {
-  background: #b8c4cf;
-  color: #ffffff;
+  background: #C8C3B6;
+  color: #FBFAF6;
+  box-shadow: none;
 }
 
 /* 次级按钮 */
 .btn-ghost {
   border: 2rpx solid var(--primary);
   color: var(--primary);
-  border-radius: 48rpx;
-  font-size: 30rpx;
+  border-radius: 12rpx;
+  font-size: var(--fs-subtitle);
+  letter-spacing: 2rpx;
   height: 88rpx;
   line-height: 88rpx;
   background: transparent;
 }
 
-/* 价格 */
-.price {
-  color: var(--danger);
-  font-weight: bold;
+/* 去掉微信 button 自带的 ::after 描边，避免圆角处出现毛边 */
+.btn-primary::after,
+.btn-ghost::after {
+  border: none;
 }
 
-/* 标签胶囊 */
+/* 价格：等值数字，像印在价签上，跳动时不晃动 */
+.price {
+  color: var(--danger);
+  font-weight: 600;
+  font-family: var(--font-num);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+  letter-spacing: 0.5rpx;
+}
+
+/* 标签：分类签 / 印章感，方角细边，不做高饱和胶囊 */
 .tag {
   display: inline-block;
-  padding: 4rpx 20rpx;
-  border-radius: 24rpx;
-  font-size: 22rpx;
-  background: var(--primary-light);
-  color: var(--primary);
+  padding: 3rpx 14rpx;
+  border-radius: 6rpx;
+  font-size: var(--fs-caption);
+  letter-spacing: 1rpx;
+  background: var(--bg-deep);
+  color: var(--text-secondary);
+  border: 1rpx solid var(--border);
   margin-right: 12rpx;
 }
 
-/* 空态 */
+/* 空态：留白和一句具体的话，不堆图标 */
 .empty {
   text-align: center;
   color: var(--text-hint);
   padding: 120rpx 0;
-  font-size: 26rpx;
+  font-size: var(--fs-meta);
+  letter-spacing: 1rpx;
+}
+
+/* ---- 数字统一：倒计时、金额、分数用等值字形（科技感来自这里，不靠霓虹） ---- */
+.countdown,
+.bid-price,
+.bid-count,
+.log-amount,
+.score,
+.panel-input,
+.panel-unit,
+.ai-suggest-range,
+.quick-btn,
+.board-count,
+.stat-num {
+  font-family: var(--font-num);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* ---- 小标题：左侧一道短竖线，像用笔在公告上划的记号 ---- */
+.section-head {
+  display: flex;
+  align-items: baseline;
+  margin: 8rpx 0 20rpx;
+}
+
+.section-head::before {
+  content: '';
+  display: inline-block;
+  width: 6rpx;
+  height: 26rpx;
+  background: var(--brick);
+  border-radius: 2rpx;
+  margin-right: 14rpx;
+  flex-shrink: 0;
+}
+
+/* ---- 细线与辅助 ---- */
+.hairline {
+  height: 1rpx;
+  background: var(--border);
+}
+
+.mono {
+  font-family: var(--font-num);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+.kicker {
+  font-size: var(--fs-label);
+  letter-spacing: 3rpx;
+  color: var(--text-hint);
+  font-family: var(--font-num);
 }

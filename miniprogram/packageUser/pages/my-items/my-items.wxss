@@ -5,8 +5,9 @@
 .cover {
   width: 160rpx;
   height: 160rpx;
-  border-radius: 12rpx;
-  background: var(--bg);
+  border-radius: 8rpx;
+  background: var(--bg-deep);
+  border: 1rpx solid var(--border);
   flex-shrink: 0;
 }
 
@@ -21,7 +22,9 @@
 
 .title {
   font-size: 28rpx;
-  font-weight: bold;
+  line-height: 1.45;
+  letter-spacing: 0.5rpx;
+  font-weight: 600;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -36,7 +39,7 @@
 .status-tag {
   font-size: 22rpx;
   padding: 4rpx 16rpx;
-  border-radius: 20rpx;
+  border-radius: 6rpx;
   background: var(--primary-light);
   color: var(--primary);
 }
@@ -61,6 +64,6 @@
   font-size: 22rpx;
   color: var(--danger);
   background: var(--danger-light);
-  border-radius: 8rpx;
+  border-radius: 6rpx;
   padding: 8rpx 12rpx;
 }

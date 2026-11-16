@@ -1,9 +1,10 @@
 .score-card {
   margin: 20rpx 24rpx;
   padding: 48rpx 32rpx;
-  border-radius: 16rpx;
+  border-radius: 10rpx;
   background: var(--success);
-  color: #ffffff;
+  color: #FFFFFF;
+  box-shadow: inset 0 2rpx 0 rgba(255,255,255,0.14);
   text-align: center;
 }
 
@@ -17,7 +18,8 @@
 
 .score {
   font-size: 96rpx;
-  font-weight: bold;
+  letter-spacing: 2rpx;
+  font-weight: 600;
   line-height: 1.2;
 }
 
@@ -36,8 +38,10 @@
 
 .section-title {
   font-size: 30rpx;
-  font-weight: bold;
+  font-weight: 600;
   margin-bottom: 12rpx;
+  padding-left: 16rpx;
+  border-left: 6rpx solid var(--brick);
 }
 
 .log-item {
@@ -45,7 +49,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 20rpx 0;
-  border-bottom: 1rpx solid var(--border);
+  border-bottom: 1rpx dashed var(--border);
 }
 
 .log-item:last-child {
@@ -64,7 +68,7 @@
 
 .log-change {
   font-size: 32rpx;
-  font-weight: bold;
+  font-weight: 600;
 }
 
 .log-change.plus {

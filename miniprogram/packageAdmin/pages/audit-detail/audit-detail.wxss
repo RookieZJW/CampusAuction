@@ -4,7 +4,7 @@
 
 .image-swiper {
   height: 480rpx;
-  background: #000000;
+  background: #2C2A26;
 }
 
 .swiper-image {
@@ -13,8 +13,9 @@
 }
 
 .detail-title {
-  font-size: 34rpx;
-  font-weight: bold;
+  font-size: 32rpx;
+  letter-spacing: 1rpx;
+  font-weight: 600;
 }
 
 .meta {
@@ -26,7 +27,7 @@
 .info-grid {
   display: flex;
   flex-wrap: wrap;
-  border-top: 1rpx solid var(--border);
+  border-top: 1rpx dashed var(--border);
   padding-top: 20rpx;
 }
 
@@ -44,7 +45,7 @@
 
 .section-title {
   font-size: 28rpx;
-  font-weight: bold;
+  font-weight: 600;
   margin-top: 16rpx;
 }
 
@@ -62,8 +63,9 @@
   display: flex;
   gap: 20rpx;
   padding: 20rpx 40rpx calc(20rpx + env(safe-area-inset-bottom));
-  background: #ffffff;
-  box-shadow: 0 -4rpx 16rpx rgba(0, 0, 0, 0.05);
+  background: var(--card-bg);
+  border-top: 1rpx solid var(--border);
+  box-shadow: 0 -4rpx 18rpx rgba(27, 54, 84, 0.05);
 }
 
 .reject-btn {

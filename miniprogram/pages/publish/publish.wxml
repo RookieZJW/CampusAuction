@@ -1,6 +1,6 @@
 <view class="publish-page">
   <view class="card">
-    <view class="form-title">基本信息</view>
+    <view class="form-title"><text class="form-no">01</text>基本信息</view>
 
     <view class="form-item">
       <view class="label">标题</view>
@@ -45,7 +45,7 @@
   </view>
 
   <view class="card">
-    <view class="form-title">拍卖规则</view>
+    <view class="form-title"><text class="form-no">02</text>拍卖规则</view>
 
     <!-- AI 定价建议（W5）：填好基本信息后一键估价 -->
     <view class="ai-suggest" wx:if="{{suggest}}">
@@ -65,7 +65,7 @@
     <view class="form-item">
       <view class="label-row">
         <text class="label">起拍价（元）</text>
-        <text class="ai-trigger" bindtap="onSuggestPrice">{{suggesting ? '估价中…' : '✨ AI 帮我定价'}}</text>
+        <text class="ai-trigger" bindtap="onSuggestPrice">{{suggesting ? '正在估价…' : '帮我估个价'}}</text>
       </view>
       <input class="input" type="digit" placeholder="如：20" value="{{startPriceYuan}}"
              bindinput="onInput" data-field="startPriceYuan" />

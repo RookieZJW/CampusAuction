@@ -1,25 +1,31 @@
 <view class="mine-page">
-  <!-- 用户信息区 -->
+  <!-- 用户信息区：像一张夹在笔记本里的参拍名片 -->
   <view class="user-card card">
-    <block wx:if="{{userInfo}}">
-      <image class="avatar" src="{{userInfo.avatar || '/images/placeholder.png'}}" mode="aspectFill" />
-      <view class="user-info">
-        <view class="nickname">{{userInfo.nickname}}</view>
-        <view class="stats">
-          <text>余额 ¥{{balanceYuan}}</text>
-          <text class="divider">|</text>
-          <text>信用 {{userInfo.creditScore}}</text>
+    <view class="id-strip">
+      <text class="id-label">我的参拍名片</text>
+      <text class="id-mark">ID / 01</text>
+    </view>
+    <view class="id-main">
+      <block wx:if="{{userInfo}}">
+        <image class="avatar" src="{{userInfo.avatar || '/images/placeholder.png'}}" mode="aspectFill" />
+        <view class="user-info">
+          <view class="nickname">{{userInfo.nickname}}</view>
+          <view class="stats">
+            <text>余额 ¥{{balanceYuan}}</text>
+            <text class="divider">·</text>
+            <text>信用 {{userInfo.creditScore}}</text>
+          </view>
         </view>
-      </view>
-    </block>
-    <block wx:else>
-      <view class="avatar avatar-empty">?</view>
-      <view class="user-info">
-        <view class="nickname">未登录</view>
-        <view class="stats">登录后参与竞拍</view>
-      </view>
-      <button class="btn-login" bindtap="onLoginTap">去登录</button>
-    </block>
+      </block>
+      <block wx:else>
+        <view class="avatar avatar-empty">?</view>
+        <view class="user-info">
+          <view class="nickname">还没登录</view>
+          <view class="stats">登录后才能出价和面交</view>
+        </view>
+        <button class="btn-login" bindtap="onLoginTap">去登录</button>
+      </block>
+    </view>
   </view>
 
   <!-- 功能入口 -->

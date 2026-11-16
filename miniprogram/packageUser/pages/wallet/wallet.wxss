@@ -1,9 +1,10 @@
 .balance-card {
   margin: 20rpx 24rpx;
   padding: 48rpx 32rpx;
-  border-radius: 16rpx;
+  border-radius: 10rpx;
   background: var(--primary);
-  color: #ffffff;
+  color: #FFFFFF;
+  box-shadow: inset 0 2rpx 0 rgba(255,255,255,0.14), 0 8rpx 18rpx rgba(27,54,84,0.14);
 }
 
 .balance-label {
@@ -13,7 +14,8 @@
 
 .balance {
   font-size: 64rpx;
-  font-weight: bold;
+  letter-spacing: 2rpx;
+  font-weight: 600;
   margin: 12rpx 0;
 }
 
@@ -24,8 +26,10 @@
 
 .section-title {
   font-size: 30rpx;
-  font-weight: bold;
+  font-weight: 600;
   margin-bottom: 12rpx;
+  padding-left: 16rpx;
+  border-left: 6rpx solid var(--brick);
 }
 
 .log-item {
@@ -33,7 +37,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 20rpx 0;
-  border-bottom: 1rpx solid var(--border);
+  border-bottom: 1rpx dashed var(--border);
 }
 
 .log-item:last-child {
@@ -42,7 +46,7 @@
 
 .log-type {
   font-size: 28rpx;
-  font-weight: bold;
+  font-weight: 600;
 }
 
 .log-remark {
@@ -58,7 +62,7 @@
 
 .log-amount {
   font-size: 32rpx;
-  font-weight: bold;
+  font-weight: 600;
 }
 
 .log-amount.plus {

@@ -1,6 +1,6 @@
 .tab-bar {
   display: flex;
-  background: #ffffff;
+  background: var(--card-bg);
 }
 
 .tab {
@@ -14,7 +14,7 @@
 
 .tab.active {
   color: var(--primary);
-  font-weight: bold;
+  font-weight: 600;
 }
 
 .tab.active::after {
@@ -23,8 +23,8 @@
   left: 30%;
   right: 30%;
   bottom: 8rpx;
-  height: 6rpx;
-  border-radius: 3rpx;
+  height: 4rpx;
+  border-radius: 0;
   background: var(--primary);
 }
 
@@ -35,8 +35,9 @@
 .cover {
   width: 160rpx;
   height: 160rpx;
-  border-radius: 12rpx;
-  background: var(--bg);
+  border-radius: 8rpx;
+  background: var(--bg-deep);
+  border: 1rpx solid var(--border);
   flex-shrink: 0;
 }
 
@@ -48,7 +49,9 @@
 
 .title {
   font-size: 28rpx;
-  font-weight: bold;
+  line-height: 1.45;
+  letter-spacing: 0.5rpx;
+  font-weight: 600;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -74,7 +77,7 @@
 .status-tag {
   font-size: 22rpx;
   padding: 4rpx 16rpx;
-  border-radius: 20rpx;
+  border-radius: 6rpx;
   background: var(--primary-light);
   color: var(--primary);
 }
@@ -101,17 +104,17 @@
   height: 56rpx;
   line-height: 56rpx;
   padding: 0 24rpx;
-  border-radius: 28rpx;
+  border-radius: 8rpx;
   margin: 0;
 }
 
 .mini-btn.primary {
   background: var(--primary);
-  color: #ffffff;
+  color: #FFFFFF;
 }
 
 .mini-btn.ghost {
-  border: 2rpx solid var(--primary);
+  border: 1rpx solid var(--primary);
   color: var(--primary);
   background: transparent;
 }

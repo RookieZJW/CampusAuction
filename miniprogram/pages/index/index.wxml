@@ -1,5 +1,23 @@
 <view class="index-page">
-  <!-- 顶部分类快捷入口 -->
+  <!-- 公告栏：像贴在宿舍楼下布告板上的一张通知 -->
+  <view class="board">
+    <view class="board-tape"></view>
+    <view class="board-top">
+      <text class="board-no">NO. 01 / 拍场公告</text>
+      <view class="board-live"><text class="live-dot"></text><text>正在进行</text></view>
+    </view>
+    <view class="board-title">本周拍场</view>
+    <view class="board-desc">教材、单车、小台灯，都是学长学姐用过的东西</view>
+    <view class="board-foot">
+      <view class="board-stat">
+        <text class="board-count">{{auctionList.length}}</text>
+        <text class="board-unit">件在拍</text>
+      </view>
+      <text class="board-rule">{{today}} · 同校面交</text>
+    </view>
+  </view>
+
+  <!-- 分类横滑条：纸条式的筛选签 -->
   <view class="category-bar">
     <view
       class="category-item {{activeCategory === 0 ? 'active' : ''}}"
@@ -14,11 +32,13 @@
   </view>
 
   <!-- 拍卖列表 -->
-  <view wx:if="{{loading}}" class="empty">加载中...</view>
+  <view wx:if="{{loading}}" class="empty">正在翻公告板…</view>
   <view wx:elif="{{auctionList.length === 0}}" class="empty">
-    暂无进行中的拍卖\n去发布第一件拍品吧
+    <view>公告板上还空着</view>
+    <view class="empty-sub">去「发布」贴上第一件闲置吧</view>
   </view>
   <block wx:else>
+    <view class="list-head section-head">正在进行的拍品</view>
     <view
       wx:for="{{auctionList}}"
       wx:key="id"
@@ -34,13 +54,13 @@
         </view>
         <view class="auction-price-row">
           <text class="price">¥{{item.currentPriceYuan}}</text>
-          <text class="bid-count">{{item.bidCount}}次出价</text>
+          <text class="bid-count">{{item.bidCount}} 次出价</text>
         </view>
         <view class="countdown {{item.urgent ? 'urgent' : ''}}">
-          距结束 {{item.countdownText}}
+          <text class="countdown-dot"></text>距结束 {{item.countdownText}}
         </view>
       </view>
     </view>
-    <view wx:if="{{noMore}}" class="empty">没有更多了</view>
+    <view wx:if="{{noMore}}" class="list-end">— 翻到底了 —</view>
   </block>
 </view>

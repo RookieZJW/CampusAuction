@@ -1,7 +1,8 @@
 .header {
   font-size: 30rpx;
-  font-weight: bold;
+  font-weight: 600;
   padding: 24rpx 32rpx 8rpx;
+  letter-spacing: 2rpx;
 }
 
 .login-card .form-item {
@@ -10,14 +11,15 @@
 
 .form-title {
   font-size: 30rpx;
-  font-weight: bold;
+  font-weight: 600;
   margin-bottom: 20rpx;
 }
 
 .input {
-  background: var(--bg);
-  border-radius: 12rpx;
+  background: var(--bg-deep);
+  border-radius: 6rpx;
   padding: 18rpx 20rpx;
+  border: 1rpx solid var(--border);
   font-size: 28rpx;
 }
 
@@ -28,8 +30,9 @@
 .cover {
   width: 160rpx;
   height: 160rpx;
-  border-radius: 12rpx;
-  background: var(--bg);
+  border-radius: 8rpx;
+  background: var(--bg-deep);
+  border: 1rpx solid var(--border);
   flex-shrink: 0;
 }
 
@@ -44,7 +47,9 @@
 
 .title {
   font-size: 28rpx;
-  font-weight: bold;
+  line-height: 1.45;
+  letter-spacing: 0.5rpx;
+  font-weight: 600;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

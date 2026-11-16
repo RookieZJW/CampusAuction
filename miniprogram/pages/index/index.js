@@ -10,12 +10,21 @@ Page({
     page: 1,
     size: 10,
     loading: false,
-    noMore: false
+    noMore: false,
+    today: ''
   },
 
   onLoad() {
+    this.setData({ today: this.formatToday() })
     this.loadCategories()
     this.loadAuctions()
+  },
+
+  /** 公告栏上的日期，像手写补上去的一样 */
+  formatToday() {
+    const d = new Date()
+    const week = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
+    return `${d.getMonth() + 1}月${d.getDate()}日 ${week[d.getDay()]}`
   },
 
   onPullDownRefresh() {

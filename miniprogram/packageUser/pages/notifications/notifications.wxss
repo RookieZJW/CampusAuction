@@ -10,7 +10,8 @@
 
 .head-title {
   font-size: 30rpx;
-  font-weight: bold;
+  letter-spacing: 2rpx;
+  font-weight: 600;
 }
 
 .unread-badge {
@@ -18,9 +19,9 @@
   min-width: 36rpx;
   padding: 2rpx 12rpx;
   margin-left: 12rpx;
-  border-radius: 24rpx;
+  border-radius: 6rpx;
   background: var(--danger);
-  color: #ffffff;
+  color: #FFFFFF;
   font-size: 22rpx;
   text-align: center;
 }
@@ -34,7 +35,7 @@
   display: flex;
   align-items: flex-start;
   padding: 24rpx 0;
-  border-bottom: 1rpx solid var(--border);
+  border-bottom: 1rpx dashed var(--border);
 }
 
 .notify-item:last-child {
@@ -74,7 +75,7 @@
 
 .notify-title {
   font-size: 28rpx;
-  font-weight: bold;
+  font-weight: 600;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

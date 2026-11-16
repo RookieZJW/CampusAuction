@@ -2,10 +2,24 @@
   padding-bottom: 160rpx;
 }
 
+/* ---- 表单分区：编号像登记表上的栏目 ---- */
 .form-title {
+  display: flex;
+  align-items: baseline;
   font-size: 30rpx;
-  font-weight: bold;
-  margin-bottom: 20rpx;
+  font-weight: 600;
+  letter-spacing: 2rpx;
+  margin-bottom: 24rpx;
+  padding-bottom: 14rpx;
+  border-bottom: 1rpx solid var(--border);
+}
+
+.form-no {
+  font-family: var(--font-num);
+  font-size: 22rpx;
+  letter-spacing: 1rpx;
+  color: var(--brick);
+  margin-right: 16rpx;
 }
 
 .form-item {
@@ -13,18 +27,22 @@
 }
 
 .label {
-  font-size: 26rpx;
+  font-size: var(--fs-meta);
   color: var(--text-secondary);
   margin-bottom: 10rpx;
+  letter-spacing: 1rpx;
 }
 
+/* 输入区：淡淡一笔底纹，像写在横线纸上 */
 .input,
 .textarea,
 .picker-value {
-  background: var(--bg);
-  border-radius: 12rpx;
+  background: var(--bg-deep);
+  border: 1rpx solid var(--border);
+  border-radius: 6rpx;
   padding: 18rpx 20rpx;
-  font-size: 28rpx;
+  font-size: var(--fs-body);
+  color: var(--text);
 }
 
 .textarea {
@@ -52,7 +70,8 @@
 .image-item image {
   width: 100%;
   height: 100%;
-  border-radius: 12rpx;
+  border-radius: 8rpx;
+  border: 1rpx solid var(--border);
 }
 
 .image-delete {
@@ -65,31 +84,35 @@
   text-align: center;
   border-radius: 50%;
   background: var(--danger);
-  color: #ffffff;
+  color: #FFFFFF;
   font-size: 28rpx;
+  box-shadow: 0 2rpx 6rpx rgba(39, 51, 62, 0.16);
 }
 
 .image-add {
   width: 180rpx;
   height: 180rpx;
   border: 2rpx dashed var(--border);
-  border-radius: 12rpx;
+  border-radius: 8rpx;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 64rpx;
+  font-size: 56rpx;
   color: var(--text-hint);
+  background: var(--bg-deep);
 }
 
 .deposit-tip {
-  font-size: 22rpx;
-  color: #854F0B;
-  background: #FAEEDA;
-  border-radius: 8rpx;
+  font-size: var(--fs-caption);
+  color: var(--warning);
+  background: var(--warning-light);
+  border-left: 4rpx solid var(--kraft);
+  border-radius: 0 6rpx 6rpx 0;
   padding: 14rpx 20rpx;
+  line-height: 1.6;
 }
 
-/* ---- AI 定价建议（W5） ---- */
+/* ---- 估价便签 ---- */
 .label-row {
   display: flex;
   justify-content: space-between;
@@ -99,12 +122,17 @@
 
 .ai-trigger {
   color: var(--primary);
-  font-size: 24rpx;
+  font-size: var(--fs-caption);
+  border-bottom: 1rpx solid var(--primary-soft);
+  padding-bottom: 2rpx;
 }
 
 .ai-suggest {
+  position: relative;
   background: var(--primary-light);
-  border-radius: 12rpx;
+  border: 1rpx solid var(--primary-soft);
+  border-left: 6rpx solid var(--primary);
+  border-radius: 6rpx;
   padding: 20rpx 24rpx;
   margin-bottom: 28rpx;
 }
@@ -116,10 +144,11 @@
 }
 
 .ai-badge {
-  font-size: 20rpx;
-  padding: 4rpx 16rpx;
-  border-radius: 20rpx;
-  color: #ffffff;
+  font-size: var(--fs-label);
+  letter-spacing: 1rpx;
+  padding: 3rpx 14rpx;
+  border-radius: 4rpx;
+  color: #FFFFFF;
 }
 
 .ai-badge-ai {
@@ -127,19 +156,20 @@
 }
 
 .ai-badge-rule {
-  background: var(--warning);
+  background: var(--kraft);
 }
 
 .ai-suggest-range {
   font-size: 34rpx;
-  font-weight: bold;
-  color: var(--primary);
+  font-weight: 600;
+  color: var(--primary-deep);
 }
 
 .ai-suggest-reason {
-  font-size: 22rpx;
+  font-size: var(--fs-caption);
   color: var(--text-secondary);
   margin-top: 10rpx;
+  line-height: 1.6;
 }
 
 .ai-suggest-actions {
@@ -151,27 +181,30 @@
   flex: 1;
   text-align: center;
   background: var(--primary);
-  color: #ffffff;
-  font-size: 24rpx;
-  border-radius: 32rpx;
+  color: #FFFFFF;
+  font-size: var(--fs-caption);
+  border-radius: 6rpx;
   padding: 10rpx 0;
   margin-right: 16rpx;
+  letter-spacing: 1rpx;
 }
 
 .ai-dismiss {
   width: 120rpx;
   text-align: center;
   color: var(--text-hint);
-  font-size: 24rpx;
+  font-size: var(--fs-caption);
   padding: 10rpx 0;
 }
 
+/* ---- 底部提交条 ---- */
 .submit-area {
   position: fixed;
   left: 0;
   right: 0;
   bottom: 0;
-  padding: 20rpx 40rpx calc(20rpx + env(safe-area-inset-bottom));
-  background: #ffffff;
-  box-shadow: 0 -4rpx 16rpx rgba(0, 0, 0, 0.05);
+  padding: 18rpx 40rpx calc(18rpx + env(safe-area-inset-bottom));
+  background: var(--card-bg);
+  border-top: 1rpx solid var(--border);
+  box-shadow: 0 -4rpx 18rpx rgba(39, 51, 62, 0.05);
 }

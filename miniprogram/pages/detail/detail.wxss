@@ -3,17 +3,18 @@
 }
 
 .extend-tip {
-  font-size: 22rpx;
+  font-size: var(--fs-caption);
   color: var(--warning);
-  background: #FAEEDA;
-  border-radius: 8rpx;
+  background: var(--warning-light);
+  border-left: 4rpx solid var(--kraft);
+  border-radius: 0 6rpx 6rpx 0;
   padding: 10rpx 16rpx;
   margin-bottom: 12rpx;
 }
 
 .image-swiper {
-  height: 560rpx;
-  background: #000000;
+  height: 520rpx;
+  background: #2C2A26;
 }
 
 .swiper-image {
@@ -21,25 +22,61 @@
   height: 100%;
 }
 
+/* ---- 价签卡 ---- */
+.price-card {
+  padding: 26rpx 24rpx 22rpx;
+  overflow: hidden;
+}
+
+.price-card::after {
+  content: '';
+  position: absolute;
+  right: -28rpx;
+  bottom: -28rpx;
+  width: 120rpx;
+  height: 120rpx;
+  border: 1rpx solid var(--border);
+  border-radius: 50%;
+  opacity: 0.6;
+}
+
+.price-kicker {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 12rpx;
+  font-size: var(--fs-label);
+  letter-spacing: 2rpx;
+  color: var(--text-hint);
+}
+
+.price-no {
+  font-family: var(--font-num);
+  letter-spacing: 2rpx;
+  color: var(--brick);
+}
+
 .price-row {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  margin-bottom: 16rpx;
+  margin-bottom: 14rpx;
 }
 
 .price-label {
-  font-size: 24rpx;
+  font-size: var(--fs-meta);
   color: var(--text-secondary);
   margin-right: 12rpx;
 }
 
 .current-price .price {
-  font-size: 48rpx;
+  font-size: 56rpx;
+  line-height: 1.1;
+  letter-spacing: 1rpx;
 }
 
 .bid-count {
-  font-size: 24rpx;
+  font-size: var(--fs-meta);
   color: var(--text-hint);
 }
 
@@ -52,23 +89,25 @@
 .countdown {
   margin-left: auto;
   font-size: 26rpx;
-  color: var(--warning);
+  color: var(--kraft);
+  letter-spacing: 1rpx;
 }
 
 .countdown.urgent {
   color: var(--danger);
-  font-weight: bold;
-  font-size: 30rpx;
+  font-weight: 600;
+  font-size: 28rpx;
 }
 
 .rules {
-  font-size: 24rpx;
+  font-size: var(--fs-caption);
   color: var(--text-hint);
   line-height: 1.8;
-  border-top: 1rpx solid var(--border);
+  border-top: 1rpx dashed var(--border);
   padding-top: 16rpx;
 }
 
+/* ---- 标题与描述 ---- */
 .title-row {
   display: flex;
   justify-content: space-between;
@@ -77,13 +116,15 @@
 
 .detail-title {
   flex: 1;
-  font-size: 34rpx;
-  font-weight: bold;
+  font-size: var(--fs-title);
+  font-weight: 600;
+  line-height: 1.45;
+  letter-spacing: 1rpx;
 }
 
-/* W5 收藏按钮 */
+/* 收藏按钮 */
 .fav-btn {
-  font-size: 52rpx;
+  font-size: 48rpx;
   color: var(--text-hint);
   margin-left: 20rpx;
   line-height: 1.1;
@@ -100,34 +141,41 @@
 }
 
 .seller {
-  font-size: 24rpx;
+  font-size: var(--fs-meta);
   color: var(--text-secondary);
-  margin: 12rpx 0;
+  margin: 14rpx 0;
 }
 
-/* W5 举报入口 */
+/* 举报入口 */
 .report-link {
-  font-size: 22rpx;
+  font-size: var(--fs-caption);
   color: var(--text-hint);
+  border-bottom: 1rpx solid var(--border);
+  padding-bottom: 2rpx;
 }
 
 .description {
-  font-size: 28rpx;
+  font-size: var(--fs-body);
   color: var(--text);
+  line-height: 1.75;
   white-space: pre-wrap;
+  border-top: 1rpx solid var(--border);
+  padding-top: 16rpx;
 }
 
 .section-title {
-  font-size: 30rpx;
-  font-weight: bold;
-  margin-bottom: 16rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+  letter-spacing: 1rpx;
+  align-items: center;
+  margin-bottom: 12rpx;
 }
 
 .bid-item {
   display: flex;
   align-items: center;
-  padding: 20rpx 0;
-  border-bottom: 1rpx solid var(--border);
+  padding: 18rpx 0;
+  border-bottom: 1rpx dashed var(--border);
 }
 
 .bid-item:last-child {
@@ -143,33 +191,35 @@
 .bid-price {
   font-size: 30rpx;
   color: var(--danger);
-  font-weight: bold;
+  font-weight: 600;
 }
 
 .bid-time {
   margin-left: 20rpx;
-  font-size: 22rpx;
+  font-size: var(--fs-caption);
   color: var(--text-hint);
 }
 
+/* ---- 底部操作栏 ---- */
 .bottom-bar {
   position: fixed;
   left: 0;
   right: 0;
   bottom: 0;
-  padding: 20rpx 40rpx calc(20rpx + env(safe-area-inset-bottom));
-  background: #ffffff;
-  box-shadow: 0 -4rpx 16rpx rgba(0, 0, 0, 0.05);
+  padding: 18rpx 40rpx calc(18rpx + env(safe-area-inset-bottom));
+  background: var(--card-bg);
+  border-top: 1rpx solid var(--border);
+  box-shadow: 0 -4rpx 18rpx rgba(39, 51, 62, 0.05);
 }
 
-/* 出价面板 */
+/* ---- 出价面板 ---- */
 .bid-mask {
   position: fixed;
   left: 0;
   top: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(27, 54, 84, 0.44);
   z-index: 100;
 }
 
@@ -178,16 +228,19 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: #ffffff;
-  border-radius: 24rpx 24rpx 0 0;
-  padding: 40rpx 40rpx calc(40rpx + env(safe-area-inset-bottom));
+  background: var(--card-bg);
+  border-top: 2rpx solid var(--primary);
+  border-radius: 16rpx 16rpx 0 0;
+  padding: 36rpx 40rpx calc(40rpx + env(safe-area-inset-bottom));
   z-index: 101;
+  box-shadow: 0 -10rpx 30rpx rgba(27, 54, 84, 0.12);
 }
 
 .panel-title {
   text-align: center;
   font-size: 32rpx;
-  font-weight: bold;
+  font-weight: 600;
+  letter-spacing: 3rpx;
   margin-bottom: 24rpx;
 }
 
@@ -202,15 +255,16 @@
 .panel-input-row {
   display: flex;
   align-items: center;
-  background: var(--bg);
-  border-radius: 12rpx;
-  padding: 20rpx;
+  background: var(--bg-deep);
+  border: 1rpx solid var(--border);
+  border-radius: 8rpx;
+  padding: 18rpx 20rpx;
   margin-bottom: 20rpx;
 }
 
 .panel-unit {
-  font-size: 36rpx;
-  font-weight: bold;
+  font-size: 34rpx;
+  font-weight: 600;
   color: var(--danger);
   margin-right: 12rpx;
 }
@@ -218,7 +272,7 @@
 .panel-input {
   flex: 1;
   font-size: 40rpx;
-  font-weight: bold;
+  font-weight: 600;
 }
 
 .quick-bids {
@@ -232,15 +286,21 @@
   text-align: center;
   margin: 0 8rpx;
   padding: 14rpx 0;
-  border: 2rpx solid var(--primary);
+  border: 1rpx solid var(--primary-soft);
   color: var(--primary);
-  border-radius: 10rpx;
+  background: var(--primary-light);
+  border-radius: 6rpx;
   font-size: 26rpx;
+}
+
+.quick-btn:active {
+  background: var(--primary);
+  color: #FFFFFF;
 }
 
 .panel-tip {
   text-align: center;
-  font-size: 22rpx;
+  font-size: var(--fs-caption);
   color: var(--text-hint);
   margin-bottom: 24rpx;
 }

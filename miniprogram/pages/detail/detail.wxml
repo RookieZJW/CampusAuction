@@ -10,8 +10,12 @@
     </swiper-item>
   </swiper>
 
-  <!-- 价格与状态 -->
+  <!-- 价格与状态：一张价签 -->
   <view class="card price-card">
+    <view class="price-kicker">
+      <text>当前竞价</text>
+      <text class="price-no">LIVE / {{detail.id}}</text>
+    </view>
     <view class="price-row">
       <view class="current-price">
         <text class="price-label">当前价</text>
@@ -48,7 +52,7 @@
 
   <!-- 出价记录 -->
   <view class="card">
-    <view class="section-title">出价记录（{{detail.bidCount}}）</view>
+    <view class="section-title section-head">出价记录（{{detail.bidCount}}）</view>
     <view wx:if="{{!detail.bidRecords.length}}" class="empty" style="padding: 40rpx 0;">
       还没有人出价，来做第一个吧
     </view>

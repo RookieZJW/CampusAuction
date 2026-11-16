@@ -1,40 +1,175 @@
 .index-page {
-  padding-bottom: 40rpx;
+  padding-bottom: 48rpx;
 }
 
-/* 分类横滑条 */
+/* ---- 公告栏头图：纸胶带 + 编号 + 一句话，不做营销大图 ---- */
+.board {
+  position: relative;
+  margin: 24rpx 24rpx 8rpx;
+  padding: 34rpx 30rpx 26rpx;
+  background: var(--card-bg);
+  border: 1rpx solid var(--border);
+  border-radius: 8rpx;
+  box-shadow: 0 8rpx 20rpx rgba(39, 51, 62, 0.06);
+}
+
+.board-tape {
+  position: absolute;
+  top: -14rpx;
+  left: 50%;
+  width: 132rpx;
+  height: 30rpx;
+  margin-left: -66rpx;
+  background: rgba(154, 107, 47, 0.20);
+  border-left: 1rpx solid rgba(154, 107, 47, 0.10);
+  border-right: 1rpx solid rgba(154, 107, 47, 0.10);
+  transform: rotate(-2deg);
+}
+
+.board-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.board-no {
+  font-size: var(--fs-label);
+  letter-spacing: 3rpx;
+  color: var(--text-hint);
+  font-family: var(--font-num);
+}
+
+.board-live {
+  display: flex;
+  align-items: center;
+  font-size: var(--fs-label);
+  letter-spacing: 2rpx;
+  color: var(--moss);
+}
+
+.live-dot {
+  width: 10rpx;
+  height: 10rpx;
+  border-radius: 50%;
+  background: var(--moss);
+  margin-right: 10rpx;
+  box-shadow: 0 0 0 4rpx rgba(84, 112, 79, 0.12);
+}
+
+.board-title {
+  margin-top: 20rpx;
+  font-size: var(--fs-hero);
+  font-weight: 600;
+  letter-spacing: 4rpx;
+  line-height: 1.25;
+  color: var(--primary-deep);
+}
+
+.board-desc {
+  margin-top: 12rpx;
+  font-size: var(--fs-meta);
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.board-foot {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-top: 28rpx;
+  padding-top: 18rpx;
+  border-top: 1rpx dashed var(--border);
+}
+
+.board-stat {
+  display: flex;
+  align-items: baseline;
+}
+
+.board-count {
+  font-size: 44rpx;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--brick);
+}
+
+.board-unit {
+  font-size: var(--fs-caption);
+  color: var(--text-secondary);
+  margin-left: 10rpx;
+}
+
+.board-rule {
+  font-size: var(--fs-label);
+  letter-spacing: 1rpx;
+  color: var(--text-hint);
+}
+
+/* ---- 分类：纸条筛选签 ---- */
 .category-bar {
   display: flex;
   white-space: nowrap;
-  background: #ffffff;
-  padding: 16rpx 16rpx 8rpx;
+  padding: 20rpx 24rpx 6rpx;
 }
 
 .category-item {
   display: inline-block;
-  padding: 8rpx 28rpx;
-  margin-right: 8rpx;
-  border-radius: 28rpx;
+  padding: 10rpx 24rpx;
+  margin-right: 12rpx;
+  border-radius: 6rpx;
   font-size: 26rpx;
+  letter-spacing: 1rpx;
   color: var(--text-secondary);
-  background: var(--bg);
+  background: var(--card-bg);
+  border: 1rpx solid var(--border);
 }
 
 .category-item.active {
-  color: #ffffff;
+  color: #FFFFFF;
   background: var(--primary);
+  border-color: var(--primary);
+  font-weight: 500;
 }
 
-/* 拍卖卡片 */
+/* ---- 列表标题 ---- */
+.list-head {
+  margin: 22rpx 24rpx 2rpx;
+  align-items: center;
+  font-size: 26rpx;
+  font-weight: 600;
+  letter-spacing: 2rpx;
+  color: var(--text);
+}
+
+/* ---- 拍品卡片：左侧一道墨蓝竖签 ---- */
 .auction-card {
   display: flex;
+  padding: 20rpx;
+  margin: 16rpx 24rpx;
+  overflow: hidden;
+}
+
+.auction-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 18rpx;
+  bottom: 18rpx;
+  width: 6rpx;
+  background: var(--primary-soft);
+  border-radius: 0 3rpx 3rpx 0;
+}
+
+.auction-card:active {
+  background: var(--bg-deep);
 }
 
 .auction-cover {
-  width: 200rpx;
-  height: 200rpx;
-  border-radius: 12rpx;
-  background: var(--bg);
+  width: 196rpx;
+  height: 196rpx;
+  border-radius: 8rpx;
+  background: var(--bg-deep);
+  border: 1rpx solid var(--border);
   flex-shrink: 0;
 }
 
@@ -49,12 +184,18 @@
 
 .auction-title {
   font-size: 30rpx;
-  font-weight: bold;
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--text);
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+}
+
+.auction-meta {
+  margin: 6rpx 0;
 }
 
 .auction-price-row {
@@ -64,20 +205,47 @@
 }
 
 .auction-price-row .price {
-  font-size: 34rpx;
+  font-size: 38rpx;
 }
 
 .bid-count {
-  font-size: 22rpx;
+  font-size: 21rpx;
   color: var(--text-hint);
 }
 
 .countdown {
-  font-size: 24rpx;
-  color: var(--warning);
+  display: flex;
+  align-items: center;
+  font-size: 22rpx;
+  color: var(--kraft);
+  letter-spacing: 0.5rpx;
+}
+
+.countdown-dot {
+  width: 8rpx;
+  height: 8rpx;
+  border-radius: 50%;
+  background: currentColor;
+  margin-right: 10rpx;
+  opacity: 0.75;
 }
 
 .countdown.urgent {
   color: var(--danger);
-  font-weight: bold;
+  font-weight: 600;
+}
+
+/* ---- 空态与列表尾 ---- */
+.empty-sub {
+  margin-top: 10rpx;
+  font-size: var(--fs-caption);
+  color: var(--text-hint);
+}
+
+.list-end {
+  text-align: center;
+  padding: 30rpx 0 10rpx;
+  font-size: var(--fs-label);
+  letter-spacing: 2rpx;
+  color: var(--text-hint);
 }

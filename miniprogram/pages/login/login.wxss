@@ -3,9 +3,21 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 200rpx 60rpx 80rpx;
+  padding: 220rpx 60rpx 80rpx;
   box-sizing: border-box;
-  background: #ffffff;
+  background: transparent;
+  position: relative;
+}
+
+/* 纸上印的一道竖线，像笔记本装订边 */
+.login-page::before {
+  content: '';
+  position: absolute;
+  left: 46rpx;
+  top: 0;
+  bottom: 0;
+  width: 1rpx;
+  background: var(--border);
 }
 
 .logo-area {
@@ -13,27 +25,50 @@
 }
 
 .logo-icon {
-  width: 140rpx;
-  height: 140rpx;
-  line-height: 140rpx;
+  position: relative;
+  width: 136rpx;
+  height: 136rpx;
+  line-height: 136rpx;
   margin: 0 auto;
-  border-radius: 36rpx;
-  background: var(--primary);
-  color: #ffffff;
+  border-radius: 10rpx;
+  background: var(--primary-deep);
+  color: #FFFFFF;
   font-size: 64rpx;
-  font-weight: bold;
+  font-weight: 600;
+  box-shadow: 0 8rpx 18rpx rgba(27, 54, 84, 0.18), inset 0 2rpx 0 rgba(255, 255, 255, 0.12);
+}
+
+/* 角上一枚小印章 */
+.logo-icon::after {
+  content: '';
+  position: absolute;
+  right: -10rpx;
+  top: -10rpx;
+  width: 34rpx;
+  height: 34rpx;
+  border: 3rpx double var(--brick);
+  border-radius: 50%;
+  opacity: 0.75;
 }
 
 .app-name {
-  margin-top: 32rpx;
-  font-size: 44rpx;
-  font-weight: bold;
-  color: var(--text);
+  margin-top: 36rpx;
+  font-size: 48rpx;
+  font-weight: 600;
+  letter-spacing: 8rpx;
+  color: var(--primary-deep);
 }
 
 .app-slogan {
-  margin-top: 12rpx;
-  font-size: 26rpx;
+  margin-top: 14rpx;
+  font-size: var(--fs-meta);
+  letter-spacing: 2rpx;
+  color: var(--text-secondary);
+}
+
+.login-note {
+  margin-top: 28rpx;
+  font-size: var(--fs-caption);
   color: var(--text-hint);
 }
 
@@ -44,6 +79,6 @@
 .privacy-tip {
   margin-top: 24rpx;
   text-align: center;
-  font-size: 22rpx;
+  font-size: var(--fs-caption);
   color: var(--text-hint);
 }
