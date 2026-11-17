@@ -1,4 +1,4 @@
-/* 登录弹窗：半透明遮罩 + 居中纸卡，仿 WorkBuddy 布局但沿用本项目纸感视觉 */
+/* 登录弹窗：半透明遮罩 + 居中纸卡，一屏填齐头像/昵称/手机号 */
 .login-mask {
   position: fixed;
   inset: 0;
@@ -12,16 +12,15 @@
 .login-sheet {
   position: relative;
   width: 640rpx;
-  max-width: 88vw;
+  max-width: 90vw;
   background: var(--card-bg);
   border: 1rpx solid var(--border);
   border-radius: 20rpx;
-  padding: 72rpx 48rpx 48rpx;
+  padding: 60rpx 48rpx 44rpx;
   box-sizing: border-box;
   box-shadow: 0 24rpx 80rpx rgba(0, 0, 0, 0.25);
 }
 
-/* 顶部一道压痕 */
 .login-sheet::before {
   content: '';
   position: absolute;
@@ -46,42 +45,132 @@
 
 .sheet-brand {
   text-align: center;
-  margin-bottom: 56rpx;
+  margin-bottom: 40rpx;
 }
 
 .brand-stamp {
-  width: 112rpx;
-  height: 112rpx;
-  line-height: 112rpx;
-  margin: 0 auto 24rpx;
+  width: 92rpx;
+  height: 92rpx;
+  line-height: 92rpx;
+  margin: 0 auto 20rpx;
   border-radius: 12rpx;
   background: var(--primary-deep);
   color: #FFFFFF;
-  font-size: 56rpx;
+  font-size: 48rpx;
   font-weight: 600;
   letter-spacing: 4rpx;
   box-shadow: 0 8rpx 18rpx rgba(27, 54, 84, 0.18);
 }
 
 .brand-title {
-  font-size: 44rpx;
+  font-size: 40rpx;
   font-weight: 600;
   letter-spacing: 4rpx;
   color: var(--primary-deep);
 }
 
 .brand-slogan {
-  margin-top: 10rpx;
+  margin-top: 8rpx;
   font-size: var(--fs-caption);
   color: var(--text-hint);
   letter-spacing: 1rpx;
 }
 
-/* 微信登录主按钮：黑色实心，仿 WorkBuddy */
-.btn-wx {
+/* ---- 资料填写区 ---- */
+.profile-form {
+  margin-bottom: 36rpx;
+}
+
+.avatar-btn {
+  position: relative;
+  display: block;
+  width: 132rpx;
+  height: 132rpx;
+  margin: 0 auto 32rpx;
+  padding: 0;
+  background: transparent;
+  border: none;
+  line-height: 1;
+}
+
+.avatar-btn::after {
+  border: none;
+}
+
+.avatar-img {
+  width: 132rpx;
+  height: 132rpx;
+  border-radius: 50%;
+  border: 2rpx solid var(--border);
+  background: var(--bg-deep);
+}
+
+.avatar-edit {
+  position: absolute;
+  left: 50%;
+  bottom: -8rpx;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-size: 20rpx;
+  color: #FFFFFF;
+  background: var(--primary);
+  padding: 2rpx 14rpx;
+  border-radius: 20rpx;
+}
+
+.field-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 18rpx;
+}
+
+.field-label {
+  width: 96rpx;
+  flex-shrink: 0;
+  font-size: var(--fs-body);
+  color: var(--text-secondary);
+}
+
+.field-input {
+  flex: 1;
+  height: 80rpx;
+  padding: 0 20rpx;
+  box-sizing: border-box;
+  border: 1rpx solid var(--border);
+  border-radius: 10rpx;
+  background: #FFFFFF;
+  font-size: var(--fs-body);
+  color: var(--text);
+}
+
+.phone-btn {
+  flex: 1;
+  height: 80rpx;
+  line-height: 80rpx;
+  background: var(--primary-light);
+  color: var(--primary-deep);
+  font-size: var(--fs-body);
+  border: 1rpx solid var(--primary-soft);
+  border-radius: 10rpx;
+  padding: 0 20rpx;
+  text-align: left;
+}
+
+.phone-btn::after {
+  border: none;
+}
+
+.phone-hint {
+  margin: -6rpx 0 0 96rpx;
+  font-size: var(--fs-caption);
+  color: var(--moss);
+}
+
+/* 登录主按钮：黑色实心，仿 WorkBuddy */
+.btn-login {
   width: 100%;
-  height: 96rpx;
-  line-height: 96rpx;
+  height: 92rpx;
+  line-height: 92rpx;
   background: #1A1A1A;
   color: #FFFFFF;
   font-size: 32rpx;
@@ -92,109 +181,8 @@
   padding: 0;
 }
 
-.btn-wx::after {
+.btn-login::after {
   border: none;
-}
-
-.alt-row {
-  display: flex;
-  justify-content: center;
-  gap: 80rpx;
-  margin-top: 44rpx;
-}
-
-.alt-item {
-  width: 160rpx;
-  background: transparent;
-  border: none;
-  padding: 0;
-  line-height: 1.4;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.alt-item::after {
-  border: none;
-}
-
-.alt-icon {
-  width: 92rpx;
-  height: 92rpx;
-  line-height: 92rpx;
-  border-radius: 50%;
-  background: #F0EDE4;
-  color: var(--primary-deep);
-  font-size: 40rpx;
-  text-align: center;
-  margin-bottom: 14rpx;
-}
-
-.alt-icon-mail {
-  background: #E7EEF3;
-}
-
-.alt-label {
-  font-size: var(--fs-meta);
-  color: var(--text-secondary);
-}
-
-/* 邮箱登录表单 */
-.email-form {
-  margin-top: 8rpx;
-}
-
-.field {
-  width: 100%;
-  height: 88rpx;
-  padding: 0 24rpx;
-  box-sizing: border-box;
-  border: 1rpx solid var(--border);
-  border-radius: 10rpx;
-  background: #FFFFFF;
-  font-size: var(--fs-body);
-  color: var(--text);
-  margin-bottom: 20rpx;
-}
-
-.code-row {
-  display: flex;
-  gap: 16rpx;
-}
-
-.code-field {
-  flex: 1;
-  margin-bottom: 20rpx;
-}
-
-.code-btn {
-  width: 220rpx;
-  height: 88rpx;
-  line-height: 88rpx;
-  margin-bottom: 20rpx;
-  background: var(--primary);
-  color: #FFFFFF;
-  font-size: var(--fs-meta);
-  border-radius: 10rpx;
-  padding: 0;
-}
-
-.code-btn::after {
-  border: none;
-}
-
-.dev-hint {
-  font-size: var(--fs-caption);
-  color: var(--brick);
-  margin: -6rpx 0 18rpx;
-  text-align: center;
-}
-
-.back-link {
-  text-align: center;
-  margin-top: 24rpx;
-  font-size: var(--fs-meta);
-  color: var(--primary);
 }
 
 /* 协议勾选 */
@@ -202,7 +190,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 44rpx;
+  margin-top: 32rpx;
 }
 
 .checkbox {

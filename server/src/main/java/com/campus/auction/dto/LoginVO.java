@@ -18,6 +18,9 @@ public class LoginVO {
 
     private String avatar;
 
+    /** 手机号（未绑定为空串），前端据此判断是否需要引导补全 */
+    private String phone;
+
     /** 虚拟余额（分） */
     private Integer balance;
 

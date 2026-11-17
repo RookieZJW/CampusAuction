@@ -175,6 +175,11 @@ Page({
       data: { code: d.code }
     }).then((profile) => {
       this.setData({ phone: profile.phone || '', phoneBound: !!profile.phone })
+      // 同步本地登录态，返回「我的」页立即显示手机号
+      this.syncLogin(Object.assign({}, profile, {
+        nickname: this.data.nickname,
+        avatar: this.data.avatarUrl
+      }))
       wx.showToast({ title: '已绑定', icon: 'success' })
     }).catch((err) => {
       wx.showToast({ title: err.msg || '绑定失败，请重试', icon: 'none' })
@@ -220,7 +225,8 @@ Page({
     app.setLogin({
       ...info,
       nickname: profile.nickname || info.nickname,
-      avatar: profile.avatar || info.avatar
+      avatar: profile.avatar || info.avatar,
+      phone: profile.phone !== undefined ? profile.phone : info.phone
     })
   }
 })

@@ -1,55 +1,40 @@
 <view class="login-mask" bindtap="onMaskTap">
   <view class="login-sheet" catchtap="onSheetTap">
-    <!-- 关闭 -->
     <view class="sheet-close" bindtap="onClose" aria-label="关闭">×</view>
 
-    <!-- 品牌区：沿用纸感校园视觉，不用 WorkBuddy 机器人形象 -->
     <view class="sheet-brand">
       <view class="brand-stamp">拍</view>
       <view class="brand-title">校园拍场</view>
-      <view class="brand-slogan">闲置好物 · 价高者得 · 校园面交</view>
+      <view class="brand-slogan">填好资料，同学才好认出你</view>
     </view>
 
-    <!-- 主登录方式 -->
-    <block wx:if="{{mode === 'main'}}">
-      <button class="btn-wx" bindtap="onWxLogin" loading="{{loading}}" disabled="{{loading}}">
-        微信登录
+    <!-- 资料填写区：头像 / 昵称 / 手机号，都在这一屏 -->
+    <view class="profile-form">
+      <button class="avatar-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
+        <image class="avatar-img" src="{{avatarDisplay || '/images/placeholder.png'}}" mode="aspectFill" />
+        <view class="avatar-edit">换头像</view>
       </button>
 
-      <view class="alt-row">
-        <button class="alt-item" open-type="getPhoneNumber" bindgetphonenumber="onGetPhoneNumber"
-                disabled="{{phoneLoading}}">
-          <view class="alt-icon alt-icon-phone">▣</view>
-          <view class="alt-label">手机号</view>
-        </button>
-        <view class="alt-item" bindtap="onSwitchMode" data-mode="email">
-          <view class="alt-icon alt-icon-mail">✉</view>
-          <view class="alt-label">邮箱登录</view>
-        </view>
+      <view class="field-row">
+        <text class="field-label">昵称</text>
+        <input class="field-input" type="nickname" placeholder="填个同学认得出的名字"
+               value="{{nickname}}" maxlength="32"
+               bindinput="onNicknameInput" bindblur="onNicknameBlur" />
       </view>
-    </block>
 
-    <!-- 邮箱登录子页 -->
-    <block wx:else>
-      <view class="email-form">
-        <input class="field" type="text" placeholder="输入邮箱地址" value="{{email}}"
-               bindinput="onEmailInput" maxlength="64" />
-        <view class="code-row">
-          <input class="field code-field" type="number" placeholder="验证码" value="{{emailCode}}"
-                 bindinput="onCodeInput" maxlength="6" />
-          <button class="code-btn" bindtap="onSendCode" disabled="{{countdown > 0 || sending}}">
-            {{countdown > 0 ? countdown + 's' : (sending ? '发送中' : '获取验证码')}}
-          </button>
-        </view>
-        <view wx:if="{{devMode && devCode}}" class="dev-hint">演示验证码：{{devCode}}</view>
-        <button class="btn-wx" bindtap="onEmailLogin" loading="{{emailLoading}}" disabled="{{emailLoading}}">
-          邮箱登录
+      <view class="field-row">
+        <text class="field-label">手机号</text>
+        <button class="phone-btn" open-type="getPhoneNumber" bindgetphonenumber="onGetPhoneNumber">
+          {{phoneReady ? '已授权，点此可重新授权' : '微信一键授权手机号'}}
         </button>
-        <view class="back-link" bindtap="onSwitchMode" data-mode="main">‹ 返回其他登录方式</view>
       </view>
-    </block>
+      <view wx:if="{{phoneReady}}" class="phone-hint">授权成功，登录时会绑定到你的账号</view>
+    </view>
 
-    <!-- 协议勾选：不默认勾选 -->
+    <button class="btn-login" bindtap="onLogin" loading="{{loading}}" disabled="{{loading}}">
+      登录
+    </button>
+
     <view class="agreement-row">
       <view class="checkbox {{agreed ? 'checked' : ''}}" bindtap="onToggleAgree">
         <view wx:if="{{agreed}}" class="checkbox-mark">✓</view>

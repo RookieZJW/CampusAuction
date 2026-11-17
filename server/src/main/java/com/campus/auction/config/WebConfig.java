@@ -28,9 +28,7 @@ public class WebConfig implements WebMvcConfigurer {
                 // 白名单：登录接口 + 接口文档
                 .excludePathPatterns(
                         "/api/v1/auth/login",
-                        "/api/v1/auth/login/phone",
-                        "/api/v1/auth/login/email",
-                        "/api/v1/auth/email/code",
+                        "/api/v1/auth/register",
                         "/api/v1/auth/mock-login",
                         "/api/v1/admin/login",
                         // 未登录可浏览（审核合规：核心浏览功能不强制登录）

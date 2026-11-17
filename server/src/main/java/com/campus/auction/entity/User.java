@@ -29,9 +29,6 @@ public class User {
     /** 手机号登录凭证，唯一（账号打通用） */
     private String phone;
 
-    /** 邮箱登录凭证，唯一（账号打通用） */
-    private String email;
-
     /** 信用分：初始 100，低于 60 限制出价 */
     private Integer creditScore;
 

@@ -10,6 +10,7 @@
         <image class="avatar" src="{{userInfo.avatar || '/images/placeholder.png'}}" mode="aspectFill" />
         <view class="user-info">
           <view class="nickname">{{userInfo.nickname}}</view>
+          <view wx:if="{{userInfo.phone}}" class="user-phone">{{userInfo.phone}}</view>
           <view class="stats">
             <text>余额 ¥{{balanceYuan}}</text>
             <text class="divider">·</text>

@@ -67,6 +67,13 @@
   color: var(--text);
 }
 
+.user-phone {
+  margin-top: 4rpx;
+  font-size: var(--fs-meta);
+  color: var(--text-hint);
+  font-family: var(--font-num);
+}
+
 .stats {
   margin-top: 8rpx;
   font-size: var(--fs-meta);

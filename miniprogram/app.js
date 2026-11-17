@@ -3,10 +3,12 @@ const { request } = require('./utils/request')
 
 App({
   globalData: {
-    // 用户信息缓存：{ token, userId, nickname, avatar, balance, creditScore }
+    // 用户信息缓存：{ token, userId, nickname, avatar, phone, balance, creditScore }
     userInfo: null,
-    // 本次启动是否已自动弹过登录框（避免关闭后反复弹）
-    loginPrompted: false
+    // 本次启动是否已弹过登录框（避免反复弹）
+    loginPrompted: false,
+    // 本地登录态是否已完成恢复校验（老用户免登录判断用）
+    loginReady: false
   },
 
   onLaunch() {
@@ -32,17 +34,27 @@ App({
   restoreLogin() {
     const userInfo = wx.getStorageSync('userInfo')
     if (!userInfo || !userInfo.token) {
+      // 本地无登录态：校验已完成（无账号），标记就绪
+      this.globalData.loginReady = true
       return
     }
     this.globalData.userInfo = userInfo
 
-    // 异步自检：token 失效则清空本地态，交由页面引导重新登录
+    // 异步自检：token 失效则清空本地态，并弹登录框引导重新登录
     request({
       url: '/api/v1/auth/check',
       method: 'GET'
+    }).then(() => {
+      this.globalData.loginReady = true
     }).catch(() => {
       wx.removeStorageSync('userInfo')
       this.globalData.userInfo = null
+      this.globalData.loginReady = true
+      // 老用户 token 过期：本次启动补弹一次登录框
+      if (!this.globalData.loginPrompted) {
+        this.globalData.loginPrompted = true
+        wx.navigateTo({ url: '/pages/login/login' })
+      }
     })
   },
 

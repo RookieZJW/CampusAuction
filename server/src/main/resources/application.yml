@@ -47,20 +47,6 @@ ai:
     api-key: ${AI_PRICE_KEY:}
     model: ${AI_MODEL:deepseek-chat}
 
-# 多方式登录：邮箱验证码
-# dev-mode=true 时不真实发信，使用固定验证码 + 日志打印，答辩演示可直接填 dev-code
-# 后续拿到 QQ 邮箱 SMTP 授权码后，把 dev-mode 改 false 并补 smtp-password 即可切真实发信
-auth:
-  email:
-    dev-mode: ${AUTH_EMAIL_DEV_MODE:true}
-    dev-code: ${AUTH_EMAIL_DEV_CODE:123456}
-    code-ttl-minutes: 5
-    send-interval-seconds: 60
-    smtp-host: ${AUTH_EMAIL_SMTP_HOST:}
-    smtp-port: ${AUTH_EMAIL_SMTP_PORT:465}
-    smtp-username: ${AUTH_EMAIL_SMTP_USERNAME:}
-    # smtp-password 只从 application-local.yml / 环境变量注入，不在此声明
-
 spring.servlet.multipart:
   max-file-size: 3MB
   max-request-size: 10MB
