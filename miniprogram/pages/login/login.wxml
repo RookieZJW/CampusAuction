@@ -29,6 +29,7 @@
         </button>
       </view>
       <view wx:if="{{phoneReady}}" class="phone-hint">授权成功，登录时会绑定到你的账号</view>
+      <view wx:if="{{privacyDeclined}}" class="privacy-reagree" bindtap="onReopenPrivacy">还没同意隐私指引，点此重新查看</view>
     </view>
 
     <button class="btn-login" bindtap="onLogin" loading="{{loading}}" disabled="{{loading}}">
@@ -45,6 +46,23 @@
         和
         <text class="link" data-type="privacy" catchtap="onOpenAgreement">隐私政策</text>
       </view>
+    </view>
+  </view>
+</view>
+
+<!-- 微信隐私保护指引授权弹窗：用户主动同意，不默认勾选，不同意也可关闭登录卡片继续逛 -->
+<view class="privacy-mask" wx:if="{{showPrivacy}}">
+  <view class="privacy-panel">
+    <view class="privacy-title">先看一下隐私说明</view>
+    <view class="privacy-text">
+      登录时我们会向你收集手机号、头像和昵称：手机号用于登录与面交联系，头像昵称用于出价记录展示。这些信息只在你主动授权后才会获取，拒绝也能继续逛拍场。
+    </view>
+    <button class="privacy-link" bindtap="onOpenPrivacyContract">查看{{privacyContractName}}</button>
+    <view class="privacy-actions">
+      <button class="privacy-disagree" bindtap="onDisagreePrivacy">先不同意</button>
+      <button id="agree-btn" class="privacy-agree"
+              open-type="agreePrivacyAuthorization"
+              bindagreeprivacyauthorization="onAgreePrivacy">同意并继续</button>
     </view>
   </view>
 </view>

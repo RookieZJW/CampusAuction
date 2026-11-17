@@ -16,7 +16,79 @@ Page({
     avatarDisplay: '',   // 头像预览
     phoneCode: '',       // getPhoneNumber 回调的 code
     phoneMasked: '',     // 展示用（后端只回完整号，前端脱敏显示）
-    phoneReady: false
+    phoneReady: false,
+    // 微信隐私保护指引授权（getPhoneNumber / chooseAvatar / nickname 都受它约束）
+    showPrivacy: false,
+    privacyDeclined: false,
+    privacyContractName: '《用户隐私保护指引》'
+  },
+
+  onLoad() {
+    this.initPrivacy()
+  },
+
+  onUnload() {
+    if (wx.offNeedPrivacyAuthorization && this._privacyHandler) {
+      wx.offNeedPrivacyAuthorization(this._privacyHandler)
+    }
+  },
+
+  // ---------- 微信隐私保护指引 ----------
+  // errno 112 是后台没声明 scope（平台层），前端弹窗解决不了；
+  // 这里的弹窗解决的是「用户同意」层：没同意时微信会挂起接口，同意后放行。
+  initPrivacy() {
+    if (!wx.getPrivacySetting) {
+      return
+    }
+    wx.getPrivacySetting({
+      success: (res) => {
+        this.setData({
+          privacyContractName: res.privacyContractName || '《用户隐私保护指引》'
+        })
+        if (res.needAuthorization) {
+          this.setData({ showPrivacy: true })
+        }
+      },
+      fail: () => {}
+    })
+    if (wx.onNeedPrivacyAuthorization) {
+      this._privacyHandler = (resolve) => {
+        this.resolvePrivacyAuthorization = resolve
+        this.setData({ showPrivacy: true })
+      }
+      wx.onNeedPrivacyAuthorization(this._privacyHandler)
+    }
+  },
+
+  onAgreePrivacy() {
+    this.setData({ showPrivacy: false, privacyDeclined: false })
+    if (this.resolvePrivacyAuthorization) {
+      this.resolvePrivacyAuthorization({ buttonId: 'agree-btn', event: 'agree' })
+      this.resolvePrivacyAuthorization = null
+    }
+  },
+
+  onDisagreePrivacy() {
+    // 不能强制授权：不同意仍可关闭登录卡片继续逛拍场
+    this.setData({ showPrivacy: false, privacyDeclined: true })
+    if (this.resolvePrivacyAuthorization) {
+      this.resolvePrivacyAuthorization({ event: 'disagree' })
+      this.resolvePrivacyAuthorization = null
+    }
+  },
+
+  onOpenPrivacyContract() {
+    if (!wx.openPrivacyContract) {
+      return
+    }
+    wx.openPrivacyContract({
+      fail: () => wx.showToast({ title: '请先在 MP 后台配置隐私指引', icon: 'none' })
+    })
+  },
+
+  /** 用户之前拒绝了，给一个主动重新查看的入口 */
+  onReopenPrivacy() {
+    this.setData({ showPrivacy: true })
   },
 
   // ---------- 协议 ----------
@@ -75,7 +147,15 @@ Page({
   onGetPhoneNumber(e) {
     const d = e.detail || {}
     if (!d.code) {
-      if (d.errno === 1400001) {
+      if (d.errno === 112 || d.errCode === 112) {
+        // 平台层校验：MP 后台《用户隐私保护指引》未声明「手机号」采集类型
+        wx.showModal({
+          title: '手机号授权暂不可用',
+          content: '小程序后台还未声明「手机号」隐私保护类型（errno 112）。请在 MP 后台「设置 → 服务内容声明 → 用户隐私保护指引」中声明手机号、昵称、头像三项，审核通过约 5 分钟后生效。',
+          showCancel: false,
+          confirmText: '知道了'
+        })
+      } else if (d.errno === 1400001) {
         wx.showToast({ title: '手机号体验额度已用完', icon: 'none' })
       } else {
         wx.showToast({ title: '已取消授权，可重新点', icon: 'none' })

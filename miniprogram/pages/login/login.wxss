@@ -166,6 +166,13 @@
   color: var(--moss);
 }
 
+.privacy-reagree {
+  margin: 8rpx 0 0 96rpx;
+  font-size: var(--fs-caption);
+  color: var(--primary);
+  text-decoration: underline;
+}
+
 /* 登录主按钮：黑色实心，仿 WorkBuddy */
 .btn-login {
   width: 100%;
@@ -223,4 +230,86 @@
 
 .link {
   color: var(--primary);
+}
+
+/* ---- 微信隐私保护指引授权弹窗（层级高于登录遮罩 1000）---- */
+.privacy-mask {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 26, 34, 0.62);
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.privacy-panel {
+  width: 600rpx;
+  max-width: 88vw;
+  background: var(--card-bg);
+  border: 1rpx solid var(--border);
+  border-radius: 16rpx;
+  padding: 40rpx 36rpx 32rpx;
+  box-sizing: border-box;
+  box-shadow: 0 20rpx 60rpx rgba(0, 0, 0, 0.28);
+}
+
+.privacy-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  letter-spacing: 1rpx;
+  color: var(--primary-deep);
+}
+
+.privacy-text {
+  margin-top: 18rpx;
+  font-size: var(--fs-meta);
+  color: var(--text-secondary);
+  line-height: 1.75;
+}
+
+.privacy-link {
+  background: transparent;
+  color: var(--primary);
+  font-size: var(--fs-caption);
+  text-align: left;
+  padding: 0;
+  margin-top: 18rpx;
+  line-height: 1.6;
+}
+
+.privacy-link::after {
+  border: none;
+}
+
+.privacy-actions {
+  display: flex;
+  gap: 16rpx;
+  margin-top: 32rpx;
+}
+
+.privacy-disagree,
+.privacy-agree {
+  flex: 1;
+  height: 80rpx;
+  line-height: 80rpx;
+  font-size: 26rpx;
+  border-radius: 10rpx;
+  margin: 0;
+}
+
+.privacy-disagree {
+  background: var(--bg-deep);
+  color: var(--text-secondary);
+  border: 1rpx solid var(--border);
+}
+
+.privacy-agree {
+  background: var(--primary);
+  color: #FFFFFF;
+}
+
+.privacy-disagree::after,
+.privacy-agree::after {
+  border: none;
 }
