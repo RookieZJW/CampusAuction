@@ -19,8 +19,8 @@ import java.util.Map;
  * <p>手机号快速验证文档：
  * https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/getPhoneNumber.html
  *
- * <p>wx.mock=true 时不调微信服务器，直接生成模拟 openid（离线跑通登录闭环）；
- * 但 access_token 与手机号接口在 mock 模式下明确拒绝，避免写入假数据。
+ * <p>wx.mock=true 时不调微信服务器：openid 用模拟值，手机号用 code 映射的模拟号码（离线跑通注册闭环）；
+ * 但 access_token 接口仍明确拒绝，避免写入需要真实微信环境的脏数据。
  */
 @Slf4j
 @Service
@@ -120,6 +120,13 @@ public class WxApiService {
      * 返回值不写入日志，避免手机号明文落盘。
      */
     public String getPhoneNumber(String code) {
+        if (mock) {
+            // mock 模式只用于答辩离线演示：前端 getPhoneNumber 在真机/工具里仍可能拿到真 code，
+            // 但这里不调微信接口，用 code 稳定映射一个假号，保证注册闭环可跑。
+            log.warn("[mock 模式] 未调用微信 getuserphonenumber，返回模拟手机号");
+            long n = Math.abs((long) code.hashCode()) % 10000000000L;
+            return "138" + String.format("%08d", n);
+        }
         String token = getAccessToken();
         JsonNode resp;
         try {
