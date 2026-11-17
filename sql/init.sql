@@ -18,13 +18,16 @@ CREATE TABLE t_user (
     openid       VARCHAR(64)  NOT NULL COMMENT '微信 openid',
     nickname     VARCHAR(64)  NOT NULL DEFAULT '微信用户',
     avatar       VARCHAR(512) NULL,
-    phone        VARCHAR(20)  NULL,
+    phone        VARCHAR(20)  NULL COMMENT '手机号登录凭证，唯一',
+    email        VARCHAR(128) NULL COMMENT '邮箱登录凭证，唯一',
     credit_score INT          NOT NULL DEFAULT 100 COMMENT '信用分，初始100，低于60限制出价',
     balance      INT          NOT NULL DEFAULT 0 COMMENT '虚拟余额（分）',
     status       TINYINT      NOT NULL DEFAULT 0 COMMENT '0正常 1封禁',
     create_time  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
     update_time  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    UNIQUE KEY uk_openid (openid)
+    UNIQUE KEY uk_openid (openid),
+    UNIQUE KEY uk_phone (phone),
+    UNIQUE KEY uk_email (email)
 ) ENGINE = InnoDB COMMENT '学生用户';
 
 -- ------------------------------------------------------------

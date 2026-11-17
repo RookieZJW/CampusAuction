@@ -4,7 +4,8 @@
     "pages/detail/detail",
     "pages/publish/publish",
     "pages/mine/mine",
-    "pages/login/login"
+    "pages/login/login",
+    "pages/agreement/agreement"
   ],
   "subpackages": [
     {

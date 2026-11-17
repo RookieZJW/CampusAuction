@@ -1,0 +1,13 @@
+<view class="agreement-page">
+  <view class="doc-title">{{title}}</view>
+  <view class="doc-meta">最近更新：2026-11-17</view>
+
+  <view class="doc-body">
+    <block wx:for="{{sections}}" wx:key="heading">
+      <view class="sec-heading">{{item.heading}}</view>
+      <view wx:for="{{item.paragraphs}}" wx:for-item="p" wx:key="*this" class="sec-p">{{p}}</view>
+    </block>
+  </view>
+
+  <view class="doc-footer">如对本协议有疑问，可在小程序内联系管理员咨询。</view>
+</view>

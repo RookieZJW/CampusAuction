@@ -2,6 +2,7 @@
 // W2 后端就绪后接口为 GET /api/v1/auctions?page=&size=&categoryId=
 const { request } = require('../../utils/request')
 const { parseServerTime } = require('../../utils/time')
+const app = getApp()
 
 Page({
   data: {
@@ -19,6 +20,11 @@ Page({
     this.setData({ today: this.formatToday() })
     this.loadCategories()
     this.loadAuctions()
+  },
+
+  onShow() {
+    // 进入小程序即弹登录框（可关闭，不强制；本次启动只弹一次）
+    app.tryPromptLogin('pages/index/index')
   },
 
   /** 公告栏上的日期，像手写补上去的一样 */

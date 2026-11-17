@@ -1,0 +1,53 @@
+/* 协议文本页：纸感排版，长文可读 */
+.agreement-page {
+  padding: 48rpx 40rpx 80rpx;
+  line-height: 1.9;
+}
+
+.doc-title {
+  font-size: var(--fs-title);
+  font-weight: 600;
+  color: var(--primary-deep);
+  text-align: center;
+  letter-spacing: 2rpx;
+}
+
+.doc-meta {
+  margin-top: 12rpx;
+  margin-bottom: 40rpx;
+  text-align: center;
+  font-size: var(--fs-caption);
+  color: var(--text-hint);
+}
+
+.doc-body {
+  background: var(--card-bg);
+  border: 1rpx solid var(--border);
+  border-radius: 12rpx;
+  padding: 36rpx 32rpx;
+}
+
+.sec-heading {
+  margin: 28rpx 0 10rpx;
+  font-size: var(--fs-subtitle);
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.sec-heading:first-child {
+  margin-top: 0;
+}
+
+.sec-p {
+  font-size: var(--fs-body);
+  color: var(--text-secondary);
+  margin-bottom: 14rpx;
+  text-align: justify;
+}
+
+.doc-footer {
+  margin-top: 36rpx;
+  font-size: var(--fs-caption);
+  color: var(--text-hint);
+  text-align: center;
+}

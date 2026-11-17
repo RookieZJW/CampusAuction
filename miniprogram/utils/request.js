@@ -35,7 +35,16 @@ function request(options) {
         // 登录失效：清空本地态并跳转登录页
         if (body.code === 2001 || body.code === 2002) {
           wx.removeStorageSync('userInfo')
-          wx.navigateTo({ url: '/pages/login/login' })
+          const app = getApp()
+          if (app && app.globalData) {
+            app.globalData.userInfo = null
+          }
+          // 避免重复压栈：当前已在登录页则不再跳转
+          const pages = getCurrentPages()
+          const current = pages.length ? pages[pages.length - 1].route : ''
+          if (current !== 'pages/login/login') {
+            wx.navigateTo({ url: '/pages/login/login' })
+          }
         }
         reject(body)
       },
