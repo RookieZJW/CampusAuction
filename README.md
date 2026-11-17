@@ -53,6 +53,7 @@ campus-auction/
    - 密码与微信密钥放在 `server/src/main/resources/application-local.yml`（已 gitignore，不入库）
    - `cd server && mvn spring-boot:run`，接口文档：http://localhost:8080/doc.html
    - 当前 `wx.mock=false`：登录走真实微信 code2session（AppID/Secret 已配，仅本机 local.yml 生效）
+   - 新用户进入小程序弹登录卡片，一屏填齐头像（可选）/昵称/手机号，走 `POST /api/v1/auth/register` 一步建号；老用户本地有登录态则免登录
 4. **管理后台**：`cd admin && npm install && npm run dev` → http://localhost:5173（admin / admin123）
 5. **小程序**：微信开发者工具导入项目根目录的 `project.config.json`，
    **务必勾选「不校验合法域名」**（详情 → 本地设置）
@@ -79,4 +80,4 @@ campus-auction/
 
 ## 进度
 
-见 `docs/小程序项目档案.md`（每轮开发后更新）。**W1–W5 全部功能完成（2026-11-13 当天）**；2026-11-16 追加小程序视觉改版、分类横滑/时间格式/分类筛选三项修复，以及**用户资料（头像/昵称/手机号）与隐私合规**。仅剩收尾：MP 后台隐私指引配置、真机手机号验证、中期材料、论文撰写。
+见 `docs/小程序项目档案.md`（每轮开发后更新）。**W1–W5 全部功能完成（2026-11-13 当天）**；2026-11-16 追加小程序视觉改版、分类横滑/时间格式/分类筛选三项修复，以及**用户资料（头像/昵称/手机号）与隐私合规**；2026-11-17 重做登录体系为**新用户一屏填齐资料建号 + 老用户免登录**，并彻底删除邮箱登录（前后端 + 数据库）。仅剩收尾：MP 后台隐私指引配置、真机手机号验证、中期材料、论文撰写。
