@@ -6,9 +6,11 @@ import com.campus.auction.common.exception.BusinessException;
 import com.campus.auction.dto.PublishItemDTO;
 import com.campus.auction.entity.Auction;
 import com.campus.auction.entity.Item;
+import com.campus.auction.entity.User;
 import com.campus.auction.mapper.AuctionMapper;
 import com.campus.auction.mapper.CategoryMapper;
 import com.campus.auction.mapper.ItemMapper;
+import com.campus.auction.mapper.UserMapper;
 import com.campus.auction.service.ItemService;
 import com.campus.auction.util.JsonUtil;
 import com.campus.auction.vo.MyItemVO;import com.campus.auction.util.TimeUtil;
@@ -34,11 +36,19 @@ public class ItemServiceImpl implements ItemService {
     private final ItemMapper itemMapper;
     private final AuctionMapper auctionMapper;
     private final CategoryMapper categoryMapper;
+    private final UserMapper userMapper;
     private final JsonUtil jsonUtil;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Long publish(Long userId, PublishItemDTO dto) {
+        // 多校隔离：发布必须符合学校认证，拍品归属卖家学校
+        User seller = userMapper.selectById(userId);
+        if (seller == null || seller.getSchoolId() == null) {
+            throw new BusinessException(ResultCode.SCHOOL_NOT_AUTHED);
+        }
+        Long schoolId = seller.getSchoolId();
+
         // 校验分类存在
         if (categoryMapper.selectById(dto.getCategoryId()) == null) {
             throw new BusinessException(ResultCode.PARAM_ERROR, "分类不存在");
@@ -47,6 +57,7 @@ public class ItemServiceImpl implements ItemService {
         // 1. 物品入库（PENDING 待审）
         Item item = new Item();
         item.setSellerId(userId);
+        item.setSchoolId(schoolId);
         item.setCategoryId(dto.getCategoryId());
         item.setTitle(dto.getTitle());
         item.setDescription(dto.getDescription());
@@ -61,6 +72,7 @@ public class ItemServiceImpl implements ItemService {
         Auction auction = new Auction();
         auction.setItemId(item.getId());
         auction.setSellerId(userId);
+        auction.setSchoolId(schoolId);
         auction.setStartPrice(dto.getStartPrice());
         auction.setIncrement(dto.getIncrement());
         auction.setDeposit(DEFAULT_DEPOSIT);

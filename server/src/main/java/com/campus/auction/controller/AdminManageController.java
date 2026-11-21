@@ -10,12 +10,14 @@ import com.campus.auction.entity.Auction;
 import com.campus.auction.entity.Category;
 import com.campus.auction.entity.Item;
 import com.campus.auction.entity.Order;
+import com.campus.auction.entity.School;
 import com.campus.auction.entity.User;
 import com.campus.auction.interceptor.AuthInterceptor;
 import com.campus.auction.mapper.AuctionMapper;
 import com.campus.auction.mapper.CategoryMapper;
 import com.campus.auction.mapper.ItemMapper;
 import com.campus.auction.mapper.OrderMapper;
+import com.campus.auction.mapper.SchoolMapper;
 import com.campus.auction.mapper.UserMapper;
 import com.campus.auction.service.ReportService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,6 +52,7 @@ public class AdminManageController {
     private final ItemMapper itemMapper;
     private final OrderMapper orderMapper;
     private final CategoryMapper categoryMapper;
+    private final SchoolMapper schoolMapper;
     private final ReportService reportService;
 
     @Operation(summary = "数据看板")
@@ -196,4 +200,46 @@ public class AdminManageController {
         reportService.handle(reportId, adminId, dto);
         return Result.ok();
     }
+    // ------------------------------------------------------------------
+    // 学校字典管理（多校隔离）
+    // ------------------------------------------------------------------
+
+    @Operation(summary = "学校列表（管理端）", description = "含停用学校")
+    @GetMapping("/schools")
+    public Result<List<School>> schools() {
+        return Result.ok(schoolMapper.selectList(
+                new LambdaQueryWrapper<School>().orderByAsc(School::getSort)));
+    }
+
+    @Operation(summary = "新增学校")
+    @PostMapping("/schools")
+    public Result<School> addSchool(@RequestBody School school) {
+        if (school.getName() == null || school.getName().isBlank()
+                || school.getShortName() == null || school.getShortName().isBlank()) {
+            return Result.fail(ResultCode.PARAM_ERROR, "学校全称和简称不能为空");
+        }
+        school.setId(null);
+        if (school.getStatus() == null) {
+            school.setStatus(School.STATUS_ENABLED);
+        }
+        if (school.getSort() == null) {
+            school.setSort(99);
+        }
+        schoolMapper.insert(school);
+        return Result.ok(school);
+    }
+
+    @Operation(summary = "启用/停用学校")
+    @PutMapping("/schools/{id}/status")
+    public Result<Void> setSchoolStatus(@PathVariable Long id,
+                                        @RequestParam Integer status) {
+        School school = schoolMapper.selectById(id);
+        if (school == null) {
+            return Result.fail(ResultCode.NOT_FOUND, "学校不存在");
+        }
+        school.setStatus(status);
+        schoolMapper.updateById(school);
+        return Result.ok();
+    }
+
 }

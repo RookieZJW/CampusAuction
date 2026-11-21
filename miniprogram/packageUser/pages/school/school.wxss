@@ -1,0 +1,88 @@
+.school-page {
+  min-height: 100vh;
+  padding: 24rpx 24rpx 160rpx;
+  background: var(--bg);
+}
+
+.notice {
+  background: var(--primary-light);
+  border-color: var(--primary-soft);
+}
+.notice-title {
+  font-size: var(--fs-subtitle);
+  font-weight: 600;
+  color: var(--primary-deep);
+  margin-bottom: 10rpx;
+}
+.notice-text {
+  font-size: var(--fs-body);
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.current-card {
+  margin-top: 20rpx;
+  border-left: 6rpx solid var(--moss);
+}
+.current-label {
+  font-size: var(--fs-caption);
+  color: var(--text-hint);
+}
+.current-name {
+  font-size: var(--fs-title);
+  font-weight: 600;
+  color: var(--moss);
+  margin: 8rpx 0;
+}
+.current-hint {
+  font-size: var(--fs-caption);
+  color: var(--text-secondary);
+}
+
+.school-list {
+  padding: 8rpx 0;
+}
+.school-item {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 28rpx;
+  border-bottom: 1rpx solid var(--border);
+}
+.school-item:last-child {
+  border-bottom: none;
+}
+.school-item.selected {
+  background: var(--primary-light);
+}
+.radio {
+  width: 36rpx;
+  font-size: 28rpx;
+  color: var(--primary);
+  flex-shrink: 0;
+}
+.school-name {
+  flex: 1;
+  font-size: var(--fs-body);
+  color: var(--text);
+}
+.check {
+  font-size: var(--fs-caption);
+  color: var(--moss);
+}
+.empty {
+  padding: 40rpx;
+  text-align: center;
+  color: var(--text-hint);
+  font-size: var(--fs-body);
+}
+
+.submit-area {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 18rpx 40rpx calc(18rpx + env(safe-area-inset-bottom));
+  background: var(--card-bg);
+  border-top: 1rpx solid var(--border);
+  box-shadow: 0 -4rpx 18rpx rgba(39, 51, 62, 0.05);
+}

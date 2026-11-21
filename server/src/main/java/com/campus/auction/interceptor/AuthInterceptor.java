@@ -68,6 +68,23 @@ public class AuthInterceptor implements HandlerInterceptor {
         }
     }
 
+    /**
+     * 可选登录：从请求中尽力解析 openid，供免登录白名单接口（拍卖列表/详情）识别已登录用户做学校过滤。
+     * 无 token / token 无效 / 管理员 token 一律返回 null（当游客处理），绝不抛异常。
+     */
+    public String optionalOpenid(HttpServletRequest request) {
+        String auth = request.getHeader("Authorization");
+        if (auth == null || !auth.startsWith(BEARER_PREFIX)) {
+            return null;
+        }
+        try {
+            String subject = jwtUtil.parseOpenid(auth.substring(BEARER_PREFIX.length()));
+            return subject.startsWith("admin:") ? null : subject;
+        } catch (JwtException e) {
+            return null;
+        }
+    }
+
     /** 未授权时写回统一 JSON 响应（HTTP 200 + 业务码 2001/2002，前端按 code 处理） */
     private void writeUnauthorized(HttpServletResponse response, ResultCode resultCode) throws Exception {
         response.setStatus(HttpServletResponse.SC_OK);

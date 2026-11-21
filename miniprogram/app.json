@@ -21,7 +21,8 @@
         "pages/my-reviews/my-reviews",
         "pages/review/review",
         "pages/favorites/favorites",
-        "pages/profile/profile"
+        "pages/profile/profile",
+        "pages/school/school"
       ]
     },
     {

@@ -11,6 +11,8 @@
         <view class="user-info">
           <view class="nickname">{{userInfo.nickname}}</view>
           <view wx:if="{{userInfo.phone}}" class="user-phone">{{userInfo.phone}}</view>
+          <view wx:if="{{userInfo.certified}}" class="user-school">{{userInfo.schoolName}} · 本校拍场</view>
+          <view wx:else class="user-school unverified">未认证学校 · 看全部拍品</view>
           <view class="stats">
             <text>余额 ¥{{balanceYuan}}</text>
             <text class="divider">·</text>
@@ -31,6 +33,13 @@
 
   <!-- 功能入口 -->
   <view class="menu card">
+    <view class="menu-item" bindtap="onMenuTap" data-url="/packageUser/pages/school/school">
+      <text>学校认证</text>
+      <view class="menu-right">
+        <text class="school-tag">{{userInfo && userInfo.certified ? userInfo.schoolName : '去认证'}}</text>
+        <text class="arrow">›</text>
+      </view>
+    </view>
     <view class="menu-item" bindtap="onMenuTap" data-url="/packageUser/pages/profile/profile">
       <text>完善资料</text><text class="arrow">›</text>
     </view>

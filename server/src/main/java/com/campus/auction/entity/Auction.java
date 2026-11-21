@@ -35,6 +35,9 @@ public class Auction {
 
     private Long sellerId;
 
+    /** 所属学校，列表按本校过滤（冗余免联表） */
+    private Long schoolId;
+
     private Integer startPrice;
 
     @TableField("`increment`")

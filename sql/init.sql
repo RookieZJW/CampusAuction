@@ -11,6 +11,20 @@ CREATE DATABASE IF NOT EXISTS campus_auction
 USE campus_auction;
 
 -- ------------------------------------------------------------
+-- 0. 学校字典表（多校隔离：不同学校看到不同拍品）
+-- ------------------------------------------------------------
+CREATE TABLE t_school (
+    id          BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name        VARCHAR(64)  NOT NULL COMMENT '学校全称',
+    short_name  VARCHAR(32)  NOT NULL COMMENT '简称，小程序展示用',
+    status      TINYINT      NOT NULL DEFAULT 1 COMMENT '1启用 0停用',
+    sort        INT          NOT NULL DEFAULT 0 COMMENT '排序，越小越靠前',
+    create_time DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    update_time DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY uk_name (name)
+) ENGINE = InnoDB COMMENT '学校字典';
+
+-- ------------------------------------------------------------
 -- 1. 学生用户表
 -- ------------------------------------------------------------
 CREATE TABLE t_user (
@@ -19,13 +33,15 @@ CREATE TABLE t_user (
     nickname     VARCHAR(64)  NOT NULL DEFAULT '微信用户',
     avatar       VARCHAR(512) NULL,
     phone        VARCHAR(20)  NULL COMMENT '手机号登录凭证，唯一',
+    school_id    BIGINT       NULL COMMENT '认证学校ID，NULL=未认证',
     credit_score INT          NOT NULL DEFAULT 100 COMMENT '信用分，初始100，低于60限制出价',
     balance      INT          NOT NULL DEFAULT 0 COMMENT '虚拟余额（分）',
     status       TINYINT      NOT NULL DEFAULT 0 COMMENT '0正常 1封禁',
     create_time  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
     update_time  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     UNIQUE KEY uk_openid (openid),
-    UNIQUE KEY uk_phone (phone)
+    UNIQUE KEY uk_phone (phone),
+    KEY idx_school (school_id)
 ) ENGINE = InnoDB COMMENT '学生用户';
 
 -- ------------------------------------------------------------
@@ -61,6 +77,7 @@ CREATE TABLE t_category (
 CREATE TABLE t_item (
     id              BIGINT AUTO_INCREMENT PRIMARY KEY,
     seller_id       BIGINT      NOT NULL COMMENT '卖家 user_id',
+    school_id       BIGINT      NULL COMMENT '发布时卖家所属学校，冗余免联表',
     category_id     BIGINT      NOT NULL,
     title           VARCHAR(100) NOT NULL,
     description     TEXT         NULL,
@@ -74,6 +91,7 @@ CREATE TABLE t_item (
     create_time     DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
     update_time     DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     KEY idx_seller (seller_id),
+    KEY idx_school (school_id),
     KEY idx_category (category_id),
     KEY idx_status (status)
 ) ENGINE = InnoDB COMMENT '拍品（物品本体）';
@@ -85,6 +103,7 @@ CREATE TABLE t_auction (
     id                  BIGINT AUTO_INCREMENT PRIMARY KEY,
     item_id             BIGINT      NOT NULL COMMENT '关联 t_item',
     seller_id           BIGINT      NOT NULL COMMENT '冗余卖家ID，免联表',
+    school_id           BIGINT      NULL COMMENT '所属学校，列表按本校过滤（冗余免联表）',
     start_price         INT         NOT NULL COMMENT '起拍价（分）',
     `increment`         INT         NOT NULL DEFAULT 100 COMMENT '加价幅度（分）',
     buyout_price        INT         NULL COMMENT '一口价，NULL=无一口价',
@@ -104,6 +123,7 @@ CREATE TABLE t_auction (
     update_time         DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     KEY idx_item (item_id),
     KEY idx_seller (seller_id),
+    KEY idx_school_status (school_id, status) COMMENT '本校拍品列表过滤索引',
     KEY idx_status_end (status, end_time) COMMENT '结算任务扫描索引'
 ) ENGINE = InnoDB COMMENT '拍卖场次';
 
@@ -262,3 +282,12 @@ INSERT INTO t_category (name, parent_id, sort) VALUES
 ('服饰鞋包', 0, 5),
 ('乐器', 0, 6),
 ('其他', 0, 7);
+
+-- 学校字典（多校隔离，可在此增删；id 固定便于迁移脚本引用）
+INSERT INTO t_school (id, name, short_name, status, sort) VALUES
+(1, '河南理工大学', '河南理工', 1, 1),
+(2, '河南职业技术学院', '河南职院', 1, 2),
+(3, '郑州大学', '郑大', 1, 3),
+(4, '河南大学', '河大', 1, 4),
+(5, '河南财经政法大学', '河南财大', 1, 5),
+(6, '华北水利水电大学', '华水', 1, 6);

@@ -33,6 +33,8 @@ public class WebConfig implements WebMvcConfigurer {
                         "/api/v1/admin/login",
                         // 未登录可浏览（审核合规：核心浏览功能不强制登录）
                         "/api/v1/categories",
+                        // 学校字典公开（认证页选择用）；认证/我的学校接口需登录
+                        "/api/v1/schools",
                         "/api/v1/auctions",
                         "/api/v1/auctions/*",
                         "/api/v1/auctions/*/live",

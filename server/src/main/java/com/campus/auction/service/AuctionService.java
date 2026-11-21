@@ -11,7 +11,7 @@ public interface AuctionService {
     /**
      * 大厅列表：分页 + 分类筛选，只查 ONGOING
      */
-    Map<String, Object> pageList(int page, int size, Long categoryId);
+    Map<String, Object> pageList(int page, int size, Long categoryId, Long schoolId);
 
     /**
      * 拍卖详情：拍品信息 + 出价记录（倒序）

@@ -157,6 +157,20 @@
   margin-right: 12rpx;
 }
 
+.user-school {
+  font-size: var(--fs-caption);
+  color: var(--moss);
+  margin-top: 6rpx;
+}
+.user-school.unverified {
+  color: var(--warning);
+}
+.school-tag {
+  font-size: var(--fs-caption);
+  color: var(--moss);
+  margin-right: 10rpx;
+}
+
 .logout-row {
   padding: 0 24rpx;
   margin-top: 36rpx;

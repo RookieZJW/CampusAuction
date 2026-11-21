@@ -27,6 +27,15 @@ public class LoginVO {
     /** 信用分 */
     private Integer creditScore;
 
+    /** 学校ID（未认证为 null） */
+    private Long schoolId;
+
+    /** 学校简称（未认证为空串） */
+    private String schoolName;
+
+    /** 是否已完成学校认证 */
+    private Boolean certified;
+
     /** 是否新注册用户（前端可展示欢迎语） */
     private Boolean isNew;
 }

@@ -141,6 +141,24 @@ Page({
     if (this.data.submitting) {
       return
     }
+    // 多校隔离：发布前先确认学校认证，避免填完表单才被后端拒绝
+    const u = app.globalData.userInfo
+    if (!u) {
+      wx.showToast({ title: '请先登录', icon: 'none' })
+      setTimeout(() => wx.navigateTo({ url: '/pages/login/login' }), 600)
+      return
+    }
+    if (!u.certified) {
+      wx.showModal({
+        title: '需要先认证学校',
+        content: '认证后才能发布拍品，拍品只对本校同学可见。',
+        confirmText: '去认证',
+        success: (r) => {
+          if (r.confirm) wx.navigateTo({ url: '/packageUser/pages/school/school' })
+        }
+      })
+      return
+    }
     const err = this.validate()
     if (err) {
       wx.showToast({ title: err, icon: 'none' })

@@ -116,8 +116,8 @@ Page({
   loadDetail() {
     request({
       url: `/api/v1/auctions/${this.data.id}`,
-      method: 'GET',
-      needAuth: false
+      method: 'GET'
+      // 带 token：已登录用户跨校详情会被后端拦截
     }).then((detail) => {
       const fen2yuan = (fen) => ((fen || 0) / 100).toFixed(2)
       const records = (detail.bidRecords || []).map(r => ({
@@ -150,8 +150,7 @@ Page({
     this._liveTimer = setInterval(() => {
       request({
         url: `/api/v1/auctions/${this.data.id}/live`,
-        method: 'GET',
-        needAuth: false
+        method: 'GET'
       }).then((live) => {
         if (live.status !== 'ONGOING') {
           // 状态变化（成交/流拍）→ 整页重载拿最终数据与订单去向

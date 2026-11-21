@@ -13,7 +13,7 @@
         <text class="board-count">{{auctionList.length}}</text>
         <text class="board-unit">件在拍</text>
       </view>
-      <text class="board-rule">{{today}} · 同校面交</text>
+      <text class="board-rule">{{today}} · {{schoolLabel}}</text>
     </view>
   </view>
 

@@ -6,6 +6,7 @@ import com.campus.auction.dto.BidDTO;
 import com.campus.auction.interceptor.AuthInterceptor;
 import com.campus.auction.mapper.UserMapper;
 import com.campus.auction.service.BidService;
+import com.campus.auction.service.SchoolService;
 import com.campus.auction.vo.BidVO;
 import com.campus.auction.vo.MyBidVO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,6 +30,7 @@ import java.util.List;
 public class BidController {
 
     private final BidService bidService;
+    private final SchoolService schoolService;
     private final UserMapper userMapper;
 
     @Operation(summary = "出价", description = "双层校验：Redis Lua 原子预校验 + MySQL 乐观锁；含防狙击延时与保证金冻结")
@@ -40,6 +42,8 @@ public class BidController {
         if (userId == null) {
             return Result.fail(ResultCode.UNAUTHORIZED);
         }
+        // 多校隔离：跨校拍品不可出价
+        schoolService.assertTradable(userId, auctionId);
         return Result.ok(bidService.bid(userId, auctionId, dto));
     }
 

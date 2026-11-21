@@ -1,0 +1,32 @@
+<view class="school-page">
+  <!-- 说明：纸感提示条 -->
+  <view class="notice card">
+    <view class="notice-title">认领你的校园</view>
+    <view class="notice-text">认证后只看本校同学的拍品，发布和交易也只在本校范围内进行。选一次就好，之后可在「我的」里修改。</view>
+  </view>
+
+  <!-- 当前认证状态 -->
+  <view wx:if="{{certified}}" class="current-card card">
+    <view class="current-label">当前学校</view>
+    <view class="current-name">{{schoolName}}</view>
+    <view class="current-hint">已认证 · 你正在「{{schoolName}}」拍场</view>
+  </view>
+
+  <!-- 学校选择列表 -->
+  <view class="section-head">选择学校</view>
+  <view class="school-list card">
+    <view wx:for="{{schools}}" wx:key="id"
+          class="school-item {{selectedId === item.id ? 'selected' : ''}}"
+          bindtap="onSelect" data-id="{{item.id}}" data-name="{{item.shortName}}">
+      <view class="radio">{{selectedId === item.id ? '●' : ''}}</view>
+      <view class="school-name">{{item.name}}</view>
+      <view wx:if="{{selectedId === item.id}}" class="check">已选</view>
+    </view>
+    <view wx:if="{{!schools.length && !loading}}" class="empty">暂无可选学校，请联系管理员</view>
+    <view wx:if="{{loading}}" class="empty">加载中…</view>
+  </view>
+
+  <view class="submit-area">
+    <button class="btn-primary" bindtap="onSubmit" loading="{{saving}}">确认认证</button>
+  </view>
+</view>

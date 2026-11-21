@@ -14,7 +14,8 @@ Page({
     size: 10,
     loading: false,
     noMore: false,
-    today: ''
+    today: '',
+    schoolLabel: '同校面交'
   },
 
   onLoad() {
@@ -26,6 +27,19 @@ Page({
   onShow() {
     // 进入小程序即弹登录框（可关闭，不强制；本次启动只弹一次）
     app.tryPromptLogin('pages/index/index')
+    // 认证后返回首页：更新学校标签并按本校重新加载列表
+    const u = app.globalData.userInfo
+    const label = u && u.certified && u.schoolName ? (u.schoolName + ' · 本校') : '同校面交'
+    if (label !== this.data.schoolLabel) {
+      this.setData({ schoolLabel: label })
+    }
+    if (this._lastCertified !== undefined && this._lastCertified !== !!(u && u.certified)) {
+      this._lastCertified = !!(u && u.certified)
+      this.setData({ page: 1, noMore: false, auctionList: [] })
+      this.loadAuctions()
+    } else {
+      this._lastCertified = !!(u && u.certified)
+    }
   },
 
   /** 公告栏上的日期，像手写补上去的一样 */
@@ -69,8 +83,8 @@ Page({
     return request({
       url: `/api/v1/auctions?page=${page}&size=${size}` +
            (activeCategory ? `&categoryId=${activeCategory}` : ''),
-      method: 'GET',
-      needAuth: false
+      method: 'GET'
+      // 不设 needAuth:false：已登录时带 token，后端按本校过滤；游客无 token 看全部
     }).then((data) => {
       const list = (data && data.list) || []
       const decorated = this.decorate(list)

@@ -38,13 +38,19 @@ public class AuctionServiceImpl implements AuctionService {
     private final JsonUtil jsonUtil;
 
     @Override
-    public Map<String, Object> pageList(int page, int size, Long categoryId) {
+    public Map<String, Object> pageList(int page, int size, Long categoryId, Long schoolId) {
         // 1. 分类过滤：类别字段在 t_item.category_id 上，t_auction 没有该列。
         //    先查出该类目下的 itemId，再作为拍卖分页的 in 条件，
         //    这样 total 也是筛选后的数量，分页不会错。
         LambdaQueryWrapper<Auction> wrapper = new LambdaQueryWrapper<Auction>()
                 .eq(Auction::getStatus, Auction.STATUS_ONGOING)
                 .orderByAsc(Auction::getEndTime);
+
+        // 多校隔离：已认证登录用户只看本校拍品；游客 schoolId=null 不过滤
+        // 兼容历史数据 school_id IS NULL 的公共拍品也一并展示给登录用户
+        if (schoolId != null) {
+            wrapper.and(w -> w.eq(Auction::getSchoolId, schoolId).or().isNull(Auction::getSchoolId));
+        }
 
         if (categoryId != null) {
             List<Long> itemIds = itemMapper.selectList(
@@ -87,6 +93,7 @@ public class AuctionServiceImpl implements AuctionService {
                             .title(item.getTitle())
                             .images(jsonUtil.parseImages(item.getImages()))
                             .categoryName(categoryNameMap.getOrDefault(item.getCategoryId(), "其他"))
+                            .schoolId(a.getSchoolId())
                             .condition(item.getCondition())
                             .currentPrice(a.getCurrentPrice())
                             .bidCount(a.getBidCount())

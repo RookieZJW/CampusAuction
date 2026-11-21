@@ -5,6 +5,8 @@ import com.campus.auction.common.ResultCode;
 import com.campus.auction.common.exception.BusinessException;
 import com.campus.auction.dto.LoginVO;
 import com.campus.auction.entity.User;
+import com.campus.auction.entity.School;
+import com.campus.auction.mapper.SchoolMapper;
 import com.campus.auction.mapper.UserMapper;
 import com.campus.auction.service.AuthService;
 import com.campus.auction.service.WxApiService;
@@ -35,6 +37,7 @@ public class AuthServiceImpl implements AuthService {
 
     private final WxApiService wxApiService;
     private final UserMapper userMapper;
+    private final SchoolMapper schoolMapper;
     private final JwtUtil jwtUtil;
 
     /** 老用户登录：code 换 openid 后签发 token，不触碰资料（本地有登录态时前端直接用缓存） */
@@ -135,6 +138,15 @@ public class AuthServiceImpl implements AuthService {
     }
 
     /** 用账号自身的 openid 签 token——账号打通的关键 */
+    /** 学校简称，未认证返回空串（登录态直接用，避免前端多请求一次） */
+    private String resolveSchoolName(Long schoolId) {
+        if (schoolId == null) {
+            return "";
+        }
+        School school = schoolMapper.selectById(schoolId);
+        return school == null ? "" : school.getShortName();
+    }
+
     private LoginVO buildVO(User user, boolean isNew) {
         return LoginVO.builder()
                 .token(jwtUtil.generateToken(user.getOpenid()))
@@ -144,6 +156,9 @@ public class AuthServiceImpl implements AuthService {
                 .phone(user.getPhone() == null ? "" : user.getPhone())
                 .balance(user.getBalance())
                 .creditScore(user.getCreditScore())
+                .schoolId(user.getSchoolId())
+                .schoolName(resolveSchoolName(user.getSchoolId()))
+                .certified(user.getSchoolId() != null)
                 .isNew(isNew)
                 .build();
     }

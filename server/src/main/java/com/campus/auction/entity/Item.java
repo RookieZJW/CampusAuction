@@ -27,6 +27,9 @@ public class Item {
 
     private Long sellerId;
 
+    /** 发布时卖家所属学校，冗余免联表 */
+    private Long schoolId;
+
     private Long categoryId;
 
     private String title;

@@ -5,6 +5,7 @@ import com.campus.auction.common.ResultCode;
 import com.campus.auction.interceptor.AuthInterceptor;
 import com.campus.auction.mapper.UserMapper;
 import com.campus.auction.service.FavoriteService;
+import com.campus.auction.service.SchoolService;
 import com.campus.auction.vo.FavoriteVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,6 +27,7 @@ import java.util.Map;
 public class FavoriteController {
 
     private final FavoriteService favoriteService;
+    private final SchoolService schoolService;
     private final UserMapper userMapper;
 
     @Operation(summary = "我的收藏列表")
@@ -59,6 +61,7 @@ public class FavoriteController {
         if (userId == null) {
             return Result.fail(ResultCode.UNAUTHORIZED);
         }
+        schoolService.assertTradable(userId, auctionId);
         return Result.ok(favoriteService.toggle(userId, auctionId));
     }
 }

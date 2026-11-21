@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -113,10 +114,14 @@ public class UserController {
 
     /** 只回本人的资料；Map.of 不接受 null，空值统一转空串 */
     private Map<String, Object> profileMap(User user) {
-        return Map.of(
-                "nickname", user.getNickname() == null ? "" : user.getNickname(),
-                "avatar", user.getAvatar() == null ? "" : user.getAvatar(),
-                "phone", user.getPhone() == null ? "" : user.getPhone());
+        // Map.of 不接受 null，用 LinkedHashMap 兼容学校未认证的 null
+        Map<String, Object> m = new LinkedHashMap<>();
+        m.put("nickname", user.getNickname() == null ? "" : user.getNickname());
+        m.put("avatar", user.getAvatar() == null ? "" : user.getAvatar());
+        m.put("phone", user.getPhone() == null ? "" : user.getPhone());
+        m.put("schoolId", user.getSchoolId());
+        m.put("certified", user.getSchoolId() != null);
+        return m;
     }
 
     private User requireUser(String openid) {

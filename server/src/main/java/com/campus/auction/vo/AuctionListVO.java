@@ -20,6 +20,9 @@ public class AuctionListVO {
 
     private String categoryName;
 
+    /** 所属学校ID（多校隔离展示用，可能为 null=公共拍品） */
+    private Long schoolId;
+
     private String condition;
 
     private Integer currentPrice;
