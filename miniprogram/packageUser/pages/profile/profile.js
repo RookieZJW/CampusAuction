@@ -2,6 +2,7 @@
 // 头像/昵称/手机号全部由用户主动选择与授权，不做静默获取，也不强制授权。
 const { request } = require('../../../utils/request')
 const { BASE_URL } = require('../../../utils/config')
+const avatarUtil = require('../../../utils/avatar')
 const app = getApp()
 
 Page({
@@ -36,16 +37,52 @@ Page({
   },
 
   loadProfile() {
+    // 先用本地登录态填充（此时 avatar 通常已是 base64），头像立即可见，不闪绿色占位
+    const local = app.globalData.userInfo || {}
+    if (local.avatar) {
+      this.setData({ avatarDisplay: local.avatar })
+    }
+    if (local.nickname) {
+      this.setData({ nickname: local.nickname === '微信用户' ? '' : local.nickname })
+    }
+    if (local.phone) {
+      this.setData({ phone: local.phone, phoneBound: true })
+    }
     request({ url: '/api/v1/users/profile', method: 'GET' }).then((p) => {
+      const serverAvatar = p.avatar || ''
+      const httpAvatar = avatarUtil.isRemoteHttp(serverAvatar)
       this.setData({
         // 默认值「微信用户」不当成已填昵称
         nickname: p.nickname === '微信用户' ? '' : (p.nickname || ''),
-        avatarUrl: p.avatar || '',
-        avatarDisplay: p.avatar || '',
+        avatarUrl: serverAvatar,       // 提交给服务端的原始 URL 保持不变
+        // http 外链先保留本地已填充的 base64 预览，等转换完再覆盖；避免闪一下绿色占位
+        avatarDisplay: httpAvatar ? (this.data.avatarDisplay || serverAvatar) : serverAvatar,
         phone: p.phone || '',
         phoneBound: !!p.phone
       })
+      // 真机调试：服务端头像是 http+纯IP，image 组件拦截会显示占位图，转 base64 才能预览
+      this.resolveAvatarDisplay(serverAvatar)
     }).catch(() => { /* 静默：拉取失败不阻塞填写 */ })
+  },
+
+  /** 服务端头像 URL → 可显示预览：http 外链转 base64，其余（https / 本地临时路径）直接用 */
+  resolveAvatarDisplay(serverAvatar) {
+    // 已经是 base64（如从「我的」页带过来的），无需重复下载转换
+    if (/^data:image/.test(this.data.avatarDisplay || '')) {
+      return
+    }
+    if (avatarUtil.isRemoteHttp(serverAvatar)) {
+      avatarUtil.remoteToBase64(serverAvatar).then((b64) => {
+        if (b64) {
+          this.setData({ avatarDisplay: b64 })
+          // 同步进本地登录态，这样返回「我的」页也不会退回占位图
+          const info = app.globalData.userInfo
+          if (info && info.avatar === serverAvatar) {
+            app.setLogin(Object.assign({}, info, { avatar: b64 }))
+          }
+        }
+      })
+    }
   },
 
   // ---------- 隐私授权 ----------
@@ -126,7 +163,10 @@ Page({
         try {
           const body = JSON.parse(res.data)
           if (body.code === 0 && body.data && body.data.url) {
-            this.setData({ avatarUrl: body.data.url, avatarDisplay: body.data.url })
+            const url = body.data.url
+            this.setData({ avatarUrl: url, avatarDisplay: url })
+            // 新头像同样是 http+IP，转成 base64 才能马上预览到
+            this.resolveAvatarDisplay(url)
           } else {
             this.setData({ avatarDisplay: fallback })
             wx.showToast({ title: body.msg || '头像上传失败', icon: 'none' })
