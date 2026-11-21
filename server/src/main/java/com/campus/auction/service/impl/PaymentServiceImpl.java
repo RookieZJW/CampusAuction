@@ -212,9 +212,12 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     private PayStatusVO toStatus(Order o) {
+        Item item = itemMapper.selectById(o.getItemId());
+        String title = item == null ? "校园拍场成交订单" : item.getTitle();
         return PayStatusVO.builder()
                 .orderId(o.getId())
                 .orderNo(o.getOrderNo())
+                .title(title)
                 .payStatus(o.getPayStatus() == null ? Order.PAY_UNPAID : o.getPayStatus())
                 .payNo(o.getPayNo())
                 .provider(o.getPayProvider())

@@ -73,6 +73,7 @@ Page({
       paid: true,
       result: res,
       resultYuan: ((res.amount || 0) / 100).toFixed(2),
+      title: res.title || this.data.title,
       loading: false
     })
   },

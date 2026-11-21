@@ -14,6 +14,9 @@ public class PayStatusVO {
 
     private String orderNo;
 
+    /** 商品描述：重复进入收银台时成功凭证页直接展示 */
+    private String title;
+
     /** UNPAID / PAYING / PAID / CLOSED */
     private String payStatus;
 
