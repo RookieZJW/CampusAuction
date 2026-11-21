@@ -78,25 +78,38 @@
   margin-bottom: 14rpx;
 }
 
-.picker-view, .input {
+/* 三栏统一高度：外层容器负责背景/边框/居中，原生 input 不再自带上下 padding，
+   否则真机上文字行框会被裁掉一半（真实姓名/学号显示不完整）。 */
+.picker-view, .input-wrap {
   width: 100%;
   box-sizing: border-box;
   background: var(--bg-deep);
   border: 1rpx solid var(--border);
   border-radius: 8rpx;
-  padding: 18rpx 20rpx;
-  font-size: var(--fs-body);
-  color: var(--text);
-  line-height: 1.5;
-}
-.picker-view {
+  padding: 0 20rpx;
+  min-height: 88rpx;
   display: flex;
   align-items: center;
+  font-size: var(--fs-body);
+  color: var(--text);
+}
+.picker-view {
   justify-content: space-between;
-  min-height: 64rpx;
 }
 .picker-view.placeholder {
   color: var(--text-hint);
+}
+.input {
+  flex: 1;
+  min-width: 0;
+  height: 88rpx;
+  font-size: var(--fs-body);
+  color: var(--text);
+  line-height: normal;
+}
+.input-placeholder {
+  color: var(--text-hint);
+  font-size: var(--fs-body);
 }
 .picker-arrow {
   font-size: 36rpx;
