@@ -45,15 +45,20 @@ Page({
   loadMyAuth() {
     return request({ url: '/api/v1/schools/mine' }).then((info) => {
       const schools = this.data.schools
-      const applySchoolId = info.applySchoolId || info.schoolId || null
+      const status = info.status || 'NONE'
+      // 已认证：以 t_user 的生效学校为准（申请表可能残留旧学校的申请记录）；
+      // 待审/驳回：以申请学校为准，方便用户看到自己提交的是哪一所。
+      const activeSchoolId = status === 'APPROVED'
+        ? (info.schoolId || info.applySchoolId || null)
+        : (info.applySchoolId || info.schoolId || null)
       let selectedIndex = -1
       schools.forEach((s, index) => {
-        if (s.id === applySchoolId) {
+        if (s.id === activeSchoolId) {
           selectedIndex = index
         }
       })
       this.setData({
-        status: info.status || 'NONE',
+        status,
         certified: !!info.certified,
         schoolName: info.schoolName || '',
         realName: info.realName || '',
