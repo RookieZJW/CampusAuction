@@ -30,6 +30,12 @@
   white-space: nowrap;
 }
 
+.item-school {
+  margin-top: 6rpx;
+  font-size: var(--fs-caption);
+  color: var(--moss);
+}
+
 .status-row {
   display: flex;
   justify-content: space-between;

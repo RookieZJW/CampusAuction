@@ -24,6 +24,7 @@
       <view class="bid-count">{{detail.bidCount}} 次出价</view>
     </view>
     <view class="meta-row">
+      <text wx:if="{{detail.schoolName}}" class="tag school-tag">{{detail.schoolName}} · 本校拍场</text>
       <text class="tag">{{detail.categoryName}}</text>
       <text class="tag">{{detail.condition}}</text>
       <view class="countdown {{urgent ? 'urgent' : ''}}">

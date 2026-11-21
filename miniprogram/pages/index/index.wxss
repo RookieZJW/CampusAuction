@@ -241,6 +241,13 @@
   font-weight: 600;
 }
 
+/* 拍品归属学校：列表卡片上直接可见 */
+.tag.school-tag {
+  background: var(--success-light);
+  color: var(--moss);
+  border-color: var(--moss);
+}
+
 /* ---- 空态与列表尾 ---- */
 .empty-sub {
   margin-top: 10rpx;

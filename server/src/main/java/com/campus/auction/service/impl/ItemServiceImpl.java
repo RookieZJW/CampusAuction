@@ -6,10 +6,12 @@ import com.campus.auction.common.exception.BusinessException;
 import com.campus.auction.dto.PublishItemDTO;
 import com.campus.auction.entity.Auction;
 import com.campus.auction.entity.Item;
+import com.campus.auction.entity.School;
 import com.campus.auction.entity.User;
 import com.campus.auction.mapper.AuctionMapper;
 import com.campus.auction.mapper.CategoryMapper;
 import com.campus.auction.mapper.ItemMapper;
+import com.campus.auction.mapper.SchoolMapper;
 import com.campus.auction.mapper.UserMapper;
 import com.campus.auction.service.ItemService;
 import com.campus.auction.util.JsonUtil;
@@ -37,6 +39,7 @@ public class ItemServiceImpl implements ItemService {
     private final AuctionMapper auctionMapper;
     private final CategoryMapper categoryMapper;
     private final UserMapper userMapper;
+    private final SchoolMapper schoolMapper;
     private final JsonUtil jsonUtil;
 
     @Override
@@ -48,6 +51,12 @@ public class ItemServiceImpl implements ItemService {
             throw new BusinessException(ResultCode.SCHOOL_NOT_AUTHED);
         }
         Long schoolId = seller.getSchoolId();
+
+        // 前端显式携带学校信息；与登录用户认证学校不一致直接拒绝，防止挂错学校
+        if (dto.getSchoolId() != null && !schoolId.equals(dto.getSchoolId())) {
+            throw new BusinessException(ResultCode.CROSS_SCHOOL_DENIED,
+                    "发布学校与当前认证学校不一致，请重新进入发布页");
+        }
 
         // 校验分类存在
         if (categoryMapper.selectById(dto.getCategoryId()) == null) {
@@ -107,12 +116,20 @@ public class ItemServiceImpl implements ItemService {
                 .stream()
                 .collect(Collectors.toMap(Auction::getItemId, Function.identity(), (a, b) -> a));
 
+        List<Long> schoolIds = items.stream().map(Item::getSchoolId)
+                .filter(java.util.Objects::nonNull).distinct().toList();
+        Map<Long, String> schoolNameMap = schoolIds.isEmpty() ? Map.of()
+                : schoolMapper.selectBatchIds(schoolIds).stream()
+                        .collect(Collectors.toMap(School::getId,
+                                s -> s.getShortName() == null ? s.getName() : s.getShortName()));
+
         return items.stream().map(item -> {
             Auction auction = auctionMap.get(item.getId());
             return MyItemVO.builder()
                     .itemId(item.getId())
                     .auctionId(auction != null ? auction.getId() : null)
                     .title(item.getTitle())
+                    .schoolName(schoolNameMap.get(item.getSchoolId()))
                     .images(jsonUtil.parseImages(item.getImages()))
                     .itemStatus(item.getStatus())
                     .auctionStatus(auction != null ? auction.getStatus() : null)

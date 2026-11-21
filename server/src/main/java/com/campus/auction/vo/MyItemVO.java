@@ -18,6 +18,9 @@ public class MyItemVO {
 
     private String title;
 
+    /** 发布时归属的学校简称 */
+    private String schoolName;
+
     private List<String> images;
 
     /** PENDING待审 ON_SALE拍卖中 REJECTED已驳回 CANCELLED已取消 */

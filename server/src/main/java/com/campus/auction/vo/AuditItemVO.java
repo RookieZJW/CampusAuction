@@ -26,6 +26,9 @@ public class AuditItemVO {
 
     private String categoryName;
 
+    /** 提交时归属的学校简称 */
+    private String schoolName;
+
     private String condition;
 
     private Integer startPrice;

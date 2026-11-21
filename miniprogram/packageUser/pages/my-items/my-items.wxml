@@ -9,6 +9,7 @@
       <image class="cover" src="{{item.images[0] || '/images/placeholder.png'}}" mode="aspectFill" />
       <view class="info">
         <view class="title">{{item.title}}</view>
+        <view wx:if="{{item.schoolName}}" class="item-school">{{item.schoolName}} · 发布时归属</view>
         <view class="status-row">
           <text class="status-tag {{item.itemStatus}}">{{item.statusText}}</text>
           <text class="price">¥{{item.priceYuan}}</text>

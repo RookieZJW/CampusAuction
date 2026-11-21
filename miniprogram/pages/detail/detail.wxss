@@ -83,7 +83,14 @@
 .meta-row {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   margin-bottom: 16rpx;
+}
+
+.tag.school-tag {
+  background: var(--success-light);
+  color: var(--moss);
+  border-color: var(--moss);
 }
 
 .countdown {

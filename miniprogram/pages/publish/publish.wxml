@@ -1,4 +1,11 @@
 <view class="publish-page">
+  <!-- 发布归属：明确告诉用户这件拍品会进入哪个学校的拍场 -->
+  <view class="card school-card">
+    <view class="school-card-kicker">发布到</view>
+    <view class="school-card-name">{{schoolName || '未认证学校'}}</view>
+    <view class="school-card-hint">只有{{schoolName || '本校'}}的同学能看到这件拍品，审核通过后自动开拍</view>
+  </view>
+
   <view class="card">
     <view class="form-title"><text class="form-no">01</text>基本信息</view>
 

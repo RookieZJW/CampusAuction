@@ -20,8 +20,11 @@ public class AuctionListVO {
 
     private String categoryName;
 
-    /** 所属学校ID（多校隔离展示用，可能为 null=公共拍品） */
+    /** 所属学校ID（多校隔离展示用） */
     private Long schoolId;
+
+    /** 学校简称，如「河南理工」 */
+    private String schoolName;
 
     private String condition;
 

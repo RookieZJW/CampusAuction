@@ -23,6 +23,9 @@
             <el-link type="primary" @click="openDetail(row)">{{ row.title }}</el-link>
           </template>
         </el-table-column>
+        <el-table-column label="所属学校" width="110">
+          <template #default="{ row }">{{ row.schoolName || '-' }}</template>
+        </el-table-column>
         <el-table-column prop="categoryName" label="分类" width="100" />
         <el-table-column prop="condition" label="成色" width="90" />
         <el-table-column label="起拍价" width="110">

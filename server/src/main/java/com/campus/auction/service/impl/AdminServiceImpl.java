@@ -8,11 +8,13 @@ import com.campus.auction.dto.AuditDTO;
 import com.campus.auction.entity.Admin;
 import com.campus.auction.entity.Auction;
 import com.campus.auction.entity.Item;
+import com.campus.auction.entity.School;
 import com.campus.auction.entity.User;
 import com.campus.auction.mapper.AdminMapper;
 import com.campus.auction.mapper.AuctionMapper;
 import com.campus.auction.mapper.CategoryMapper;
 import com.campus.auction.mapper.ItemMapper;
+import com.campus.auction.mapper.SchoolMapper;
 import com.campus.auction.mapper.UserMapper;
 import com.campus.auction.service.AdminService;
 import com.campus.auction.util.JwtUtil;
@@ -38,6 +40,7 @@ public class AdminServiceImpl implements AdminService {
     private final AuctionMapper auctionMapper;
     private final UserMapper userMapper;
     private final CategoryMapper categoryMapper;
+    private final SchoolMapper schoolMapper;
     private final JsonUtil jsonUtil;
     private final JwtUtil jwtUtil;
 
@@ -86,6 +89,13 @@ public class AdminServiceImpl implements AdminService {
                         .collect(Collectors.toMap(com.campus.auction.entity.Category::getId,
                                 com.campus.auction.entity.Category::getName));
 
+        List<Long> schoolIds = items.stream().map(Item::getSchoolId)
+                .filter(java.util.Objects::nonNull).distinct().toList();
+        Map<Long, String> schoolNameMap = schoolIds.isEmpty() ? Map.of()
+                : schoolMapper.selectBatchIds(schoolIds).stream()
+                        .collect(Collectors.toMap(School::getId,
+                                s -> s.getShortName() == null ? s.getName() : s.getShortName()));
+
         return items.stream().map(item -> {
             Auction a = auctionMap.get(item.getId());
             return AuditItemVO.builder()
@@ -96,6 +106,7 @@ public class AdminServiceImpl implements AdminService {
                     .description(item.getDescription())
                     .images(jsonUtil.parseImages(item.getImages()))
                     .categoryName(categoryNameMap.getOrDefault(item.getCategoryId(), "其他"))
+                    .schoolName(schoolNameMap.get(item.getSchoolId()))
                     .condition(item.getCondition())
                     .startPrice(a != null ? a.getStartPrice() : null)
                     .increment(a != null ? a.getIncrement() : null)

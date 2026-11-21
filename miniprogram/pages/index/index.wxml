@@ -49,6 +49,7 @@
       <view class="auction-info">
         <view class="auction-title">{{item.title}}</view>
         <view class="auction-meta">
+          <text wx:if="{{item.schoolName}}" class="tag school-tag">{{item.schoolName}} · 本校</text>
           <text class="tag">{{item.categoryName}}</text>
           <text class="tag">{{item.condition}}</text>
         </view>

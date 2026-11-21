@@ -24,6 +24,12 @@ public class AuctionDetailVO {
 
     private String categoryName;
 
+    /** 拍品所属学校（发布时确定，不随卖家后续改学校变化） */
+    private Long schoolId;
+
+    /** 学校简称，如「河南理工」 */
+    private String schoolName;
+
     private String condition;
 
     private Integer startPrice;

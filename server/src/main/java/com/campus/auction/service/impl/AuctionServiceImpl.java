@@ -6,11 +6,13 @@ import com.campus.auction.entity.Auction;
 import com.campus.auction.entity.BidRecord;
 import com.campus.auction.entity.Category;
 import com.campus.auction.entity.Item;
+import com.campus.auction.entity.School;
 import com.campus.auction.entity.User;
 import com.campus.auction.mapper.AuctionMapper;
 import com.campus.auction.mapper.BidRecordMapper;
 import com.campus.auction.mapper.CategoryMapper;
 import com.campus.auction.mapper.ItemMapper;
+import com.campus.auction.mapper.SchoolMapper;
 import com.campus.auction.mapper.UserMapper;
 import com.campus.auction.service.AuctionService;
 import com.campus.auction.util.JsonUtil;
@@ -35,6 +37,7 @@ public class AuctionServiceImpl implements AuctionService {
     private final CategoryMapper categoryMapper;
     private final BidRecordMapper bidRecordMapper;
     private final UserMapper userMapper;
+    private final SchoolMapper schoolMapper;
     private final JsonUtil jsonUtil;
 
     @Override
@@ -46,10 +49,10 @@ public class AuctionServiceImpl implements AuctionService {
                 .eq(Auction::getStatus, Auction.STATUS_ONGOING)
                 .orderByAsc(Auction::getEndTime);
 
-        // 多校隔离：已认证登录用户只看本校拍品；游客 schoolId=null 不过滤
-        // 兼容历史数据 school_id IS NULL 的公共拍品也一并展示给登录用户
+        // 多校隔离：已认证登录用户严格只看本校拍品；游客 schoolId=null 不过滤
+        // 不再放行 school_id IS NULL 的历史拍品——拍品必须归属明确学校
         if (schoolId != null) {
-            wrapper.and(w -> w.eq(Auction::getSchoolId, schoolId).or().isNull(Auction::getSchoolId));
+            wrapper.eq(Auction::getSchoolId, schoolId);
         }
 
         if (categoryId != null) {
@@ -84,6 +87,14 @@ public class AuctionServiceImpl implements AuctionService {
                 : categoryMapper.selectBatchIds(categoryIds).stream()
                         .collect(Collectors.toMap(Category::getId, Category::getName));
 
+        // 学校简称批量补齐，列表卡片展示拍品归属学校
+        List<Long> schoolIds = auctions.stream().map(Auction::getSchoolId)
+                .filter(java.util.Objects::nonNull).distinct().toList();
+        Map<Long, String> schoolNameMap = schoolIds.isEmpty() ? Map.of()
+                : schoolMapper.selectBatchIds(schoolIds).stream()
+                        .collect(Collectors.toMap(School::getId,
+                                s -> s.getShortName() == null ? s.getName() : s.getShortName()));
+
         List<AuctionListVO> list = auctions.stream()
                 .filter(a -> itemMap.containsKey(a.getItemId()))
                 .map(a -> {
@@ -94,6 +105,7 @@ public class AuctionServiceImpl implements AuctionService {
                             .images(jsonUtil.parseImages(item.getImages()))
                             .categoryName(categoryNameMap.getOrDefault(item.getCategoryId(), "其他"))
                             .schoolId(a.getSchoolId())
+                            .schoolName(schoolNameMap.get(a.getSchoolId()))
                             .condition(item.getCondition())
                             .currentPrice(a.getCurrentPrice())
                             .bidCount(a.getBidCount())
@@ -113,6 +125,8 @@ public class AuctionServiceImpl implements AuctionService {
         Item item = itemMapper.selectById(auction.getItemId());
         Category category = item != null ? categoryMapper.selectById(item.getCategoryId()) : null;
         User seller = userMapper.selectById(auction.getSellerId());
+        School school = auction.getSchoolId() == null ? null : schoolMapper.selectById(auction.getSchoolId());
+        String schoolName = school == null ? "" : (school.getShortName() == null ? school.getName() : school.getShortName());
 
         // 出价记录：最新在前，取前 20 条
         List<BidRecord> records = bidRecordMapper.selectList(
@@ -143,6 +157,8 @@ public class AuctionServiceImpl implements AuctionService {
                 .description(item != null ? item.getDescription() : null)
                 .images(item != null ? jsonUtil.parseImages(item.getImages()) : List.of())
                 .categoryName(category != null ? category.getName() : "其他")
+                .schoolId(auction.getSchoolId())
+                .schoolName(schoolName)
                 .condition(item != null ? item.getCondition() : null)
                 .startPrice(auction.getStartPrice())
                 .increment(auction.getIncrement())

@@ -28,11 +28,22 @@ Page({
     durations: DURATIONS,
     durationLabels: DURATIONS.map(d => d.label),
     durationIndex: 2,
-    submitting: false
+    submitting: false,
+    schoolId: null,
+    schoolName: ''
   },
 
   onLoad() {
     this.loadCategories()
+  },
+
+  onShow() {
+    // 从「学校认证」返回时同步最新认证学校，发布页明确展示归属
+    const u = app.globalData.userInfo || {}
+    this.setData({
+      schoolId: u.schoolId || null,
+      schoolName: u.schoolName || ''
+    })
   },
 
   loadCategories() {
@@ -148,7 +159,7 @@ Page({
       setTimeout(() => wx.navigateTo({ url: '/pages/login/login' }), 600)
       return
     }
-    if (!u.certified) {
+    if (!u.certified || !u.schoolId) {
       wx.showModal({
         title: '需要先认证学校',
         content: '认证后才能发布拍品，拍品只对本校同学可见。',
@@ -173,6 +184,7 @@ Page({
       url: '/api/v1/items',
       method: 'POST',
       data: {
+        schoolId: this.data.schoolId || u.schoolId,
         title: this.data.title.trim(),
         categoryId: this.data.categoryId,
         description: this.data.description,

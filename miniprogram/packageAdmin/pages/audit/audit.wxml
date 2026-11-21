@@ -27,7 +27,7 @@
         <image class="cover" src="{{item.images[0] || '/images/placeholder.png'}}" mode="aspectFill" />
         <view class="info">
           <view class="title">{{item.title}}</view>
-          <view class="meta">{{item.sellerNickname}} · {{item.categoryName}} · {{item.condition}}</view>
+          <view class="meta">{{item.sellerNickname}} · {{item.schoolName || '未归属学校'}} · {{item.categoryName}} · {{item.condition}}</view>
           <view class="price-row">
             <text class="price">起拍 ¥{{item.startPriceYuan}}</text>
             <text class="duration">时长 {{item.durationHours}} 小时</text>

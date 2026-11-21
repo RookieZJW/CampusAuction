@@ -303,7 +303,8 @@ public class SchoolServiceImpl implements SchoolService {
         if (auction == null || schoolId == null) {
             return false;
         }
-        return auction.getSchoolId() == null || schoolId.equals(auction.getSchoolId());
+        // 严格同校：无学校归属的拍品不对任何登录用户公开
+        return auction.getSchoolId() != null && schoolId.equals(auction.getSchoolId());
     }
 
     private SchoolAuth latestAuth(Long userId) {

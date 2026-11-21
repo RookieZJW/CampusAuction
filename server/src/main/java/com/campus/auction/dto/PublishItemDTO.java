@@ -16,6 +16,10 @@ import java.util.List;
 @Data
 public class PublishItemDTO {
 
+    /** 发布学校ID：前端显式携带，服务端与登录用户认证学校核对，防止挂错学校 */
+    @NotNull(message = "缺少发布学校信息，请先完成学校认证")
+    private Long schoolId;
+
     @NotBlank(message = "标题不能为空")
     @Size(max = 100, message = "标题最多 100 字")
     private String title;
