@@ -15,6 +15,7 @@
         "pages/my-items/my-items",
         "pages/my-bids/my-bids",
         "pages/my-orders/my-orders",
+        "pages/cashier/cashier",
         "pages/wallet/wallet",
         "pages/credit/credit",
         "pages/notifications/notifications",

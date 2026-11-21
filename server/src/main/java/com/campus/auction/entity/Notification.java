@@ -15,6 +15,7 @@ public class Notification {
     public static final String TYPE_AUCTION_END = "AUCTION_END";
     public static final String TYPE_OUTBID = "OUTBID";
     public static final String TYPE_AUDIT_RESULT = "AUDIT_RESULT";
+    public static final String TYPE_PAYMENT = "PAYMENT";
 
     @TableId(type = IdType.AUTO)
     private Long id;

@@ -1,0 +1,57 @@
+<view class="cashier">
+  <view wx:if="{{loading}}" class="loading">正在加载收银台...</view>
+
+  <!-- 支付成功凭证 -->
+  <view wx:elif="{{paid}}" class="success-page">
+    <view class="success-top">
+      <view class="check">✓</view>
+      <view class="success-label">支付成功</view>
+      <view class="success-amount"><text class="cur">¥</text>{{resultYuan}}</view>
+      <view class="mock-badge">模拟支付 · 不产生真实资金变动</view>
+    </view>
+
+    <view class="receipt">
+      <view class="receipt-row"><text class="k">商品</text><text class="v ellipsis">{{title}}</text></view>
+      <view class="receipt-row"><text class="k">订单号</text><text class="v">{{result.orderNo}}</text></view>
+      <view class="receipt-row"><text class="k">支付单号</text><text class="v">{{result.payNo}}</text></view>
+      <view class="receipt-row"><text class="k">交易号</text><text class="v">{{result.transactionId}}</text></view>
+      <view class="receipt-row"><text class="k">支付时间</text><text class="v">{{result.paidAt}}</text></view>
+      <view class="receipt-row"><text class="k">支付方式</text><text class="v">微信支付（模拟）</text></view>
+    </view>
+
+    <view class="tip">支付状态已同步至订单，可返回「我的订单」继续约定线下交割。</view>
+    <button class="done-btn" bindtap="onDone">完成</button>
+  </view>
+
+  <!-- 收银台 -->
+  <view wx:else class="pay-page">
+    <view class="pay-head">
+      <view class="head-mark">微</view>
+      <view class="head-name">微信支付（模拟）</view>
+      <view class="pay-label">付款金额</view>
+      <view class="pay-amount"><text class="cur">¥</text>{{prepare.amountYuan}}</view>
+      <view class="head-badge">演示环境 · 模拟收银台</view>
+    </view>
+
+    <view class="card">
+      <view class="row"><text class="k">商品</text><text class="v ellipsis">{{prepare.title}}</text></view>
+      <view class="row"><text class="k">订单号</text><text class="v">{{prepare.orderNo}}</text></view>
+      <view class="row"><text class="k">支付单号</text><text class="v">{{prepare.payNo}}</text></view>
+      <view class="row"><text class="k">有效期至</text><text class="v">{{prepare.expireTime}}</text></view>
+    </view>
+
+    <view class="card method-card">
+      <view class="method-title">选择支付方式</view>
+      <view class="method-row">
+        <view class="wx-icon">微</view>
+        <view class="method-name">微信支付<text class="method-sub">推荐使用</text></view>
+        <view class="radio-on">✓</view>
+      </view>
+    </view>
+
+    <view class="notice">本页为答辩演示用模拟收银台，点击「确认支付」不会发起真实扣款，仅更新订单支付状态与凭证信息。</view>
+
+    <button class="pay-btn" disabled="{{submitting}}" bindtap="onConfirmPay">确认支付 ¥{{prepare.amountYuan}}</button>
+    <view class="cancel" bindtap="onCancel">取消支付</view>
+  </view>
+</view>

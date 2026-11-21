@@ -82,6 +82,8 @@ public class SettleServiceImpl implements SettleService {
                     order.setDealPrice(a.getCurrentPrice());
                     order.setStatus(Order.STATUS_PENDING_TRADING);
                     order.setTradeType("OFFLINE");
+                    // 支付维度初始为未支付；资金链路与线下交割状态机解耦
+                    order.setPayStatus(Order.PAY_UNPAID);
                     order.setCreateTime(now);
                     order.setUpdateTime(now);
                     orderMapper.insert(order);

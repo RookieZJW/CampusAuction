@@ -8,6 +8,13 @@ const STATUS_TEXT = {
   CANCELLED: '已取消(违约)'
 }
 
+const PAY_STATUS_TEXT = {
+  UNPAID: '未支付',
+  PAYING: '支付中',
+  PAID: '已支付',
+  CLOSED: '已关闭支付单'
+}
+
 Page({
   data: {
     tab: 'BUYER',
@@ -29,7 +36,9 @@ Page({
       const decorated = (list || []).map(o => ({
         ...o,
         dealPriceYuan: ((o.dealPrice || 0) / 100).toFixed(2),
-        statusText: STATUS_TEXT[o.status] || o.status
+        statusText: STATUS_TEXT[o.status] || o.status,
+        payStatus: o.payStatus || 'UNPAID',
+        payStatusText: PAY_STATUS_TEXT[o.payStatus || 'UNPAID'] || '未支付'
       }))
       imageUtil.decorateList(decorated, ['coverImage']).then(() => {
         this.setData({ list: decorated, loading: false })
@@ -74,6 +83,14 @@ Page({
     const { list, tab } = this.data
     this.setData({
       filteredList: list.filter(o => o.role === tab)
+    })
+  },
+
+  /** 方案 B：跳转仿微信收银台（模拟支付） */
+  onPay(e) {
+    const orderId = e.currentTarget.dataset.id
+    wx.navigateTo({
+      url: `/packageUser/pages/cashier/cashier?orderId=${orderId}`
     })
   },
 

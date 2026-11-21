@@ -29,6 +29,9 @@ public enum ResultCode {
     SELLER_CANNOT_BID(3009, "卖家不能参与自己发布的拍卖"),
     CROSS_SCHOOL_DENIED(3010, "该拍品不属于你的学校，无法查看或参与"),
     SCHOOL_NOT_AUTHED(3011, "请先完成学校认证"),
+    PAY_NOT_ALLOWED(3012, "当前订单状态不允许支付"),
+    PAY_STATUS_CONFLICT(3013, "支付状态已变更，请刷新后重试"),
+    PAY_PROVIDER_UNAVAILABLE(3014, "支付网关未启用或回调验签失败"),
 
     SYSTEM_ERROR(5000, "系统繁忙，请稍后重试");
 

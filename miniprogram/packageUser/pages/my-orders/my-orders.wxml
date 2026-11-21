@@ -15,6 +15,7 @@
         <view class="meta">订单号 {{item.orderNo}}</view>
         <view class="meta">{{item.role === 'BUYER' ? '卖家' : '买家'}}：{{item.counterparty}}</view>
         <view wx:if="{{item.tradePlace}}" class="meta">交割地点：{{item.tradePlace}}</view>
+        <view class="meta">支付状态：<text class="pay-text {{item.payStatus}}">{{item.payStatusText}}</text><text wx:if="{{item.paidAt}}"> · {{item.paidAt}}</text></view>
         <view class="price-row">
           <text class="price">¥{{item.dealPriceYuan}}</text>
           <text class="status-tag {{item.status}}">{{item.statusText}}</text>
@@ -23,6 +24,7 @@
         <view class="actions" wx:if="{{item.status === 'PENDING_TRADING'}}">
           <button class="mini-btn ghost" catchtap="onSetPlace" data-id="{{item.orderId}}">约定地点</button>
           <block wx:if="{{tab === 'BUYER'}}">
+            <button wx:if="{{item.payStatus !== 'PAID'}}" class="mini-btn pay" catchtap="onPay" data-id="{{item.orderId}}">去支付</button>
             <button class="mini-btn primary" catchtap="onComplete" data-id="{{item.orderId}}">确认交割完成</button>
           </block>
         </view>

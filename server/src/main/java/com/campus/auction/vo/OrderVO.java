@@ -30,6 +30,20 @@ public class OrderVO {
 
     private String tradePlace;
 
+    /** 支付状态 UNPAID/PAYING/PAID/CLOSED */
+    private String payStatus;
+
+    private String payNo;
+
+    private String payProvider;
+
+    private Integer payAmount;
+
+    private String transactionId;
+
+    /** 支付成功时间 yyyy-MM-dd HH:mm:ss */
+    private String paidAt;
+
     /** 对手方昵称 */
     private String counterparty;
 

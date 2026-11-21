@@ -38,6 +38,8 @@ public class WebConfig implements WebMvcConfigurer {
                         "/api/v1/auctions",
                         "/api/v1/auctions/*",
                         "/api/v1/auctions/*/live",
+                        // 第三方支付回调：无登录态，验签在网关实现内完成
+                        "/api/v1/pay/notify/**",
                         "/doc.html",
                         "/webjars/**",
                         "/v3/api-docs/**",

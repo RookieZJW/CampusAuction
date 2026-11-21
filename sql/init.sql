@@ -187,9 +187,18 @@ CREATE TABLE t_order (
     trade_type   VARCHAR(20)  NOT NULL DEFAULT 'OFFLINE' COMMENT 'OFFLINE线下面交',
     trade_place  VARCHAR(255) NULL COMMENT '约定交割地点',
     completed_at DATETIME     NULL,
+    -- 支付网关维度（方案 B：可插拔支付 + 模拟支付；与线下交割状态机解耦）
+    pay_status    VARCHAR(20) NOT NULL DEFAULT 'UNPAID'
+                  COMMENT 'UNPAID未支付 PAYING支付中 PAID已支付 CLOSED已关闭',
+    pay_no        VARCHAR(64) NULL COMMENT '支付单号 PAY+时间戳+随机',
+    pay_provider  VARCHAR(20) NULL COMMENT '支付网关标识 MOCK/WXPAY',
+    pay_amount    INT         NULL COMMENT '本次支付金额（分）',
+    transaction_id VARCHAR(64) NULL COMMENT '第三方交易号（模拟支付为 MOCK 前缀）',
+    paid_at       DATETIME    NULL COMMENT '支付成功时间',
     create_time  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
     update_time  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     UNIQUE KEY uk_order_no (order_no),
+    UNIQUE KEY uk_pay_no (pay_no) COMMENT '支付单号唯一：回调幂等兜底',
     UNIQUE KEY uk_auction (auction_id) COMMENT '结算幂等：一场拍卖最多生成一单'
 ) ENGINE = InnoDB COMMENT '成交订单';
 

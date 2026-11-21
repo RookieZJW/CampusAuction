@@ -53,6 +53,19 @@ ai:
     api-key: ${AI_PRICE_KEY:}
     model: ${AI_MODEL:deepseek-chat}
 
+# 可插拔支付网关（方案 B）
+# provider=mock 时启用模拟支付（答辩演示，零合规风险）；
+# provider=wxpay 时切换到微信支付实现骨架，需商户号/APIv3 证书/公网回调，默认不启用。
+payment:
+  provider: ${PAYMENT_PROVIDER:mock}
+  # 是否强制「先支付再确认交割」：默认 false，保留线下面交演示链路
+  require-before-complete: ${PAYMENT_REQUIRE_BEFORE_COMPLETE:false}
+  wxpay:
+    mch-id: ${WXPAY_MCH_ID:}
+    app-id: ${WXPAY_APP_ID:}
+    api-v3-key: ${WXPAY_API_V3_KEY:}
+    notify-url: ${WXPAY_NOTIFY_URL:}
+
 spring.servlet.multipart:
   max-file-size: 3MB
   max-request-size: 10MB

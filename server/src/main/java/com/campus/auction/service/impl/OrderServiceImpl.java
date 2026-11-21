@@ -20,9 +20,11 @@ import com.campus.auction.mapper.OrderMapper;
 import com.campus.auction.mapper.UserMapper;
 import com.campus.auction.service.OrderService;
 import com.campus.auction.util.JsonUtil;
-import com.campus.auction.vo.OrderVO;import com.campus.auction.util.TimeUtil;
+import com.campus.auction.util.TimeUtil;
+import com.campus.auction.vo.OrderVO;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 
@@ -49,6 +51,10 @@ public class OrderServiceImpl implements OrderService {
     private final NotificationMapper notificationMapper;
     private final JsonUtil jsonUtil;
     private final TransactionTemplate transactionTemplate;
+
+    /** 是否强制「先支付再确认交割」；默认 false，保留线下面交演示链路 */
+    @Value("${payment.require-before-complete:false}")
+    private boolean requirePayBeforeComplete;
 
     @Override
     public List<OrderVO> myOrders(Long userId) {
@@ -86,6 +92,12 @@ public class OrderServiceImpl implements OrderService {
                     .dealPrice(o.getDealPrice())
                     .status(o.getStatus())
                     .tradePlace(o.getTradePlace())
+                    .payStatus(o.getPayStatus() == null ? Order.PAY_UNPAID : o.getPayStatus())
+                    .payNo(o.getPayNo())
+                    .payProvider(o.getPayProvider())
+                    .payAmount(o.getPayAmount())
+                    .transactionId(o.getTransactionId())
+                    .paidAt(o.getPaidAt() == null ? "" : TimeUtil.str(o.getPaidAt()))
                     .counterparty(nicknameMap.getOrDefault(
                             isBuyer ? o.getSellerId() : o.getBuyerId(), "微信用户"))
                     .createTime(TimeUtil.str(o.getCreateTime()))
@@ -102,6 +114,11 @@ public class OrderServiceImpl implements OrderService {
             }
             if (!Order.STATUS_PENDING_TRADING.equals(order.getStatus())) {
                 throw new BusinessException(ResultCode.BIZ_ERROR, "订单不在待交割状态");
+            }
+            // 可选约束：开启 payment.require-before-complete 后必须先完成支付
+            // 默认关闭，保证答辩现场「线下交割」链路可独立演示
+            if (requirePayBeforeComplete && !Order.PAY_PAID.equals(order.getPayStatus())) {
+                throw new BusinessException(ResultCode.PAY_NOT_ALLOWED, "请先完成支付再确认交割");
             }
 
             LocalDateTime now = LocalDateTime.now();
