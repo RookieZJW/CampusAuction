@@ -131,6 +131,31 @@ Page({
     }
     // 只存临时路径，等拿到 token 后再上传持久化
     this.setData({ avatarTemp: url, avatarDisplay: url })
+    // 真机调试时服务端返回的是 http+纯IP，image 组件会被微信拦截。
+    // 转成 base64 存本地登录态，保证「我的」页能显示；服务端仍存 URL 用于正式环境。
+    this.makeAvatarBase64(url)
+  },
+
+  /** 头像转 base64（先压缩，避免超出 storage 单 key 1MB 限制） */
+  makeAvatarBase64(tempPath) {
+    const toBase64 = (filePath) => {
+      wx.getFileSystemManager().readFile({
+        filePath,
+        encoding: 'base64',
+        success: (r) => { this._avatarBase64 = 'data:image/jpeg;base64,' + r.data },
+        fail: () => { this._avatarBase64 = '' }
+      })
+    }
+    if (wx.compressImage) {
+      wx.compressImage({
+        src: tempPath,
+        quality: 40,
+        success: (c) => toBase64(c.tempFilePath || tempPath),
+        fail: () => toBase64(tempPath)
+      })
+    } else {
+      toBase64(tempPath)
+    }
   },
 
   // ---------- 昵称 ----------
@@ -271,7 +296,12 @@ Page({
   /** 登录成功收尾：回到来路页面 */
   finishLogin(data) {
     this.setData({ loading: false })
-    app.setLogin(data)
+    // 真机调试：用 base64 覆盖服务端的 http+IP 头像 URL，否则 image 组件显示不出来
+    const finalData = Object.assign({}, data)
+    if (this._avatarBase64) {
+      finalData.avatar = this._avatarBase64
+    }
+    app.setLogin(finalData)
     wx.showToast({
       title: data.isNew ? '欢迎加入' : '欢迎回来',
       icon: 'none',

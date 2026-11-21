@@ -12,7 +12,7 @@
 // 【正式部署】把 BASE_URL / IMG_BASE 改成已备案的 https 域名
 
 // 答辩演示开关：true = 用局域网 IP（手机真机调试），false = 用 localhost（开发者工具模拟器）
-const USE_LAN_IP = false
+const USE_LAN_IP = true
 
 // 当前电脑的局域网 IP（换网络环境后需重新查 ipconfig 更新）
 const LAN_IP = '192.168.3.228'
