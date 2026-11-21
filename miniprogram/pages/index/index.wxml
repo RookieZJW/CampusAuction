@@ -17,18 +17,22 @@
     </view>
   </view>
 
-  <!-- 分类横滑条：纸条式的筛选签 -->
+  <!-- 分类横滑条：纸条式的筛选签
+       内层必须用 .category-inner 包一层 inline-flex：真机上 scroll-view 内部是独立渲染容器，
+       直接把 inline-block 子项放进去会被按 flex item 压缩/裁切，导致只剩「全部」 -->
   <scroll-view class="category-bar" scroll-x>
-    <view
-      class="category-item {{activeCategory === 0 ? 'active' : ''}}"
-      data-id="0"
-      bindtap="onCategoryTap">全部</view>
-    <view
-      wx:for="{{categories}}"
-      wx:key="id"
-      class="category-item {{activeCategory === item.id ? 'active' : ''}}"
-      data-id="{{item.id}}"
-      bindtap="onCategoryTap">{{item.name}}</view>
+    <view class="category-inner">
+      <view
+        class="category-item {{activeCategory === 0 ? 'active' : ''}}"
+        data-id="0"
+        bindtap="onCategoryTap">全部</view>
+      <view
+        wx:for="{{categories}}"
+        wx:key="id"
+        class="category-item {{activeCategory === item.id ? 'active' : ''}}"
+        data-id="{{item.id}}"
+        bindtap="onCategoryTap">{{item.name}}</view>
+    </view>
   </scroll-view>
 
   <!-- 拍卖列表 -->

@@ -105,10 +105,13 @@
   color: var(--text-hint);
 }
 
-/* ---- 分类：纸条筛选签 ---- */
+/* ---- 分类：纸条筛选签 ----
+   注意：真机 scroll-view 内部是独立渲染容器，不能只靠 scroll-view 上的
+   white-space:nowrap + 子项 inline-block —— 新版基础库会把横向内容按 flex 处理，
+   inline-block 子项会被 flex-shrink 压扁并被 overflow:hidden 裁掉（表现为只剩「全部」）。
+   改用内层 inline-flex 容器：宽度由内容自然撑开，子项 flex-shrink:0 不被压缩。 */
 .category-bar {
   width: 100%;
-  white-space: nowrap;
   padding: 20rpx 24rpx 6rpx;
   box-sizing: border-box;
 }
@@ -118,8 +121,19 @@
   display: none;
 }
 
+.category-inner {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  /* 即使 scroll-view 内部容器被真机按 flex 处理，也不压缩整行内容 */
+  flex-shrink: 0;
+}
+
 .category-item {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
   padding: 10rpx 24rpx;
   margin-right: 12rpx;
   border-radius: 6rpx;

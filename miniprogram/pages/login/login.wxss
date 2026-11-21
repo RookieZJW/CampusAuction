@@ -237,6 +237,7 @@
 
 .phone-text {
   flex: 1;
+  width: 40rpx;
 }
 
 .phone-arrow {

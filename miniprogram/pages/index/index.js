@@ -20,6 +20,14 @@ Page({
 
   onLoad() {
     this.setData({ today: this.formatToday() })
+    // 先用本地缓存秒填分类，避免真机首屏空白；随后以接口结果为准刷新
+    // 缓存内容来自服务端 /api/v1/categories，不是前端造的假数据
+    try {
+      const cached = wx.getStorageSync('categories')
+      if (Array.isArray(cached) && cached.length) {
+        this.setData({ categories: cached })
+      }
+    } catch (e) { /* 缓存不可用时忽略，走网络请求 */ }
     this.loadCategories()
     this.loadAuctions()
   },
@@ -27,6 +35,10 @@ Page({
   onShow() {
     // 进入小程序即弹登录框（可关闭，不强制；本次启动只弹一次）
     app.tryPromptLogin('pages/index/index')
+    // 真机调试下首屏请求可能被登录弹窗/网络抖动打断，回到首页时若分类为空则补拉一次
+    if (!this.data.categories || this.data.categories.length === 0) {
+      this.loadCategories()
+    }
     // 认证后返回首页：更新学校标签并按本校重新加载列表
     const u = app.globalData.userInfo
     const label = u && u.certified && u.schoolName ? (u.schoolName + ' · 本校') : '同校面交'
@@ -51,6 +63,7 @@ Page({
 
   onPullDownRefresh() {
     this.setData({ page: 1, noMore: false, auctionList: [] })
+    this.loadCategories()
     this.loadAuctions().finally(() => wx.stopPullDownRefresh())
   },
 
@@ -61,16 +74,48 @@ Page({
     this.loadAuctions()
   },
 
-  loadCategories() {
+  /** 分类字典：公开接口。失败不再静默，带重试 + onShow/下拉补拉，避免真机上只剩「全部」 */
+  loadCategories(retry = 0) {
+    if (this._catLoading) {
+      return
+    }
+    this._catLoading = true
     request({
       url: '/api/v1/categories',
       method: 'GET',
       needAuth: false
     }).then((list) => {
-      this.setData({ categories: list || [] })
-    }).catch(() => {
-      // 分类加载失败不阻塞列表
+      this._catLoading = false
+      const categories = Array.isArray(list) ? list : []
+      if (categories.length === 0) {
+        this.scheduleCategoryRetry(retry)
+        return
+      }
+      this.setData({ categories })
+      try { wx.setStorageSync('categories', categories) } catch (e) { /* 忽略 */ }
+    }).catch((err) => {
+      this._catLoading = false
+      console.warn('[index] 分类加载失败', err)
+      this.scheduleCategoryRetry(retry)
     })
+  },
+
+  /** 最多重试 2 次（间隔 600ms）；仍失败读本地缓存兜底，并给出可读提示 */
+  scheduleCategoryRetry(retry) {
+    if (retry >= 2) {
+      try {
+        const cached = wx.getStorageSync('categories')
+        if (Array.isArray(cached) && cached.length) {
+          this.setData({ categories: cached })
+          wx.showToast({ title: '分类用本地缓存，下拉可更新', icon: 'none' })
+          return
+        }
+      } catch (e) { /* 忽略，走提示 */ }
+      wx.showToast({ title: '分类加载失败，下拉刷新重试', icon: 'none' })
+      return
+    }
+    clearTimeout(this._catRetryTimer)
+    this._catRetryTimer = setTimeout(() => this.loadCategories(retry + 1), 600)
   },
 
   loadAuctions() {
@@ -163,6 +208,9 @@ Page({
     // 离开页面必须清理定时器，防止内存泄漏
     if (this._timer) {
       clearInterval(this._timer)
+    }
+    if (this._catRetryTimer) {
+      clearTimeout(this._catRetryTimer)
     }
   }
 })
