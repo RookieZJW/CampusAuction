@@ -1,6 +1,7 @@
 // 我的：登录态展示 + 个人中心入口
 const app = getApp()
 const { request } = require('../../utils/request')
+const avatarUtil = require('../../utils/avatar')
 
 Page({
   data: {
@@ -18,10 +19,9 @@ Page({
     })
     if (userInfo) {
       this.loadUnread()
-      // 真机调试时服务端头像 URL 是 http+纯IP，image 组件会被微信拦截。
-      // 用 request 拉成 base64 存回登录态，让当前已登录用户也能显示头像，无需重新登录。
-      if (userInfo.avatar && /^http:\/\//.test(userInfo.avatar) && !this._avatarConverted) {
-        this._avatarConverted = true
+      // 真机调试时服务端头像 URL 是 http+纯IP，image 组件会被微信拦截，转 base64 才能显示。
+      // 不用一次性标志：从「完善资料」返回时 avatar 可能被写回 http URL，需要每次进来都校正。
+      if (avatarUtil.isRemoteHttp(userInfo.avatar)) {
         this.loadRemoteAvatar(userInfo)
       }
     }
@@ -29,24 +29,13 @@ Page({
 
   /** 把远程 http 头像转成本地 base64（仅真机调试演示需要，正式环境 https 域名无需转换） */
   loadRemoteAvatar(userInfo) {
-    wx.request({
-      url: userInfo.avatar,
-      responseType: 'arraybuffer',
-      success: (res) => {
-        if (res.statusCode !== 200 || !res.data) {
-          return
-        }
-        try {
-          const base64 = wx.arrayBufferToBase64(res.data)
-          const avatar = 'data:image/jpeg;base64,' + base64
-          const updated = Object.assign({}, userInfo, { avatar })
-          app.setLogin(updated)
-          this.setData({ userInfo: updated })
-        } catch (e) {
-          // 转换失败保持原样，不阻塞页面
-        }
-      },
-      fail: () => {}
+    avatarUtil.remoteToBase64(userInfo.avatar).then((base64) => {
+      if (!base64) {
+        return
+      }
+      const updated = Object.assign({}, userInfo, { avatar: base64 })
+      app.setLogin(updated)
+      this.setData({ userInfo: updated })
     })
   },
 

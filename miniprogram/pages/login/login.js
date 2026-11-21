@@ -5,6 +5,7 @@
 // 但都在这一屏完成，用户感知就是「登录时把资料填齐」。
 const { request } = require('../../utils/request')
 const { BASE_URL } = require('../../utils/config')
+const avatarUtil = require('../../utils/avatar')
 const app = getApp()
 
 Page({
@@ -138,24 +139,7 @@ Page({
 
   /** 头像转 base64（先压缩，避免超出 storage 单 key 1MB 限制） */
   makeAvatarBase64(tempPath) {
-    const toBase64 = (filePath) => {
-      wx.getFileSystemManager().readFile({
-        filePath,
-        encoding: 'base64',
-        success: (r) => { this._avatarBase64 = 'data:image/jpeg;base64,' + r.data },
-        fail: () => { this._avatarBase64 = '' }
-      })
-    }
-    if (wx.compressImage) {
-      wx.compressImage({
-        src: tempPath,
-        quality: 40,
-        success: (c) => toBase64(c.tempFilePath || tempPath),
-        fail: () => toBase64(tempPath)
-      })
-    } else {
-      toBase64(tempPath)
-    }
+    avatarUtil.toBase64(tempPath).then((b64) => { this._avatarBase64 = b64 })
   },
 
   // ---------- 昵称 ----------
