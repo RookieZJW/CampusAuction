@@ -225,7 +225,11 @@ Page({
       schoolId: info.schoolId,
       schoolName: info.shortName || info.schoolName || '',
       certified: !!info.certified,
-      authStatus: info.status || 'PENDING'
+      authStatus: info.status || 'PENDING',
+      realName: info.realName || '',
+      studentNo: info.studentNo || '',
+      studentCard: info.studentCard || '',
+      authTime: info.authTime || ''
     }))
   }
 })

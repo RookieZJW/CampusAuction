@@ -60,11 +60,12 @@ public class SchoolServiceImpl implements SchoolService {
         m.put("schoolName", school == null ? "" : school.getName());
         m.put("shortName", school == null ? "" : school.getShortName());
 
-        // 最新一条申请（待审/驳回时给前端看姓名学号学生证和驳回理由）
+        // 用户资料以 t_user 持久化值为准；存量数据兼容回退到申请表
         SchoolAuth latest = latestAuth(user.getId());
-        m.put("realName", latest == null ? "" : nvl(latest.getRealName()));
-        m.put("studentNo", latest == null ? "" : nvl(latest.getStudentNo()));
-        m.put("studentCard", latest == null ? "" : nvl(latest.getStudentCard()));
+        m.put("realName", firstNonBlank(user.getRealName(), latest == null ? null : latest.getRealName()));
+        m.put("studentNo", firstNonBlank(user.getStudentNo(), latest == null ? null : latest.getStudentNo()));
+        m.put("studentCard", firstNonBlank(user.getStudentCard(), latest == null ? null : latest.getStudentCard()));
+        m.put("authTime", user.getAuthTime() == null ? "" : user.getAuthTime().toString());
         m.put("applySchoolId", latest == null ? null : latest.getSchoolId());
         m.put("rejectReason", latest == null ? "" : nvl(latest.getRejectReason()));
         return m;
@@ -96,8 +97,13 @@ public class SchoolServiceImpl implements SchoolService {
         }
 
         // 已通过用户改学校：清掉旧 school_id，重新进入待审（失去旧学校身份）
+        // 姓名/学号/学生证同步持久化到 t_user，不再只留在申请表
         user.setSchoolId(null);
         user.setAuthStatus("PENDING");
+        user.setRealName(realName.trim());
+        user.setStudentNo(studentNo.trim());
+        user.setStudentCard(studentCard.trim());
+        user.setAuthTime(null);
         userMapper.updateById(user);
 
         SchoolAuth auth = latestAuth(user.getId());
@@ -180,14 +186,20 @@ public class SchoolServiceImpl implements SchoolService {
         if (user == null) {
             throw new BusinessException(ResultCode.NOT_FOUND, "申请人不存在");
         }
+        LocalDateTime now = LocalDateTime.now();
         auth.setStatus(SchoolAuth.STATUS_APPROVED);
         auth.setReviewerId(adminId);
-        auth.setReviewTime(LocalDateTime.now());
-        auth.setUpdateTime(LocalDateTime.now());
+        auth.setReviewTime(now);
+        auth.setUpdateTime(now);
         schoolAuthMapper.updateById(auth);
 
+        // 审核结果回写 t_user：以管理员审核时看到的那一份材料为准，完成持久化
         user.setSchoolId(auth.getSchoolId());
         user.setAuthStatus("APPROVED");
+        user.setRealName(auth.getRealName());
+        user.setStudentNo(auth.getStudentNo());
+        user.setStudentCard(auth.getStudentCard());
+        user.setAuthTime(now);
         userMapper.updateById(user);
         log.info("学校认证通过：authId={} userId={} adminId={}", authId, user.getId(), adminId);
     }
@@ -213,6 +225,11 @@ public class SchoolServiceImpl implements SchoolService {
         if (user != null) {
             user.setAuthStatus("REJECTED");
             user.setSchoolId(null);
+            // 材料保留在 t_user，用户修改后重新提交会覆盖
+            user.setRealName(firstNonBlank(user.getRealName(), auth.getRealName()));
+            user.setStudentNo(firstNonBlank(user.getStudentNo(), auth.getStudentNo()));
+            user.setStudentCard(firstNonBlank(user.getStudentCard(), auth.getStudentCard()));
+            user.setAuthTime(null);
             userMapper.updateById(user);
         }
         log.info("学校认证驳回：authId={} adminId={} reason={}", authId, adminId, reason.trim());
@@ -324,5 +341,10 @@ public class SchoolServiceImpl implements SchoolService {
 
     private String nvl(String s) {
         return s == null ? "" : s;
+    }
+
+    /** 优先返回非空字符串，用于存量数据从申请表回退 */
+    private String firstNonBlank(String a, String b) {
+        return a != null && !a.isBlank() ? a : nvl(b);
     }
 }

@@ -3,6 +3,8 @@ package com.campus.auction.dto;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 /**
  * 登录返回
  */
@@ -38,6 +40,18 @@ public class LoginVO {
 
     /** 认证状态 NONE/PENDING/APPROVED/REJECTED */
     private String authStatus;
+
+    /** 认证真实姓名（持久化） */
+    private String realName;
+
+    /** 认证学号（持久化） */
+    private String studentNo;
+
+    /** 认证学生证照片 URL（持久化） */
+    private String studentCard;
+
+    /** 认证通过时间 */
+    private LocalDateTime authTime;
 
     /** 是否新注册用户（前端可展示欢迎语） */
     private Boolean isNew;

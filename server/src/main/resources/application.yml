@@ -8,6 +8,12 @@ spring:
     default-property-inclusion: non_null
     time-zone: Asia/Shanghai
     date-format: yyyy-MM-dd HH:mm:ss
+  # 启动时自动执行幂等 DDL：把认证资料持久化到 t_user（等价于 sql/migration/2026-11-21-user-auth-persist.sql）
+  sql:
+    init:
+      mode: always
+      encoding: UTF-8
+      continue-on-error: false
 
 server:
   port: 8080

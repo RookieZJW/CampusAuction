@@ -70,7 +70,11 @@ Page({
         schoolId: info.schoolId,
         schoolName: info.shortName || info.schoolName || '',
         certified: !!info.certified,
-        authStatus: info.status || 'NONE'
+        authStatus: info.status || 'NONE',
+        realName: info.realName || '',
+        studentNo: info.studentNo || '',
+        studentCard: info.studentCard || '',
+        authTime: info.authTime || ''
       }))
       this.refreshView(app.globalData.userInfo)
     }).catch(() => {})

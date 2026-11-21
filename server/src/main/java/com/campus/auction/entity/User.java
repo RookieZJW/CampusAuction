@@ -35,6 +35,18 @@ public class User {
     /** 认证状态 NONE/PENDING/APPROVED/REJECTED */
     private String authStatus;
 
+    /** 认证真实姓名（提交/审核通过后持久化） */
+    private String realName;
+
+    /** 认证学号（提交/审核通过后持久化） */
+    private String studentNo;
+
+    /** 认证学生证照片 URL（提交/审核通过后持久化） */
+    private String studentCard;
+
+    /** 认证通过时间 */
+    private LocalDateTime authTime;
+
     /** 信用分：初始 100，低于 60 限制出价 */
     private Integer creditScore;
 

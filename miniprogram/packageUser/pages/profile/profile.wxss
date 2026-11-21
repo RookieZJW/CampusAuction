@@ -267,3 +267,22 @@
 .privacy-agree::after {
   border: none;
 }
+
+.info-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid var(--border);
+  font-size: var(--fs-body);
+}
+.info-row:last-of-type {
+  border-bottom: none;
+}
+.info-key {
+  color: var(--text-secondary);
+}
+.info-value {
+  color: var(--text);
+  font-weight: 500;
+}

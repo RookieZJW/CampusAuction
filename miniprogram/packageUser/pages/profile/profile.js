@@ -5,6 +5,12 @@ const { BASE_URL } = require('../../../utils/config')
 const avatarUtil = require('../../../utils/avatar')
 const app = getApp()
 
+function authTextOf(status) {
+  return status === 'APPROVED' ? '已认证'
+    : status === 'PENDING' ? '审核中'
+      : status === 'REJECTED' ? '审核未通过' : '未认证'
+}
+
 Page({
   data: {
     nickname: '',
@@ -13,6 +19,12 @@ Page({
     uploading: false,
     phone: '',
     phoneBound: false,
+    authStatus: 'NONE',
+    authText: '未认证',
+    realName: '',
+    studentNo: '',
+    schoolName: '',
+    authTime: '',
     binding: false,
     saving: false,
     showPrivacy: false,
@@ -48,17 +60,33 @@ Page({
     if (local.phone) {
       this.setData({ phone: local.phone, phoneBound: true })
     }
+    const localStatus = local.authStatus || (local.certified ? 'APPROVED' : 'NONE')
+    this.setData({
+      authStatus: localStatus,
+      authText: authTextOf(localStatus),
+      realName: local.realName || '',
+      studentNo: local.studentNo || '',
+      schoolName: local.schoolName || '',
+      authTime: local.authTime || ''
+    })
     request({ url: '/api/v1/users/profile', method: 'GET' }).then((p) => {
       const serverAvatar = p.avatar || ''
       const httpAvatar = avatarUtil.isRemoteHttp(serverAvatar)
+      const authStatus = p.authStatus || localStatus
       this.setData({
+        authStatus,
+        authText: authTextOf(authStatus),
         // 默认值「微信用户」不当成已填昵称
         nickname: p.nickname === '微信用户' ? '' : (p.nickname || ''),
         avatarUrl: serverAvatar,       // 提交给服务端的原始 URL 保持不变
         // http 外链先保留本地已填充的 base64 预览，等转换完再覆盖；避免闪一下绿色占位
         avatarDisplay: httpAvatar ? (this.data.avatarDisplay || serverAvatar) : serverAvatar,
         phone: p.phone || '',
-        phoneBound: !!p.phone
+        phoneBound: !!p.phone,
+        realName: p.realName || this.data.realName,
+        studentNo: p.studentNo || this.data.studentNo,
+        schoolName: this.data.schoolName,
+        authTime: p.authTime || ''
       })
       // 真机调试：服务端头像是 http+纯IP，image 组件拦截会显示占位图，转 base64 才能预览
       this.resolveAvatarDisplay(serverAvatar)

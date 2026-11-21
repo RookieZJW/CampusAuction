@@ -120,7 +120,14 @@ public class UserController {
         m.put("avatar", user.getAvatar() == null ? "" : user.getAvatar());
         m.put("phone", user.getPhone() == null ? "" : user.getPhone());
         m.put("schoolId", user.getSchoolId());
-        m.put("certified", user.getSchoolId() != null);
+        String authStatus = user.getAuthStatus() == null ? "NONE" : user.getAuthStatus();
+        m.put("authStatus", authStatus);
+        m.put("certified", "APPROVED".equals(authStatus) && user.getSchoolId() != null);
+        // 认证资料持久化在 t_user，直接回显给「完善资料」等页面
+        m.put("realName", user.getRealName() == null ? "" : user.getRealName());
+        m.put("studentNo", user.getStudentNo() == null ? "" : user.getStudentNo());
+        m.put("studentCard", user.getStudentCard() == null ? "" : user.getStudentCard());
+        m.put("authTime", user.getAuthTime() == null ? "" : user.getAuthTime().toString());
         return m;
     }
 

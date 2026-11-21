@@ -147,6 +147,10 @@ public class AuthServiceImpl implements AuthService {
         return school == null ? "" : school.getShortName();
     }
 
+    private String nvl(String s) {
+        return s == null ? "" : s;
+    }
+
     private LoginVO buildVO(User user, boolean isNew) {
         String authStatus = user.getAuthStatus() == null ? "NONE" : user.getAuthStatus();
         return LoginVO.builder()
@@ -160,6 +164,10 @@ public class AuthServiceImpl implements AuthService {
                 .schoolId(user.getSchoolId())
                 .schoolName(resolveSchoolName(user.getSchoolId()))
                 .authStatus(authStatus)
+                .realName(nvl(user.getRealName()))
+                .studentNo(nvl(user.getStudentNo()))
+                .studentCard(nvl(user.getStudentCard()))
+                .authTime(user.getAuthTime())
                 .certified("APPROVED".equals(authStatus) && user.getSchoolId() != null)
                 .isNew(isNew)
                 .build();

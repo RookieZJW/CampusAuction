@@ -46,8 +46,9 @@ App({
       method: 'GET'
     }).then(() => {
       this.globalData.loginReady = true
-      // 兼容旧登录态：补齐学校与审核状态（迁移后库里已有 school_id/auth_status，但本地缓存没有）
-      if (userInfo.certified === undefined || userInfo.authStatus === undefined) {
+      // 兼容旧登录态：补齐学校、审核状态与已持久化的认证资料
+      if (userInfo.certified === undefined || userInfo.authStatus === undefined
+          || userInfo.realName === undefined) {
         request({ url: '/api/v1/schools/mine' }).then((info) => {
           const cur = this.globalData.userInfo
           if (cur) {
@@ -55,7 +56,11 @@ App({
               schoolId: info.schoolId,
               schoolName: info.shortName || info.schoolName || '',
               certified: !!info.certified,
-              authStatus: info.status || 'NONE'
+              authStatus: info.status || 'NONE',
+              realName: info.realName || '',
+              studentNo: info.studentNo || '',
+              studentCard: info.studentCard || '',
+              authTime: info.authTime || ''
             }))
           }
         }).catch(() => {})

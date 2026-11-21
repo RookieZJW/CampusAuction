@@ -48,6 +48,16 @@
     </block>
   </view>
 
+  <!-- 校园认证资料：已持久化到 t_user，此处只读展示 -->
+  <view wx:if="{{authStatus !== 'NONE'}}" class="card">
+    <view class="section-label">校园认证 <text class="optional">已持久化</text></view>
+    <view class="info-row"><text class="info-key">姓名</text><text class="info-value">{{realName || '—'}}</text></view>
+    <view class="info-row"><text class="info-key">学号</text><text class="info-value">{{studentNo || '—'}}</text></view>
+    <view class="info-row"><text class="info-key">学校</text><text class="info-value">{{schoolName || '—'}}</text></view>
+    <view class="info-row"><text class="info-key">状态</text><text class="info-value">{{authText}}</text></view>
+    <view class="field-hint">以上信息保存在用户资料中，可在「学校认证」修改后重新提交审核</view>
+  </view>
+
   <view class="submit-area">
     <button class="btn-primary" bindtap="onSave" loading="{{saving}}">保存资料</button>
   </view>
