@@ -1,5 +1,6 @@
 // 我发布的拍品：状态跟踪（待审/拍卖中/已驳回/已结束）
 const { request } = require('../../../utils/request')
+const imageUtil = require('../../../utils/image')
 
 const STATUS_TEXT = {
   PENDING: '待审核',
@@ -36,7 +37,10 @@ Page({
           ? '已驳回'
           : (AUCTION_TEXT[item.auctionStatus] || STATUS_TEXT[item.itemStatus] || item.itemStatus)
       }))
-      this.setData({ list: decorated, loading: false })
+      // 真机调试：http+IP 图片转成 base64 才能显示
+      imageUtil.decorateList(decorated, ['images[0]']).then(() => {
+        this.setData({ list: decorated, loading: false })
+      })
     }).catch(() => {
       this.setData({ loading: false })
     })

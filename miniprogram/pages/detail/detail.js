@@ -2,6 +2,7 @@
 // 轮询用轻量接口 /auctions/{id}/live，只取 4 个字段做局部 setData（避免整对象刷新卡顿）
 const { request } = require('../../utils/request')
 const { parseServerTime, formatServerTime } = require('../../utils/time')
+const imageUtil = require('../../utils/image')
 const app = getApp()
 
 const STATUS_TEXT = {
@@ -124,17 +125,20 @@ Page({
         priceYuan: fen2yuan(r.price),
         bidTimeText: formatServerTime(r.bidTime, 16).slice(5)
       }))
-      this.setData({
-        detail: { ...detail, bidRecords: records },
-        loading: false,
-        currentPriceYuan: fen2yuan(detail.currentPrice),
-        startPriceYuan: fen2yuan(detail.startPrice),
-        incrementYuan: fen2yuan(detail.increment),
-        minNextYuan: fen2yuan(detail.currentPrice + detail.increment),
-        statusText: STATUS_TEXT[detail.status] || detail.status
+      // 真机调试：图集 http+IP 转 base64，swiper 与 previewImage 都用同一份
+      return imageUtil.decorateImages(detail.images || []).then((images) => {
+        this.setData({
+          detail: { ...detail, images, bidRecords: records },
+          loading: false,
+          currentPriceYuan: fen2yuan(detail.currentPrice),
+          startPriceYuan: fen2yuan(detail.startPrice),
+          incrementYuan: fen2yuan(detail.increment),
+          minNextYuan: fen2yuan(detail.currentPrice + detail.increment),
+          statusText: STATUS_TEXT[detail.status] || detail.status
+        })
+        this.startCountdown()
+        this.startLivePolling()
       })
-      this.startCountdown()
-      this.startLivePolling()
     }).catch(() => {
       this.setData({ loading: false })
     })

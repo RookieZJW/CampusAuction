@@ -1,5 +1,6 @@
 // 管理员审核列表：独立于用户身份的管理员登录（adminToken 单独存储）
 const { request } = require('../../../utils/request')
+const imageUtil = require('../../../utils/image')
 
 Page({
   data: {
@@ -61,7 +62,9 @@ Page({
         ...item,
         startPriceYuan: ((item.startPrice || 0) / 100).toFixed(2)
       }))
-      this.setData({ list: decorated, loading: false })
+      imageUtil.decorateList(decorated, ['images[0]']).then(() => {
+        this.setData({ list: decorated, loading: false })
+      })
     }).catch((e) => {
       this.setData({ loading: false })
       // token 失效则清空回到登录

@@ -1,5 +1,6 @@
 // 审核详情：通过（立即开拍）/ 驳回（必填理由）
 const { request } = require('../../../utils/request')
+const imageUtil = require('../../../utils/image')
 
 Page({
   data: {
@@ -36,15 +37,18 @@ Page({
         return
       }
       const fen2yuan = (fen) => ((fen || 0) / 100).toFixed(2)
-      this.setData({
-        item: {
-          ...item,
-          submitTimeText: (item.submitTime || '').replace('T', ' ').slice(0, 16)
-        },
-        loading: false,
-        startPriceYuan: fen2yuan(item.startPrice),
-        incrementYuan: fen2yuan(item.increment),
-        depositYuan: fen2yuan(item.deposit)
+      return imageUtil.decorateImages(item.images || []).then((images) => {
+        this.setData({
+          item: {
+            ...item,
+            images,
+            submitTimeText: (item.submitTime || '').replace('T', ' ').slice(0, 16)
+          },
+          loading: false,
+          startPriceYuan: fen2yuan(item.startPrice),
+          incrementYuan: fen2yuan(item.increment),
+          depositYuan: fen2yuan(item.deposit)
+        })
       })
     }).catch(() => {
       this.setData({ loading: false })

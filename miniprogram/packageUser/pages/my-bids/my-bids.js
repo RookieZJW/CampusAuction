@@ -1,5 +1,6 @@
 // 我的出价：领先/被超越/中标状态跟踪
 const { request } = require('../../../utils/request')
+const imageUtil = require('../../../utils/image')
 
 const MY_STATUS = {
   LEADING: { text: '领先中', cls: 'leading' },
@@ -38,7 +39,9 @@ Page({
         myStatusClass: MY_STATUS[item.myStatus] ? MY_STATUS[item.myStatus].cls : '',
         auctionStatusText: AUCTION_STATUS[item.auctionStatus] || item.auctionStatus || ''
       }))
-      this.setData({ list: decorated, loading: false })
+      imageUtil.decorateList(decorated, ['coverImage']).then(() => {
+        this.setData({ list: decorated, loading: false })
+      })
     }).catch(() => {
       this.setData({ loading: false })
     })

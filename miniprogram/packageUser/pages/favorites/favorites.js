@@ -1,5 +1,6 @@
 // 我的收藏：卡片列表 + 剩余时间显示 + 跳转详情
 const { request } = require('../../../utils/request')
+const imageUtil = require('../../../utils/image')
 
 const STATUS_TEXT = {
   PENDING: '待开始',
@@ -37,7 +38,9 @@ Page({
           remainText
         }
       })
-      this.setData({ list: items })
+      imageUtil.decorateList(items, ['coverImage']).then(() => {
+        this.setData({ list: items })
+      })
     })
   },
 

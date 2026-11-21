@@ -2,6 +2,7 @@
 // W2 后端就绪后接口为 GET /api/v1/auctions?page=&size=&categoryId=
 const { request } = require('../../utils/request')
 const { parseServerTime } = require('../../utils/time')
+const imageUtil = require('../../utils/image')
 const app = getApp()
 
 Page({
@@ -72,10 +73,14 @@ Page({
       needAuth: false
     }).then((data) => {
       const list = (data && data.list) || []
+      const decorated = this.decorate(list)
+      // 真机调试：封面 http+IP 转 base64 后再渲染
+      return imageUtil.decorateList(decorated, ['coverImage']).then(() => decorated)
+    }).then((decorated) => {
       this.setData({
-        auctionList: this.data.auctionList.concat(this.decorate(list)),
+        auctionList: this.data.auctionList.concat(decorated),
         page: page + 1,
-        noMore: list.length < size
+        noMore: decorated.length < size
       })
       this.startCountdown()
     }).catch((err) => {

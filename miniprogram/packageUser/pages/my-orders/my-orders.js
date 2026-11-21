@@ -1,5 +1,6 @@
 // 我的订单：买入/卖出双视角 + 确认交割 + 约定地点
 const { request } = require('../../../utils/request')
+const imageUtil = require('../../../utils/image')
 
 const STATUS_TEXT = {
   PENDING_TRADING: '待交割',
@@ -30,9 +31,11 @@ Page({
         dealPriceYuan: ((o.dealPrice || 0) / 100).toFixed(2),
         statusText: STATUS_TEXT[o.status] || o.status
       }))
-      this.setData({ list: decorated, loading: false })
-      this.applyFilter()
-      this.markReviewed()
+      imageUtil.decorateList(decorated, ['coverImage']).then(() => {
+        this.setData({ list: decorated, loading: false })
+        this.applyFilter()
+        this.markReviewed()
+      })
     }).catch(() => {
       this.setData({ loading: false })
     })
