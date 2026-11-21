@@ -132,6 +132,11 @@ public class WxApiService {
         try {
             resp = restTemplate.postForObject(GET_PHONE_NUMBER_URL,
                     Map.of("code", code), JsonNode.class, token);
+        } catch (org.springframework.web.client.HttpClientErrorException e) {
+            // 保留 HTTP 状态，便于区分 412（请求体未缓冲/Content-Length 缺失）、
+            // 401/403（token 或接口权限）、429（额度/限流）等，避免一律兜底成笼统提示
+            log.error("换取手机号 HTTP 错误：status={} body={}", e.getStatusCode(), e.getResponseBodyAsString());
+            throw new BusinessException(ResultCode.BIZ_ERROR, "手机号授权未通过，请重新授权后再试");
         } catch (org.springframework.web.client.RestClientException e) {
             log.error("换取手机号网络异常：{}", e.getMessage());
             throw new BusinessException(ResultCode.BIZ_ERROR, "微信服务暂不可用，请稍后重试");

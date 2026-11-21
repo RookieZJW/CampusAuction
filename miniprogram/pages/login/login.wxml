@@ -1,50 +1,72 @@
 <view class="login-mask" bindtap="onMaskTap">
   <view class="login-sheet" catchtap="onSheetTap">
-    <view class="sheet-close" bindtap="onClose" aria-label="关闭">×</view>
-
-    <view class="sheet-brand">
-      <view class="brand-stamp">拍</view>
-      <view class="brand-title">校园拍场</view>
+    <!-- 票头 -->
+    <view class="sheet-head">
+      <view class="head-brand">
+        <view class="brand-stamp">拍</view>
+        <view class="head-titles">
+          <view class="brand-title">校园拍场</view>
+          <view class="brand-en">CAMPUS AUCTION · 闲置流转</view>
+        </view>
+      </view>
       <view class="brand-slogan">填好资料，同学才好认出你</view>
+      <view class="sheet-close" bindtap="onClose" aria-label="关闭">×</view>
     </view>
 
-    <!-- 资料填写区：头像 / 昵称 / 手机号，都在这一屏 -->
-    <view class="profile-form">
-      <button class="avatar-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
-        <image class="avatar-img" src="{{avatarDisplay || '/images/placeholder.png'}}" mode="aspectFill" />
-        <view class="avatar-edit">换头像</view>
-      </button>
+    <!-- 登记表主体 -->
+    <view class="register-body">
+      <!-- 头像 -->
+      <view class="avatar-row">
+        <button class="avatar-btn" open-type="chooseAvatar" bindchooseavatar="onChooseAvatar">
+          <image class="avatar-img" src="{{avatarDisplay || '/images/placeholder.png'}}" mode="aspectFill" />
+          <view class="avatar-cam">✎</view>
+        </button>
+        <view class="avatar-tip">
+          <view class="tip-title">你的头像</view>
+          <view class="tip-desc">点一下换张照片</view>
+        </view>
+      </view>
 
-      <view class="field-row">
-        <text class="field-label">昵称</text>
+      <!-- 01 昵称 -->
+      <view class="field-block">
+        <view class="field-head">
+          <text class="field-no">01</text>
+          <text class="field-label">昵称</text>
+        </view>
         <input class="field-input" type="nickname" placeholder="填个同学认得出的名字"
                value="{{nickname}}" maxlength="32"
                bindinput="onNicknameInput" bindblur="onNicknameBlur" />
       </view>
 
-      <view class="field-row">
-        <text class="field-label">手机号</text>
+      <!-- 02 手机号 -->
+      <view class="field-block">
+        <view class="field-head">
+          <text class="field-no">02</text>
+          <text class="field-label">手机号</text>
+        </view>
         <button class="phone-btn" open-type="getPhoneNumber" bindgetphonenumber="onGetPhoneNumber">
-          {{phoneReady ? '已授权，点此可重新授权' : '微信一键授权手机号'}}
+          <text class="phone-icon">＋</text>
+          <text class="phone-text">{{phoneReady ? '已授权，点此可重新授权' : '微信一键授权手机号'}}</text>
+          <text class="phone-arrow">›</text>
         </button>
+        <view wx:if="{{phoneReady}}" class="phone-hint">授权成功，登录时会绑定到你的账号</view>
+        <view wx:if="{{privacyDeclined}}" class="privacy-reagree" bindtap="onReopenPrivacy">还没同意隐私指引，点此重新查看</view>
       </view>
-      <view wx:if="{{phoneReady}}" class="phone-hint">授权成功，登录时会绑定到你的账号</view>
-      <view wx:if="{{privacyDeclined}}" class="privacy-reagree" bindtap="onReopenPrivacy">还没同意隐私指引，点此重新查看</view>
     </view>
 
-    <button class="btn-login" bindtap="onLogin" loading="{{loading}}" disabled="{{loading}}">
-      登录
-    </button>
-
-    <view class="agreement-row">
-      <view class="checkbox {{agreed ? 'checked' : ''}}" bindtap="onToggleAgree">
-        <view wx:if="{{agreed}}" class="checkbox-mark">✓</view>
-      </view>
-      <view class="agreement-text">
-        已阅读并同意
-        <text class="link" data-type="user" catchtap="onOpenAgreement">用户协议</text>
-        和
-        <text class="link" data-type="privacy" catchtap="onOpenAgreement">隐私政策</text>
+    <!-- 登录 -->
+    <view class="submit-area">
+      <button class="btn-login" bindtap="onLogin" loading="{{loading}}" disabled="{{loading}}">登 录</button>
+      <view class="agreement-row">
+        <view class="checkbox {{agreed ? 'checked' : ''}}" bindtap="onToggleAgree">
+          <view wx:if="{{agreed}}" class="checkbox-mark">✓</view>
+        </view>
+        <view class="agreement-text">
+          已阅读并同意
+          <text class="link" data-type="user" catchtap="onOpenAgreement">用户协议</text>
+          和
+          <text class="link" data-type="privacy" catchtap="onOpenAgreement">隐私政策</text>
+        </view>
       </view>
     </view>
   </view>

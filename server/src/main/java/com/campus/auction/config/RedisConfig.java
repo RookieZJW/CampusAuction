@@ -10,6 +10,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.http.client.BufferingClientHttpRequestFactory;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
@@ -43,13 +45,22 @@ public class RedisConfig {
     }
 
     /**
-     * 调微信 code2session 接口用的 RestTemplate。
-     * 微信 API 返回 JSON 但 Content-Type 是 text/plain，
-     * 需给 Jackson 转换器追加 text/plain 支持，否则 UnknownContentTypeException。
+     * 调微信各接口（code2session / access_token / getuserphonenumber）共用的 RestTemplate。
+     *
+     * <p>两个微信侧的坑：
+     * <ol>
+     *   <li>微信成功响应常返回 JSON 但 Content-Type 是 text/plain，需给 Jackson 追加 text/plain 支持，
+     *       否则 UnknownContentTypeException；</li>
+     *   <li>Spring Framework 6.1 起 SimpleClientHttpRequestFactory 默认不缓冲请求体，
+     *       POST JSON 时不带 Content-Length，微信网关直接回 412 Precondition Failed。
+     *       用 BufferingClientHttpRequestFactory 包一层，先缓冲算长度再发（getuserphonenumber 必踩）。</li>
+     * </ol>
      */
     @Bean
     public RestTemplate restTemplate() {
-        RestTemplate restTemplate = new RestTemplate();
+        SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
+        requestFactory.setBufferRequestBody(true);
+        RestTemplate restTemplate = new RestTemplate(new BufferingClientHttpRequestFactory(requestFactory));
         MappingJackson2HttpMessageConverter jsonConverter =
                 new MappingJackson2HttpMessageConverter();
         jsonConverter.setSupportedMediaTypes(java.util.List.of(
