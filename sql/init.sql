@@ -8,6 +8,9 @@ CREATE DATABASE IF NOT EXISTS campus_auction
     DEFAULT CHARACTER SET utf8mb4
     COLLATE utf8mb4_unicode_ci;
 
+-- 强制客户端字符集，避免 Windows 默认 GBK 导致中文乱码
+SET NAMES utf8mb4;
+
 USE campus_auction;
 
 -- ------------------------------------------------------------
