@@ -46,15 +46,16 @@ App({
       method: 'GET'
     }).then(() => {
       this.globalData.loginReady = true
-      // 兼容旧登录态：补齐学校字段（老用户迁移后库里已有 school_id，但本地缓存没有）
-      if (userInfo.certified === undefined) {
+      // 兼容旧登录态：补齐学校与审核状态（迁移后库里已有 school_id/auth_status，但本地缓存没有）
+      if (userInfo.certified === undefined || userInfo.authStatus === undefined) {
         request({ url: '/api/v1/schools/mine' }).then((info) => {
           const cur = this.globalData.userInfo
           if (cur) {
             this.setLogin(Object.assign({}, cur, {
               schoolId: info.schoolId,
-              schoolName: info.schoolName || '',
-              certified: !!info.certified
+              schoolName: info.shortName || info.schoolName || '',
+              certified: !!info.certified,
+              authStatus: info.status || 'NONE'
             }))
           }
         }).catch(() => {})

@@ -2,31 +2,80 @@
   <!-- 说明：纸感提示条 -->
   <view class="notice card">
     <view class="notice-title">认领你的校园</view>
-    <view class="notice-text">认证后只看本校同学的拍品，发布和交易也只在本校范围内进行。选一次就好，之后可在「我的」里修改。</view>
+    <view class="notice-text">填写学生证信息并提交，管理员审核通过后即可进入本校拍场。发布和交易只在本校范围内进行。</view>
   </view>
 
   <!-- 当前认证状态 -->
-  <view wx:if="{{certified}}" class="current-card card">
-    <view class="current-label">当前学校</view>
-    <view class="current-name">{{schoolName}}</view>
-    <view class="current-hint">已认证 · 你正在「{{schoolName}}」拍场</view>
+  <view wx:if="{{status === 'APPROVED'}}" class="status-card card approved">
+    <view class="status-label">认证状态</view>
+    <view class="status-name">已认证 · {{schoolName}}</view>
+    <view class="status-hint">你正在本校拍场，可发布拍品、出价与交易。</view>
+  </view>
+  <view wx:elif="{{status === 'PENDING'}}" class="status-card card pending">
+    <view class="status-label">认证状态</view>
+    <view class="status-name">审核中</view>
+    <view class="status-hint">管理员正在核对你的学生证，请稍候。审核通过前暂不能发布和出价。</view>
+  </view>
+  <view wx:elif="{{status === 'REJECTED'}}" class="status-card card rejected">
+    <view class="status-label">认证状态</view>
+    <view class="status-name">审核未通过</view>
+    <view class="status-hint">{{rejectReason || '请核对信息后重新提交'}}</view>
+  </view>
+  <view wx:else class="status-card card none">
+    <view class="status-label">认证状态</view>
+    <view class="status-name">尚未认证</view>
+    <view class="status-hint">提交学生证信息后即可等待管理员审核。</view>
   </view>
 
-  <!-- 学校选择列表 -->
-  <view class="section-head">选择学校</view>
-  <view class="school-list card">
-    <view wx:for="{{schools}}" wx:key="id"
-          class="school-item {{selectedId === item.id ? 'selected' : ''}}"
-          bindtap="onSelect" data-id="{{item.id}}" data-name="{{item.shortName}}">
-      <view class="radio">{{selectedId === item.id ? '●' : ''}}</view>
-      <view class="school-name">{{item.name}}</view>
-      <view wx:if="{{selectedId === item.id}}" class="check">已选</view>
+  <!-- 学生证信息表单 -->
+  <view class="section-head">学生证信息</view>
+  <view class="form-card card">
+    <view class="form-item">
+      <view class="form-label">所在学校</view>
+      <picker mode="selector" range="{{schoolNames}}" value="{{selectedIndex >= 0 ? selectedIndex : 0}}" bindchange="onSchoolChange">
+        <view class="picker-view {{selectedIndex >= 0 ? '' : 'placeholder'}}">
+          {{selectedIndex >= 0 ? schools[selectedIndex].name : '请选择学校'}}
+          <text class="picker-arrow">›</text>
+        </view>
+      </picker>
     </view>
-    <view wx:if="{{!schools.length && !loading}}" class="empty">暂无可选学校，请联系管理员</view>
-    <view wx:if="{{loading}}" class="empty">加载中…</view>
+
+    <view class="form-item">
+      <view class="form-label">真实姓名</view>
+      <input class="input" placeholder="请填写与学生证一致的姓名" value="{{realName}}" bindinput="onRealNameInput" maxlength="32" />
+    </view>
+
+    <view class="form-item">
+      <view class="form-label">学号</view>
+      <input class="input" placeholder="请填写学号" value="{{studentNo}}" bindinput="onStudentNoInput" maxlength="32" />
+    </view>
+
+    <view class="form-item">
+      <view class="form-label">学生证照片</view>
+      <view wx:if="{{studentCardPreview}}" class="card-preview" bindtap="onPreviewCard">
+        <image class="card-image" src="{{studentCardPreview}}" mode="aspectFill" />
+        <view class="card-tip">点击可查看大图</view>
+      </view>
+      <view wx:else class="upload-box" bindtap="onChooseCard">
+        <text class="upload-plus">＋</text>
+        <text class="upload-text">上传学生证照片</text>
+        <text class="upload-sub">建议拍清姓名、学号与校徽</text>
+      </view>
+      <view wx:if="{{studentCardPreview}}" class="reupload" bindtap="onChooseCard">重新上传</view>
+    </view>
   </view>
+
+  <view class="rule-note">审核期间不能发布与出价；更换学校需要重新提交审核。信息仅用于校园身份认证。</view>
 
   <view class="submit-area">
-    <button class="btn-primary" bindtap="onSubmit" loading="{{saving}}">确认认证</button>
+    <button class="btn-primary" bindtap="onSubmit" loading="{{saving}}">
+      {{status === 'PENDING' ? '重新提交认证' : (status === 'REJECTED' ? '修改后重新提交' : '提交审核')}}
+    </button>
+  </view>
+
+  <!-- 学生证大图浮层：真机 base64 图片不走系统预览 -->
+  <view wx:if="{{previewVisible}}" class="preview-mask" bindtap="onClosePreview">
+    <image class="preview-image" src="{{studentCardPreview}}" mode="aspectFit" />
+    <view class="preview-close">点击关闭</view>
   </view>
 </view>

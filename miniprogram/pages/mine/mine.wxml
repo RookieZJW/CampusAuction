@@ -11,7 +11,9 @@
         <view class="user-info">
           <view class="nickname">{{userInfo.nickname}}</view>
           <view wx:if="{{userInfo.phone}}" class="user-phone">{{userInfo.phone}}</view>
-          <view wx:if="{{userInfo.certified}}" class="user-school">{{userInfo.schoolName}} · 本校拍场</view>
+          <view wx:if="{{authStatus === 'APPROVED'}}" class="user-school">{{userInfo.schoolName}} · 本校拍场</view>
+          <view wx:elif="{{authStatus === 'PENDING'}}" class="user-school pending-text">学生证审核中 · 暂不能出价</view>
+          <view wx:elif="{{authStatus === 'REJECTED'}}" class="user-school unverified">审核未通过 · 点击重新提交</view>
           <view wx:else class="user-school unverified">未认证学校 · 看全部拍品</view>
           <view class="stats">
             <text>余额 ¥{{balanceYuan}}</text>
@@ -36,7 +38,7 @@
     <view class="menu-item" bindtap="onMenuTap" data-url="/packageUser/pages/school/school">
       <text>学校认证</text>
       <view class="menu-right">
-        <text class="school-tag">{{userInfo && userInfo.certified ? userInfo.schoolName : '去认证'}}</text>
+        <text class="school-tag">{{authStatus === 'APPROVED' ? userInfo.schoolName : authText}}</text>
         <text class="arrow">›</text>
       </view>
     </view>

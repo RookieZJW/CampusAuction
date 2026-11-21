@@ -28,6 +28,27 @@ CREATE TABLE t_school (
 ) ENGINE = InnoDB COMMENT '学校字典';
 
 -- ------------------------------------------------------------
+-- 0b. 学校认证申请表（学生证 + 管理员审核）
+-- ------------------------------------------------------------
+CREATE TABLE t_school_auth (
+    id              BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id         BIGINT       NOT NULL COMMENT '申请人 user_id',
+    school_id       BIGINT       NOT NULL COMMENT '申请学校',
+    real_name       VARCHAR(32)  NOT NULL COMMENT '真实姓名',
+    student_no      VARCHAR(32)  NOT NULL COMMENT '学号',
+    student_card    VARCHAR(512) NOT NULL COMMENT '学生证照片 URL',
+    status          VARCHAR(20)  NOT NULL DEFAULT 'PENDING'
+                    COMMENT 'PENDING待审 APPROVED通过 REJECTED驳回',
+    reject_reason   VARCHAR(255) NULL COMMENT '驳回理由',
+    reviewer_id     BIGINT       NULL COMMENT '审核管理员 id',
+    review_time     DATETIME     NULL,
+    create_time     DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    update_time     DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    KEY idx_user (user_id),
+    KEY idx_status (status)
+) ENGINE = InnoDB COMMENT '学校认证申请';
+
+-- ------------------------------------------------------------
 -- 1. 学生用户表
 -- ------------------------------------------------------------
 CREATE TABLE t_user (
@@ -36,7 +57,8 @@ CREATE TABLE t_user (
     nickname     VARCHAR(64)  NOT NULL DEFAULT '微信用户',
     avatar       VARCHAR(512) NULL,
     phone        VARCHAR(20)  NULL COMMENT '手机号登录凭证，唯一',
-    school_id    BIGINT       NULL COMMENT '认证学校ID，NULL=未认证',
+    school_id    BIGINT       NULL COMMENT '已认证学校ID，NULL=未通过认证',
+    auth_status  VARCHAR(20)  NOT NULL DEFAULT 'NONE' COMMENT '认证状态 NONE未申请 PENDING待审 APPROVED通过 REJECTED驳回',
     credit_score INT          NOT NULL DEFAULT 100 COMMENT '信用分，初始100，低于60限制出价',
     balance      INT          NOT NULL DEFAULT 0 COMMENT '虚拟余额（分）',
     status       TINYINT      NOT NULL DEFAULT 0 COMMENT '0正常 1封禁',

@@ -50,6 +50,12 @@ const router = createRouter({
           name: 'Reports',
           component: () => import('../views/Reports.vue'),
           meta: { title: '举报处理', icon: 'Warning' }
+        },
+        {
+          path: 'school-auths',
+          name: 'SchoolAuths',
+          component: () => import('../views/SchoolAuths.vue'),
+          meta: { title: '学校认证审核', icon: 'Stamp' }
         }
       ]
     },

@@ -36,6 +36,9 @@ public class LoginVO {
     /** 是否已完成学校认证 */
     private Boolean certified;
 
+    /** 认证状态 NONE/PENDING/APPROVED/REJECTED */
+    private String authStatus;
+
     /** 是否新注册用户（前端可展示欢迎语） */
     private Boolean isNew;
 }

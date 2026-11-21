@@ -165,6 +165,9 @@
 .user-school.unverified {
   color: var(--warning);
 }
+.user-school.pending-text {
+  color: var(--kraft);
+}
 .school-tag {
   font-size: var(--fs-caption);
   color: var(--moss);

@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.campus.auction.common.Result;
 import com.campus.auction.common.ResultCode;
 import com.campus.auction.dto.ReportHandleDTO;
+import com.campus.auction.dto.SchoolAuthRejectDTO;
 import com.campus.auction.entity.Auction;
 import com.campus.auction.entity.Category;
 import com.campus.auction.entity.Item;
@@ -20,6 +21,7 @@ import com.campus.auction.mapper.OrderMapper;
 import com.campus.auction.mapper.SchoolMapper;
 import com.campus.auction.mapper.UserMapper;
 import com.campus.auction.service.ReportService;
+import com.campus.auction.service.SchoolService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -54,6 +56,7 @@ public class AdminManageController {
     private final CategoryMapper categoryMapper;
     private final SchoolMapper schoolMapper;
     private final ReportService reportService;
+    private final SchoolService schoolService;
 
     @Operation(summary = "数据看板")
     @GetMapping("/stats")
@@ -239,6 +242,33 @@ public class AdminManageController {
         }
         school.setStatus(status);
         schoolMapper.updateById(school);
+        return Result.ok();
+    }
+
+    // ---------- 学生证认证审核 ----------
+
+    @Operation(summary = "待审学生证认证列表", description = "含学校/姓名/学号/学生证照片")
+    @GetMapping("/school-auths")
+    public Result<List<Map<String, Object>>> pendingSchoolAuths() {
+        return Result.ok(schoolService.pendingAuths());
+    }
+
+    @Operation(summary = "通过学生证认证")
+    @PostMapping("/school-auths/{id}/approve")
+    public Result<Void> approveSchoolAuth(
+            @RequestAttribute(AuthInterceptor.ATTR_ADMIN_ID) Long adminId,
+            @PathVariable Long id) {
+        schoolService.approveAuth(id, adminId);
+        return Result.ok();
+    }
+
+    @Operation(summary = "驳回学生证认证", description = "需填写驳回理由，用户可修改后重新提交")
+    @PostMapping("/school-auths/{id}/reject")
+    public Result<Void> rejectSchoolAuth(
+            @RequestAttribute(AuthInterceptor.ATTR_ADMIN_ID) Long adminId,
+            @PathVariable Long id,
+            @Valid @RequestBody SchoolAuthRejectDTO dto) {
+        schoolService.rejectAuth(id, adminId, dto.getReason());
         return Result.ok();
     }
 

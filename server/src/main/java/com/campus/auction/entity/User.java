@@ -32,6 +32,9 @@ public class User {
     /** 认证学校ID，NULL=未认证 */
     private Long schoolId;
 
+    /** 认证状态 NONE/PENDING/APPROVED/REJECTED */
+    private String authStatus;
+
     /** 信用分：初始 100，低于 60 限制出价 */
     private Integer creditScore;
 

@@ -1,7 +1,7 @@
 package com.campus.auction.controller;
 
 import com.campus.auction.common.Result;
-import com.campus.auction.dto.SchoolAuthDTO;
+import com.campus.auction.dto.SchoolAuthSubmitDTO;
 import com.campus.auction.interceptor.AuthInterceptor;
 import com.campus.auction.service.SchoolService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,18 +32,19 @@ public class SchoolController {
         return Result.ok(schoolService.enabledSchools());
     }
 
-    @Operation(summary = "我的学校", description = "当前用户是否已认证及学校信息")
+    @Operation(summary = "我的认证状态", description = "状态/学校/姓名学号学生证/驳回理由")
     @GetMapping("/mine")
     public Result<Map<String, Object>> mine(
             @RequestAttribute(AuthInterceptor.ATTR_OPENID) String openid) {
-        return Result.ok(schoolService.mySchool(openid));
+        return Result.ok(schoolService.myAuth(openid));
     }
 
-    @Operation(summary = "学校认证", description = "选学校即认证：写入 user.school_id")
+    @Operation(summary = "提交认证申请", description = "学校+姓名+学号+学生证，提交后管理员审核")
     @PostMapping("/auth")
     public Result<Map<String, Object>> auth(
             @RequestAttribute(AuthInterceptor.ATTR_OPENID) String openid,
-            @Valid @RequestBody SchoolAuthDTO dto) {
-        return Result.ok(schoolService.certify(openid, dto.getSchoolId()));
+            @Valid @RequestBody SchoolAuthSubmitDTO dto) {
+        return Result.ok(schoolService.submitAuth(
+                openid, dto.getSchoolId(), dto.getRealName(), dto.getStudentNo(), dto.getStudentCard()));
     }
 }

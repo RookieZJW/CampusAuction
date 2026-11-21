@@ -44,5 +44,15 @@ export const adminApi = {
   },
   rejectItem(itemId, data) {
     return request.post(`/admin/audit/items/${itemId}/reject`, data)
+  },
+  // 学生证认证审核
+  schoolAuths() {
+    return request.get('/admin/school-auths')
+  },
+  approveSchoolAuth(id) {
+    return request.post(`/admin/school-auths/${id}/approve`)
+  },
+  rejectSchoolAuth(id, data) {
+    return request.post(`/admin/school-auths/${id}/reject`, data)
   }
 }

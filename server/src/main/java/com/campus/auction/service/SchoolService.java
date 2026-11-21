@@ -8,42 +8,42 @@ import java.util.Map;
 /**
  * 学校认证与多校隔离服务。
  *
- * <p>规则：
- * <ul>
- *   <li>游客（无 token）：可浏览全部拍品列表与详情，发起交易时仍需登录；</li>
- *   <li>登录用户：列表与详情按本校过滤；未认证用户视为无学校，看全部但交易被引导先认证；</li>
- *   <li>交易（出价/收藏/订单）：登录用户 跨校 一律拒绝。</li>
- * </ul>
+ * <p>认证流程：提交申请（姓名/学号/学生证/学校）→ 管理员审核 → 通过后写入 user.school_id。
+ * 驳回可修改重交；已认证用户改学校需重新审核（审核期间失去旧学校身份）。
  */
 public interface SchoolService {
 
-    /** 启用中的学校字典（id/name/shortName），供认证页下拉选择 */
+    /** 启用中的学校字典（id/name/shortName） */
     List<Map<String, Object>> enabledSchools();
 
-    /** 选学校即认证：写入 user.school_id，返回认证结果（含学校名） */
-    Map<String, Object> certify(String openid, Long schoolId);
+    /** 我的认证状态：状态 + 学校 + 姓名学号学生证 + 驳回理由 */
+    Map<String, Object> myAuth(String openid);
+
+    /** 提交认证申请（PENDING）；已通过用户改学校会清掉旧 school_id 并重审 */
+    Map<String, Object> submitAuth(String openid, Long schoolId, String realName,
+                                   String studentNo, String studentCard);
+
+    /** 管理员：待审列表（含学生证照片） */
+    List<Map<String, Object>> pendingAuths();
+
+    /** 管理员：审核通过，写入 user.school_id + auth_status=APPROVED */
+    void approveAuth(Long authId, Long adminId);
+
+    /** 管理员：驳回，写理由 + auth_status=REJECTED */
+    void rejectAuth(Long authId, Long adminId, String reason);
 
     /** 当前用户资料用：学校 id + 学校名 + 是否已认证 */
     Map<String, Object> mySchool(String openid);
 
-    /** 查用户学校 id，未登录/未认证返回 null */
     Long schoolIdOfOpenid(String openid);
 
-    /** 查用户学校 id，按 userId */
     Long schoolIdOfUser(Long userId);
 
-    /**
-     * 列表/详情的跨校校验：登录用户访问外校拍品时抛 CROSS_SCHOOL_DENIED。
-     * 游客或未认证用户放行（保持免登录浏览）。
-     */
+    /** 列表/详情跨校校验：登录用户访问外校抛 3010，游客/未认证放行 */
     void assertReadable(String openid, Long auctionId);
 
-    /**
-     * 交易类跨校校验：登录用户必须已认证且拍品属于本校，否则抛业务异常。
-     * 入参是 userId（交易接口已解析出 userId）。
-     */
+    /** 交易跨校校验：未认证抛 3011，外校抛 3010 */
     void assertTradable(Long userId, Long auctionId);
 
-    /** 判断拍卖是否属于指定学校（供列表过滤复用） */
     boolean belongsToSchool(Auction auction, Long schoolId);
 }

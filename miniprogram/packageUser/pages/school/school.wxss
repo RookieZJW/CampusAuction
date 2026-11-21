@@ -1,6 +1,6 @@
 .school-page {
   min-height: 100vh;
-  padding: 24rpx 24rpx 160rpx;
+  padding: 24rpx 24rpx 180rpx;
   background: var(--bg);
 }
 
@@ -20,60 +20,173 @@
   line-height: 1.7;
 }
 
-.current-card {
+.status-card {
   margin-top: 20rpx;
-  border-left: 6rpx solid var(--moss);
+  border-left: 6rpx solid var(--primary);
 }
-.current-label {
+.status-card.approved {
+  border-left-color: var(--moss);
+  background: var(--success-light);
+}
+.status-card.pending {
+  border-left-color: var(--kraft);
+  background: var(--warning-light);
+}
+.status-card.rejected {
+  border-left-color: var(--brick);
+  background: var(--danger-light);
+}
+.status-label {
   font-size: var(--fs-caption);
   color: var(--text-hint);
 }
-.current-name {
+.status-name {
   font-size: var(--fs-title);
   font-weight: 600;
-  color: var(--moss);
+  color: var(--text);
   margin: 8rpx 0;
 }
-.current-hint {
+.approved .status-name { color: var(--success); }
+.pending .status-name { color: var(--warning); }
+.rejected .status-name { color: var(--danger); }
+.status-hint {
   font-size: var(--fs-caption);
   color: var(--text-secondary);
+  line-height: 1.6;
 }
 
-.school-list {
-  padding: 8rpx 0;
+.section-head {
+  font-size: var(--fs-subtitle);
+  font-weight: 600;
+  margin: 30rpx 8rpx 14rpx;
+  letter-spacing: 1rpx;
 }
-.school-item {
-  display: flex;
-  align-items: center;
-  padding: 24rpx 28rpx;
+
+.form-card {
+  padding: 8rpx 28rpx 24rpx;
+}
+.form-item {
+  padding: 24rpx 0;
   border-bottom: 1rpx solid var(--border);
 }
-.school-item:last-child {
+.form-item:last-child {
   border-bottom: none;
 }
-.school-item.selected {
-  background: var(--primary-light);
+.form-label {
+  font-size: var(--fs-caption);
+  color: var(--text-secondary);
+  margin-bottom: 14rpx;
 }
-.radio {
-  width: 36rpx;
-  font-size: 28rpx;
-  color: var(--primary);
-  flex-shrink: 0;
-}
-.school-name {
-  flex: 1;
+
+.picker-view, .input {
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--bg-deep);
+  border: 1rpx solid var(--border);
+  border-radius: 8rpx;
+  padding: 18rpx 20rpx;
   font-size: var(--fs-body);
   color: var(--text);
+  line-height: 1.5;
 }
-.check {
-  font-size: var(--fs-caption);
-  color: var(--moss);
+.picker-view {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 64rpx;
 }
-.empty {
-  padding: 40rpx;
-  text-align: center;
+.picker-view.placeholder {
   color: var(--text-hint);
+}
+.picker-arrow {
+  font-size: 36rpx;
+  color: var(--text-hint);
+  line-height: 1;
+}
+
+.upload-box {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 200rpx;
+  background: var(--bg-deep);
+  border: 2rpx dashed var(--border);
+  border-radius: 10rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.upload-plus {
+  font-size: 60rpx;
+  color: var(--primary);
+  line-height: 1;
+}
+.upload-text {
   font-size: var(--fs-body);
+  color: var(--text);
+  margin-top: 12rpx;
+}
+.upload-sub {
+  font-size: var(--fs-caption);
+  color: var(--text-hint);
+  margin-top: 8rpx;
+}
+
+.card-preview {
+  width: 100%;
+}
+.card-image {
+  width: 100%;
+  height: 320rpx;
+  border-radius: 10rpx;
+  background: var(--bg-deep);
+  border: 1rpx solid var(--border);
+}
+.card-tip {
+  font-size: var(--fs-caption);
+  color: var(--text-hint);
+  margin-top: 10rpx;
+  text-align: center;
+}
+.reupload {
+  display: inline-block;
+  margin-top: 12rpx;
+  padding: 8rpx 24rpx;
+  border: 1rpx solid var(--primary-soft);
+  border-radius: 999rpx;
+  color: var(--primary);
+  font-size: var(--fs-caption);
+}
+
+.rule-note {
+  font-size: var(--fs-caption);
+  color: var(--text-hint);
+  line-height: 1.7;
+  padding: 20rpx 12rpx 0;
+}
+
+.preview-mask {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 1000;
+  background: rgba(16, 24, 32, 0.92);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.preview-image {
+  width: 100%;
+  height: 75vh;
+}
+.preview-close {
+  color: #fff;
+  font-size: var(--fs-caption);
+  margin-top: 30rpx;
+  opacity: 0.75;
 }
 
 .submit-area {

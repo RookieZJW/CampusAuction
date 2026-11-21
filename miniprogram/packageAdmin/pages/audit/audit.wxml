@@ -11,23 +11,58 @@
     <button class="btn-primary" bindtap="onAdminLogin" loading="{{logging}}">登录</button>
   </view>
 
-  <!-- 待审核列表 -->
   <block wx:else>
-    <view class="header">待审核拍品（{{list.length}}）</view>
-    <view wx:if="{{loading}}" class="empty">加载中...</view>
-    <view wx:elif="{{list.length === 0}}" class="empty">暂无待审核拍品</view>
-    <view class="card audit-card" wx:for="{{list}}" wx:key="itemId"
-          bindtap="onAuditTap" data-index="{{index}}">
-      <image class="cover" src="{{item.images[0] || '/images/placeholder.png'}}" mode="aspectFill" />
-      <view class="info">
-        <view class="title">{{item.title}}</view>
-        <view class="meta">{{item.sellerNickname}} · {{item.categoryName}} · {{item.condition}}</view>
-        <view class="price-row">
-          <text class="price">起拍 ¥{{item.startPriceYuan}}</text>
-          <text class="duration">时长 {{item.durationHours}} 小时</text>
+    <view class="tabs">
+      <view class="tab {{tab === 'items' ? 'active' : ''}}" bindtap="onTabTap" data-tab="items">拍品审核</view>
+      <view class="tab {{tab === 'auths' ? 'active' : ''}}" bindtap="onTabTap" data-tab="auths">认证审核</view>
+    </view>
+
+    <!-- 待审核拍品 -->
+    <block wx:if="{{tab === 'items'}}">
+      <view class="header">待审核拍品（{{list.length}}）</view>
+      <view wx:if="{{loading}}" class="empty">加载中...</view>
+      <view wx:elif="{{list.length === 0}}" class="empty">暂无待审核拍品</view>
+      <view class="card audit-card" wx:for="{{list}}" wx:key="itemId"
+            bindtap="onAuditTap" data-index="{{index}}">
+        <image class="cover" src="{{item.images[0] || '/images/placeholder.png'}}" mode="aspectFill" />
+        <view class="info">
+          <view class="title">{{item.title}}</view>
+          <view class="meta">{{item.sellerNickname}} · {{item.categoryName}} · {{item.condition}}</view>
+          <view class="price-row">
+            <text class="price">起拍 ¥{{item.startPriceYuan}}</text>
+            <text class="duration">时长 {{item.durationHours}} 小时</text>
+          </view>
         </view>
       </view>
-    </view>
+    </block>
+
+    <!-- 待审核学生证认证 -->
+    <block wx:else>
+      <view class="header">待审学校认证（{{authList.length}}）</view>
+      <view wx:if="{{loading}}" class="empty">加载中...</view>
+      <view wx:elif="{{authList.length === 0}}" class="empty">暂无待审核认证</view>
+      <view class="card audit-card" wx:for="{{authList}}" wx:key="id">
+        <image class="cover" src="{{item.studentCardPreview || '/images/placeholder.png'}}"
+               mode="aspectFill" bindtap="onPreviewCard" data-index="{{index}}" />
+        <view class="info">
+          <view class="title">{{item.realName}}<text class="sub-name"> · {{item.shortName || item.schoolName}}</text></view>
+          <view class="meta">学号 {{item.studentNo}}</view>
+          <view class="meta">申请人 {{item.nickname || '微信用户'}} · {{item.createTime}}</view>
+          <view class="auth-actions">
+            <button class="mini-btn approve-btn" catchtap="onApproveAuth" data-index="{{index}}">通过</button>
+            <button class="mini-btn reject-btn" catchtap="onRejectAuth" data-index="{{index}}">驳回</button>
+          </view>
+        </view>
+      </view>
+      <view class="tap-tip">点击学生证可查看大图</view>
+    </block>
+
     <button class="btn-ghost logout" bindtap="onAdminLogout">退出管理员</button>
   </block>
+
+  <!-- 学生证大图浮层（base64 图片用系统预览在真机上打不开） -->
+  <view wx:if="{{previewCard}}" class="preview-mask" bindtap="onClosePreview">
+    <image class="preview-image" src="{{previewCard}}" mode="aspectFit" />
+    <view class="preview-close">点击关闭</view>
+  </view>
 </view>

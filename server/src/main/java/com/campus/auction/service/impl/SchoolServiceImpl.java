@@ -5,15 +5,19 @@ import com.campus.auction.common.ResultCode;
 import com.campus.auction.common.exception.BusinessException;
 import com.campus.auction.entity.Auction;
 import com.campus.auction.entity.School;
+import com.campus.auction.entity.SchoolAuth;
 import com.campus.auction.entity.User;
 import com.campus.auction.mapper.AuctionMapper;
+import com.campus.auction.mapper.SchoolAuthMapper;
 import com.campus.auction.mapper.SchoolMapper;
 import com.campus.auction.mapper.UserMapper;
 import com.campus.auction.service.SchoolService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +28,7 @@ import java.util.Map;
 public class SchoolServiceImpl implements SchoolService {
 
     private final SchoolMapper schoolMapper;
+    private final SchoolAuthMapper schoolAuthMapper;
     private final UserMapper userMapper;
     private final AuctionMapper auctionMapper;
 
@@ -43,16 +48,174 @@ public class SchoolServiceImpl implements SchoolService {
     }
 
     @Override
-    public Map<String, Object> certify(String openid, Long schoolId) {
+    public Map<String, Object> myAuth(String openid) {
+        User user = requireUserByOpenid(openid);
+        Map<String, Object> m = new LinkedHashMap<>();
+        String status = user.getAuthStatus() == null ? "NONE" : user.getAuthStatus();
+        m.put("status", status);
+        m.put("certified", "APPROVED".equals(status) && user.getSchoolId() != null);
+        m.put("schoolId", user.getSchoolId());
+
+        School school = user.getSchoolId() == null ? null : schoolMapper.selectById(user.getSchoolId());
+        m.put("schoolName", school == null ? "" : school.getName());
+        m.put("shortName", school == null ? "" : school.getShortName());
+
+        // 最新一条申请（待审/驳回时给前端看姓名学号学生证和驳回理由）
+        SchoolAuth latest = latestAuth(user.getId());
+        m.put("realName", latest == null ? "" : nvl(latest.getRealName()));
+        m.put("studentNo", latest == null ? "" : nvl(latest.getStudentNo()));
+        m.put("studentCard", latest == null ? "" : nvl(latest.getStudentCard()));
+        m.put("applySchoolId", latest == null ? null : latest.getSchoolId());
+        m.put("rejectReason", latest == null ? "" : nvl(latest.getRejectReason()));
+        return m;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Map<String, Object> submitAuth(String openid, Long schoolId, String realName,
+                                          String studentNo, String studentCard) {
         User user = requireUserByOpenid(openid);
         School school = schoolId == null ? null : schoolMapper.selectById(schoolId);
         if (school == null || !Integer.valueOf(School.STATUS_ENABLED).equals(school.getStatus())) {
             throw new BusinessException(ResultCode.PARAM_ERROR, "学校不存在或已停用");
         }
-        user.setSchoolId(school.getId());
+        if (realName == null || realName.isBlank()) {
+            throw new BusinessException(ResultCode.PARAM_ERROR, "请填写真实姓名");
+        }
+        if (studentNo == null || studentNo.isBlank()) {
+            throw new BusinessException(ResultCode.PARAM_ERROR, "请填写学号");
+        }
+        if (studentCard == null || studentCard.isBlank()) {
+            throw new BusinessException(ResultCode.PARAM_ERROR, "请上传学生证照片");
+        }
+
+        // 已认证用户重复提交同一学校：不重复走审核，直接返回当前状态
+        if (SchoolAuth.STATUS_APPROVED.equals(user.getAuthStatus())
+                && school.getId().equals(user.getSchoolId())) {
+            return myAuth(openid);
+        }
+
+        // 已通过用户改学校：清掉旧 school_id，重新进入待审（失去旧学校身份）
+        user.setSchoolId(null);
+        user.setAuthStatus("PENDING");
         userMapper.updateById(user);
-        log.info("用户 {} 完成学校认证：schoolId={} {}", user.getId(), school.getId(), school.getName());
-        return schoolInfo(school, true);
+
+        SchoolAuth auth = latestAuth(user.getId());
+        if (auth == null) {
+            auth = new SchoolAuth();
+            auth.setUserId(user.getId());
+            auth.setCreateTime(LocalDateTime.now());
+        }
+        auth.setSchoolId(school.getId());
+        auth.setRealName(realName.trim());
+        auth.setStudentNo(studentNo.trim());
+        auth.setStudentCard(studentCard.trim());
+        auth.setStatus(SchoolAuth.STATUS_PENDING);
+        auth.setRejectReason(null);
+        auth.setReviewerId(null);
+        auth.setReviewTime(null);
+        auth.setUpdateTime(LocalDateTime.now());
+        if (auth.getId() == null) {
+            schoolAuthMapper.insert(auth);
+        } else {
+            schoolAuthMapper.updateById(auth);
+        }
+        log.info("用户 {} 提交学校认证申请：schoolId={}", user.getId(), school.getId());
+
+        Map<String, Object> m = new LinkedHashMap<>();
+        m.put("status", "PENDING");
+        m.put("schoolId", null);
+        m.put("schoolName", "");
+        m.put("shortName", "");
+        m.put("certified", false);
+        m.put("rejectReason", "");
+        return m;
+    }
+
+    @Override
+    public List<Map<String, Object>> pendingAuths() {
+        List<SchoolAuth> list = schoolAuthMapper.selectList(
+                new LambdaQueryWrapper<SchoolAuth>()
+                        .eq(SchoolAuth::getStatus, SchoolAuth.STATUS_PENDING)
+                        .orderByAsc(SchoolAuth::getCreateTime));
+        if (list.isEmpty()) {
+            return List.of();
+        }
+        // 批量补用户与学校信息，避免 N+1
+        Map<Long, User> userMap = userMapper.selectBatchIds(
+                        list.stream().map(SchoolAuth::getUserId).distinct().toList())
+                .stream().collect(java.util.stream.Collectors.toMap(User::getId, u -> u));
+        Map<Long, School> schoolMap = schoolMapper.selectBatchIds(
+                        list.stream().map(SchoolAuth::getSchoolId).distinct().toList())
+                .stream().collect(java.util.stream.Collectors.toMap(School::getId, s -> s));
+
+        return list.stream().map(a -> {
+            User u = userMap.get(a.getUserId());
+            School s = schoolMap.get(a.getSchoolId());
+            Map<String, Object> m = new LinkedHashMap<>();
+            m.put("id", a.getId());
+            m.put("userId", a.getUserId());
+            m.put("schoolId", a.getSchoolId());
+            m.put("schoolName", s == null ? "" : s.getName());
+            m.put("shortName", s == null ? "" : s.getShortName());
+            m.put("nickname", u == null ? "" : nvl(u.getNickname()));
+            m.put("avatar", u == null ? "" : nvl(u.getAvatar()));
+            m.put("realName", nvl(a.getRealName()));
+            m.put("studentNo", nvl(a.getStudentNo()));
+            m.put("studentCard", nvl(a.getStudentCard()));
+            m.put("status", a.getStatus());
+            m.put("createTime", a.getCreateTime() == null ? "" : a.getCreateTime().toString());
+            return m;
+        }).toList();
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void approveAuth(Long authId, Long adminId) {
+        SchoolAuth auth = requireAuth(authId);
+        if (!SchoolAuth.STATUS_PENDING.equals(auth.getStatus())) {
+            throw new BusinessException(ResultCode.BIZ_ERROR, "该申请已处理");
+        }
+        User user = userMapper.selectById(auth.getUserId());
+        if (user == null) {
+            throw new BusinessException(ResultCode.NOT_FOUND, "申请人不存在");
+        }
+        auth.setStatus(SchoolAuth.STATUS_APPROVED);
+        auth.setReviewerId(adminId);
+        auth.setReviewTime(LocalDateTime.now());
+        auth.setUpdateTime(LocalDateTime.now());
+        schoolAuthMapper.updateById(auth);
+
+        user.setSchoolId(auth.getSchoolId());
+        user.setAuthStatus("APPROVED");
+        userMapper.updateById(user);
+        log.info("学校认证通过：authId={} userId={} adminId={}", authId, user.getId(), adminId);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void rejectAuth(Long authId, Long adminId, String reason) {
+        SchoolAuth auth = requireAuth(authId);
+        if (!SchoolAuth.STATUS_PENDING.equals(auth.getStatus())) {
+            throw new BusinessException(ResultCode.BIZ_ERROR, "该申请已处理");
+        }
+        if (reason == null || reason.isBlank()) {
+            throw new BusinessException(ResultCode.PARAM_ERROR, "请填写驳回理由");
+        }
+        auth.setStatus(SchoolAuth.STATUS_REJECTED);
+        auth.setRejectReason(reason.trim());
+        auth.setReviewerId(adminId);
+        auth.setReviewTime(LocalDateTime.now());
+        auth.setUpdateTime(LocalDateTime.now());
+        schoolAuthMapper.updateById(auth);
+
+        User user = userMapper.selectById(auth.getUserId());
+        if (user != null) {
+            user.setAuthStatus("REJECTED");
+            user.setSchoolId(null);
+            userMapper.updateById(user);
+        }
+        log.info("学校认证驳回：authId={} adminId={} reason={}", authId, adminId, reason.trim());
     }
 
     @Override
@@ -75,8 +238,7 @@ public class SchoolServiceImpl implements SchoolService {
         if (openid == null || openid.isBlank()) {
             return null;
         }
-        User user = userMapper.selectOne(
-                new LambdaQueryWrapper<User>().eq(User::getOpenid, openid));
+        User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getOpenid, openid));
         return user == null ? null : user.getSchoolId();
     }
 
@@ -92,13 +254,12 @@ public class SchoolServiceImpl implements SchoolService {
     @Override
     public void assertReadable(String openid, Long auctionId) {
         Long schoolId = schoolIdOfOpenid(openid);
-        // 游客或未认证用户：保持免登录浏览，不做拦截
         if (schoolId == null) {
             return;
         }
         Auction auction = auctionMapper.selectById(auctionId);
         if (auction == null) {
-            return; // 不存在由上层 detail 返回 1004
+            return;
         }
         if (!belongsToSchool(auction, schoolId)) {
             throw new BusinessException(ResultCode.CROSS_SCHOOL_DENIED);
@@ -125,8 +286,23 @@ public class SchoolServiceImpl implements SchoolService {
         if (auction == null || schoolId == null) {
             return false;
         }
-        // 兼容历史数据：school_id 为 NULL 的拍品视为公共，任何学校可访问
         return auction.getSchoolId() == null || schoolId.equals(auction.getSchoolId());
+    }
+
+    private SchoolAuth latestAuth(Long userId) {
+        return schoolAuthMapper.selectOne(
+                new LambdaQueryWrapper<SchoolAuth>()
+                        .eq(SchoolAuth::getUserId, userId)
+                        .orderByDesc(SchoolAuth::getId)
+                        .last("LIMIT 1"));
+    }
+
+    private SchoolAuth requireAuth(Long authId) {
+        SchoolAuth auth = schoolAuthMapper.selectById(authId);
+        if (auth == null) {
+            throw new BusinessException(ResultCode.NOT_FOUND, "认证申请不存在");
+        }
+        return auth;
     }
 
     private User requireUserByOpenid(String openid) {
@@ -144,5 +320,9 @@ public class SchoolServiceImpl implements SchoolService {
         m.put("shortName", school == null ? "" : school.getShortName());
         m.put("certified", certified && school != null);
         return m;
+    }
+
+    private String nvl(String s) {
+        return s == null ? "" : s;
     }
 }

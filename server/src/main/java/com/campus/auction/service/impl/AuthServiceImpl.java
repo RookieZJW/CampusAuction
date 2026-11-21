@@ -148,6 +148,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private LoginVO buildVO(User user, boolean isNew) {
+        String authStatus = user.getAuthStatus() == null ? "NONE" : user.getAuthStatus();
         return LoginVO.builder()
                 .token(jwtUtil.generateToken(user.getOpenid()))
                 .userId(user.getId())
@@ -158,7 +159,8 @@ public class AuthServiceImpl implements AuthService {
                 .creditScore(user.getCreditScore())
                 .schoolId(user.getSchoolId())
                 .schoolName(resolveSchoolName(user.getSchoolId()))
-                .certified(user.getSchoolId() != null)
+                .authStatus(authStatus)
+                .certified("APPROVED".equals(authStatus) && user.getSchoolId() != null)
                 .isNew(isNew)
                 .build();
     }
