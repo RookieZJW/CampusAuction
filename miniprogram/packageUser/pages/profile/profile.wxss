@@ -77,7 +77,11 @@
   border-radius: 6rpx;
   font-size: var(--fs-caption);
   height: 64rpx;
-  line-height: 64rpx;
+  line-height: 1.4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
 }
 
 .reagree-btn::after {
@@ -135,7 +139,12 @@
   font-size: 26rpx;
   letter-spacing: 1rpx;
   height: 76rpx;
-  line-height: 76rpx;
+  line-height: 1.4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  text-indent: 1rpx;
 }
 
 .phone-btn::after {

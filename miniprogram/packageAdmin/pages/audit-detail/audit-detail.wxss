@@ -73,13 +73,21 @@
   color: var(--danger);
   border-color: var(--danger);
   height: 80rpx;
-  line-height: 80rpx;
+  line-height: 1.4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
   font-size: 28rpx;
 }
 
 .approve-btn {
   flex: 2;
   height: 80rpx;
-  line-height: 80rpx;
+  line-height: 1.4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
   font-size: 28rpx;
 }
