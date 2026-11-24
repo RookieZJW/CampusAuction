@@ -15,7 +15,8 @@
 const USE_LAN_IP = true
 
 // 当前电脑的局域网 IP（换网络环境后需重新查 ipconfig 更新）
-const LAN_IP = '192.168.3.228'
+// 2026-11-24 实测：旧值 192.168.3.228 已失效，当前 WLAN 可达地址为 192.168.0.151
+const LAN_IP = '192.168.0.151'
 
 const HOST = USE_LAN_IP ? 'http://' + LAN_IP + ':8080' : 'http://localhost:8080'
 
