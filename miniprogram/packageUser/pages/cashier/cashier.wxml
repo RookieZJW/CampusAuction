@@ -16,7 +16,7 @@
       <view class="receipt-row"><text class="k">支付单号</text><text class="v">{{result.payNo}}</text></view>
       <view class="receipt-row"><text class="k">交易号</text><text class="v">{{result.transactionId}}</text></view>
       <view class="receipt-row"><text class="k">支付时间</text><text class="v">{{result.paidAt}}</text></view>
-      <view class="receipt-row"><text class="k">支付方式</text><text class="v">微信支付（模拟）</text></view>
+      <view class="receipt-row"><text class="k">支付方式</text><text class="v">平台模拟支付</text></view>
     </view>
 
     <view class="tip">支付状态已同步至订单，可返回「我的订单」继续约定线下交割。</view>
@@ -26,8 +26,8 @@
   <!-- 收银台 -->
   <view wx:else class="pay-page">
     <view class="pay-head">
-      <view class="head-mark">微</view>
-      <view class="head-name">微信支付（模拟）</view>
+      <view class="head-mark">付</view>
+      <view class="head-name">平台模拟支付</view>
       <view class="pay-label">付款金额</view>
       <view class="pay-amount"><text class="cur">¥</text>{{prepare.amountYuan}}</view>
       <view class="head-badge">演示环境 · 模拟收银台</view>
@@ -43,8 +43,8 @@
     <view class="card method-card">
       <view class="method-title">选择支付方式</view>
       <view class="method-row">
-        <view class="wx-icon">微</view>
-        <view class="method-name">微信支付<text class="method-sub">推荐使用</text></view>
+        <view class="wx-icon">付</view>
+        <view class="method-name">平台模拟支付<text class="method-sub">推荐使用</text></view>
         <view class="radio-on">✓</view>
       </view>
     </view>

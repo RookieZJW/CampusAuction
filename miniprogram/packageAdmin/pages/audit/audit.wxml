@@ -47,7 +47,7 @@
         <view class="info">
           <view class="title">{{item.realName}}<text class="sub-name"> · {{item.shortName || item.schoolName}}</text></view>
           <view class="meta">学号 {{item.studentNo}}</view>
-          <view class="meta">申请人 {{item.nickname || '微信用户'}} · {{item.createTime}}</view>
+          <view class="meta">申请人 {{item.nickname || '匿名同学'}} · {{item.createTime}}</view>
           <view class="auth-actions">
             <button class="mini-btn approve-btn" catchtap="onApproveAuth" data-index="{{index}}">通过</button>
             <button class="mini-btn reject-btn" catchtap="onRejectAuth" data-index="{{index}}">驳回</button>

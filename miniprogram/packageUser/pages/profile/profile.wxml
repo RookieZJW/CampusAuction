@@ -28,7 +28,7 @@
     <input class="nickname-input" type="nickname" placeholder="填个同学认得出的名字"
            value="{{nickname}}" maxlength="32"
            bindinput="onNicknameInput" bindblur="onNicknameBlur" />
-    <view class="field-hint">键盘上方可以直接选用微信昵称</view>
+    <view class="field-hint">键盘上方可以直接选用你的昵称</view>
   </view>
 
   <!-- 手机号：手机号快速验证组件，可选，拒绝后不阻塞任何功能 -->
@@ -43,7 +43,7 @@
     </block>
     <block wx:else>
       <button class="phone-btn" open-type="getPhoneNumber" disabled="{{binding}}"
-              bindgetphonenumber="onGetPhoneNumber">{{binding ? '绑定中…' : '一键填入微信绑定的手机号'}}</button>
+              bindgetphonenumber="onGetPhoneNumber">{{binding ? '绑定中…' : '手机号快捷填入'}}</button>
       <view class="field-hint">不授权也能用，可在面交时另行留联系方式</view>
     </block>
   </view>

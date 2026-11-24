@@ -5,8 +5,6 @@ App({
   globalData: {
     // 用户信息缓存：{ token, userId, nickname, avatar, phone, balance, creditScore }
     userInfo: null,
-    // 本次启动是否已弹过登录框（避免反复弹）
-    loginPrompted: false,
     // 本地登录态是否已完成恢复校验（老用户免登录判断用）
     loginReady: false
   },
@@ -14,20 +12,6 @@ App({
   onLaunch() {
     // 启动时恢复本地登录态
     this.restoreLogin()
-  },
-
-  /** 首页进入时调用：未登录且本次启动未提示过，则弹一次登录框 */
-  tryPromptLogin(fromPage) {
-    if (this.globalData.userInfo || this.globalData.loginPrompted) {
-      return false
-    }
-    // 登录页/协议页自身不触发，避免 navigateBack 后重复弹
-    if (fromPage === 'pages/login/login' || fromPage === 'pages/agreement/agreement') {
-      return false
-    }
-    this.globalData.loginPrompted = true
-    wx.navigateTo({ url: '/pages/login/login' })
-    return true
   },
 
   /** 从本地缓存恢复 token 与用户信息，并做一次服务端校验 */
@@ -66,14 +50,11 @@ App({
         }).catch(() => {})
       }
     }).catch(() => {
+      // token 过期只静默清空登录态，不主动弹登录框。
+      // 微信审核要求：先进首页浏览体验，用户需要身份时再自行授权登录。
       wx.removeStorageSync('userInfo')
       this.globalData.userInfo = null
       this.globalData.loginReady = true
-      // 老用户 token 过期：本次启动补弹一次登录框
-      if (!this.globalData.loginPrompted) {
-        this.globalData.loginPrompted = true
-        wx.navigateTo({ url: '/pages/login/login' })
-      }
     })
   },
 

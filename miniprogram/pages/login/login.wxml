@@ -46,7 +46,7 @@
         </view>
         <button class="phone-btn" open-type="getPhoneNumber" bindgetphonenumber="onGetPhoneNumber">
           <text class="phone-icon">＋</text>
-          <text class="phone-text">{{phoneReady ? '已授权，点此可重新授权' : '微信一键授权手机号'}}</text>
+          <text class="phone-text">{{phoneReady ? '已授权，点此可重新授权' : '手机号快捷登录'}}</text>
           <text class="phone-arrow">›</text>
         </button>
         <view wx:if="{{phoneReady}}" class="phone-hint">授权成功，登录时会绑定到你的账号</view>

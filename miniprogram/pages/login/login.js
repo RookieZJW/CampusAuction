@@ -202,7 +202,7 @@ Page({
     wx.login({
       success: (loginRes) => {
         if (!loginRes.code) {
-          this.failLogin('微信登录失败，请重试')
+          this.failLogin('登录失败，请重试')
           return
         }
         request({
@@ -222,7 +222,7 @@ Page({
           this.failLogin(err.msg || '登录失败，请重试')
         })
       },
-      fail: () => this.failLogin('微信登录失败，请重试')
+      fail: () => this.failLogin('登录失败，请重试')
     })
   },
 

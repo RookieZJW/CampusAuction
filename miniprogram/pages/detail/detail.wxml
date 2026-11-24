@@ -45,7 +45,7 @@
       <view class="fav-btn {{collected ? 'fav-on' : ''}}" bindtap="onToggleFavorite">{{collected ? '♥' : '♡'}}</view>
     </view>
     <view class="seller-row">
-      <text class="seller">卖家：{{detail.sellerNickname || '微信用户'}}</text>
+      <text class="seller">卖家：{{detail.sellerNickname || '匿名同学'}}</text>
       <text class="report-link" bindtap="onReportTap">举报</text>
     </view>
     <view class="description">{{detail.description || '暂无描述'}}</view>

@@ -33,8 +33,9 @@ Page({
   },
 
   onShow() {
-    // 进入小程序即弹登录框（可关闭，不强制；本次启动只弹一次）
-    app.tryPromptLogin('pages/index/index')
+    // 微信审核要求：先进首页浏览、体验功能后再由用户自行选择登录，
+    // 禁止一进首页就弹授权。登录改由「我的 / 出价 / 收藏 / 发布」等
+    // 需要身份的功能点按需引导。
     // 真机调试下首屏请求可能被登录弹窗/网络抖动打断，回到首页时若分类为空则补拉一次
     if (!this.data.categories || this.data.categories.length === 0) {
       this.loadCategories()
